@@ -16,10 +16,14 @@ app.use(bodyParser.json())
 var appRoutes = require('./routes/app');
 var userRoutes = require('./routes/user');
 var loginRoutes = require('./routes/login');
-
+var materialRoutes = require('./routes/material');
+var searchRoutes = require('./routes/search');
+var uploadRoutes = require('./routes/upload');
+var imagesRoutes = require('./routes/images');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
+
 mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', function(error, res) {
     if (error) throw error;
 
@@ -29,8 +33,11 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', function(error
 // Rutas
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
+app.use('/material', materialRoutes);
+app.use('/search', searchRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/img', imagesRoutes);
 app.use('/', appRoutes);
-
 
 // Escuchar Peticiones
 app.listen(3000, function() {

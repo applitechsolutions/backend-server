@@ -90,7 +90,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
  * INSERTAR USUARIO
  */
 
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/', function(req, res) {
     var body = req.body;
 
     var user = new User({

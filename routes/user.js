@@ -30,9 +30,12 @@ app.get('/', function(req, res, next) {
                     });
                 }
 
-                res.status(200).json({
-                    ok: true,
-                    usuarios: users
+                User.count({}, function(err, conteo) {
+                    res.status(200).json({
+                        ok: true,
+                        usuarios: users,
+                        total: conteo
+                    });
                 });
 
             });

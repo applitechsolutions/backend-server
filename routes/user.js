@@ -13,12 +13,12 @@ var User = require('../models/user');
 
 app.get('/', function(req, res, next) {
 
-    var desde = req.params.desde || 0;
+    var desde = req.query.desde;
     desde = Number(desde);
 
-    User.find({}, 'name lastName email role img state')
+    User.find({ state: false }, 'name lastName email role img')
         .skip(desde)
-        .limit(10)
+        .limit(5)
         .exec(
             function(err, users) {
 
@@ -30,7 +30,7 @@ app.get('/', function(req, res, next) {
                     });
                 }
 
-                User.count({}, function(err, conteo) {
+                User.count({ state: false }, function(err, conteo) {
                     res.status(200).json({
                         ok: true,
                         usuarios: users,

@@ -104,7 +104,7 @@ function buscarUsuarios(busqueda, regex) {
     return new Promise(function(resolve, reject) {
 
         User.find({}, 'name lastName email role')
-            .or([{ 'name': regex }, { 'email': regex }])
+            .or([{ 'name': regex }, { 'email': regex }, { 'lastName': regex }])
             .exec(function(err, usuarios) {
                 if (err) {
                     reject('Error al cargar usuarios', err);

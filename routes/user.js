@@ -30,7 +30,7 @@ app.get('/', function(req, res, next) {
                     });
                 }
 
-                User.count({ state: false }, function(err, conteo) {
+                User.countDocuments({ state: false }, function(err, conteo) {
                     res.status(200).json({
                         ok: true,
                         usuarios: users,

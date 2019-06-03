@@ -103,7 +103,7 @@ function buscarBodegas(busqueda, regex) {
 function buscarUsuarios(busqueda, regex) {
     return new Promise(function(resolve, reject) {
 
-        User.find({}, 'name lastName email role')
+        User.find({ state: false }, 'name lastName email role, img')
             .or([{ 'name': regex }, { 'email': regex }, { 'lastName': regex }])
             .exec(function(err, usuarios) {
                 if (err) {

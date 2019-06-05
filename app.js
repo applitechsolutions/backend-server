@@ -2,12 +2,12 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var cors = require('cors')
+var cors = require('cors');
 
 // Inicializar Variables XD
 var app = express();
 
-app.use(cors())
+app.use(cors());
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -18,8 +18,8 @@ app.use(function(req, res, next) {
 
 // BODY PARSER
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // Importaciones
 var appRoutes = require('./routes/app');
@@ -29,6 +29,7 @@ var materialRoutes = require('./routes/material');
 var searchRoutes = require('./routes/search');
 var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
+var areaRoutes = require('./routes/area');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -40,6 +41,7 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', function(error
 });
 
 // Rutas
+app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 app.use('/material', materialRoutes);

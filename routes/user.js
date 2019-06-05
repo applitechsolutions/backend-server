@@ -107,7 +107,11 @@ app.post('/', function(req, res) {
         email: body.email,
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        role: body.role,
+    });
+
+    var userArea = new userArea({
+
     });
 
     user.save(function(err, usuarioGuardado) {
@@ -122,6 +126,7 @@ app.post('/', function(req, res) {
         res.status(201).json({
             ok: true,
             usuario: usuarioGuardado,
+            userArea: body.userArea,
             usuarioToken: req.usuario
         });
     });

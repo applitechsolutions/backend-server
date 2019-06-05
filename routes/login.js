@@ -118,7 +118,7 @@ app.post('/', function(req, res) {
 
     var body = req.body;
 
-    User.findOne({ email: body.email }, function(err, usuarioBD) {
+    User.findOne({ email: body.email, state: false }, function(err, usuarioBD) {
 
         if (err) {
             return res.status(500).json({

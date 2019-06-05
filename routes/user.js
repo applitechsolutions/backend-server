@@ -95,6 +95,55 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 });
 
 /**
+ * ACTUALIZAR USUARIO
+ */
+
+app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
+    var id = req.params.id;
+
+    User.findById(id, function(err, usuario) {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar usuario',
+                errors: err
+            });
+        }
+
+        if (!usuario) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El usuario con el id' + id + ' no existe',
+                errors: { message: 'No existe un usuario con ese ID' }
+            });
+        }
+
+        usuario.email = usuario.email + ' borrado';
+        usuario.state = true;
+
+        usuario.save(function(err, usuarioBorrado) {
+
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al borrar usuario',
+                    errors: err
+                });
+            }
+
+            usuarioBorrado.password = ':)';
+
+            res.status(200).json({
+                ok: true,
+                usuario: usuarioBorrado
+            });
+        });
+
+    });
+});
+
+/**
  * INSERTAR USUARIO
  */
 

@@ -36,7 +36,7 @@ app.post('/google', function(req, res) {
         // If request specified a G Suite domain:
         //const domain = payload['hd'];
 
-        User.findOne({ email: payload.email }, function(err, usuario) {
+        User.findOne({ email: payload.email, state: false }, function(err, usuario) {
 
             if (err) {
                 return res.status(500).json({

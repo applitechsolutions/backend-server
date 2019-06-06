@@ -1,5 +1,4 @@
 var express = require('express');
-var bcrypt = require('bcryptjs');
 
 var mdAuth = require('../middlewares/auth');
 
@@ -40,29 +39,46 @@ app.get('/:id', function(req, res, next) {
  * INSERTAR AREA DE USUARIOS
  */
 
-app.post('/', function(req, res) {
+app.post('/:id', mdAuth.verificaToken, function(req, res) {
     var body = req.body;
+    var id = req.params.id;
+    userAreaMany = [];
 
-    var userArea = new UserArea({
-        _user: body.user,
-        _area: body.area
+    body.forEach(function(area) {
+        userAreaMany.push({
+            _user: id,
+            _area: area._id
+        });
     });
 
-    userArea.save(function(err, userarea) {
+    UserArea.deleteMany({ _user: id }, function(err) {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al asignar área al usuario',
+                mensaje: 'Error al guardar área',
+                errors: err
+            });
+        }
+
+    });
+
+    UserArea.insertMany(userAreaMany, function(err, UAguardada) {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al guardar área',
                 errors: err
             });
         }
 
         res.status(201).json({
             ok: true,
-            userArea: userarea
+            userArea: UAguardada,
+            usuarioToken: req.usuario
         });
-
     });
+
+
 
 
 });

@@ -15,8 +15,8 @@ app.get('/:id', function(req, res, next) {
 
     var id = req.params.id;
 
-    UserArea.find({ _user: id }, '_user _area')
-        .populate('_area')
+    UserArea.find({ _user: id })
+        .populate('_area', 'name')
         .exec(
             function(err, areas) {
 
@@ -34,6 +34,37 @@ app.get('/:id', function(req, res, next) {
                 });
 
             });
+});
+
+/**
+ * INSERTAR AREA DE USUARIOS
+ */
+
+app.post('/', function(req, res) {
+    var body = req.body;
+
+    var userArea = new UserArea({
+        _user: body.user,
+        _area: body.area
+    });
+
+    userArea.save(function(err, userarea) {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al asignar área al usuario',
+                errors: err
+            });
+        }
+
+        res.status(201).json({
+            ok: true,
+            userArea: userarea
+        });
+
+    });
+
+
 });
 
 module.exports = app;

@@ -161,13 +161,6 @@ app.post('/', function(req, res) {
         role: body.role,
     });
 
-    <<
-    << << < HEAD
-    user.insertMany()
-
-    ===
-    === = >>>
-    >>> > 74 ff28e696ca2b1a781eb7d490ac57a1315018d6
     user.save(function(err, usuarioGuardado) {
         if (err) {
             return res.status(400).json({

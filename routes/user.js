@@ -6,7 +6,7 @@ var mdAuth = require('../middlewares/auth');
 var app = express();
 
 var User = require('../models/user');
-
+var UserArea = require('../models/userArea');
 /**
  * LISTAR USUARIOS
  */
@@ -19,6 +19,7 @@ app.get('/', function(req, res, next) {
     User.find({ state: false }, 'name lastName email role img')
         .skip(desde)
         .limit(5)
+        .sort({ _id: 'desc' })
         .exec(
             function(err, users) {
 
@@ -149,6 +150,7 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 
 app.post('/', function(req, res) {
     var body = req.body;
+    var userMany = [];
 
     var user = new User({
         name: body.name,
@@ -159,8 +161,13 @@ app.post('/', function(req, res) {
         role: body.role,
     });
 
+    <<
+    << << < HEAD
     user.insertMany()
 
+    ===
+    === = >>>
+    >>> > 74 ff28e696ca2b1a781eb7d490ac57a1315018d6
     user.save(function(err, usuarioGuardado) {
         if (err) {
             return res.status(400).json({
@@ -170,12 +177,29 @@ app.post('/', function(req, res) {
             });
         }
 
+        body.userArea.forEach(function(area) {
+            userMany.push({
+                _user: usuarioGuardado._id,
+                _area: area._id
+            });
+        });
+
+        UserArea.insertMany(userMany, function(erro, UAguardada) {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al guardar área',
+                    errors: err
+                });
+            }
+        });
+
         res.status(201).json({
             ok: true,
             usuario: usuarioGuardado,
-            userArea: body.userArea,
             usuarioToken: req.usuario
         });
+
     });
 
 

@@ -30,6 +30,7 @@ var searchRoutes = require('./routes/search');
 var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
 var areaRoutes = require('./routes/area');
+var userAreaRoutes = require('./routes/userArea');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -41,6 +42,7 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', function(error
 });
 
 // Rutas
+app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);

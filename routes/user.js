@@ -95,7 +95,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 });
 
 /**
- * ACTUALIZAR USUARIO
+ * BORRAR USUARIO
  */
 
 app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
@@ -159,9 +159,7 @@ app.post('/', function(req, res) {
         role: body.role,
     });
 
-    var userArea = new userArea({
-
-    });
+    user.insertMany()
 
     user.save(function(err, usuarioGuardado) {
         if (err) {

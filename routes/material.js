@@ -6,7 +6,6 @@ var app = express();
 
 // MODELOS
 var Material = require('../models/material');
-var Storage = require('../models/storage');
 
 /**
  * LISTAR MATERIALES
@@ -113,35 +112,5 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     });
 
 });
-
-/**
- * LISTAR MATERIALES
- */
-
-app.get('/existencia', function(req, res, next) {
-
-    Storage.find({})
-        .populate('_material', 'code name')
-        .populate('_cellar', 'name')
-        .exec(
-            function(err, storages) {
-
-                if (err) {
-                    return res.status(500).json({
-                        ok: false,
-                        mensaje: 'Error listando existenicas',
-                        errors: err
-                    });
-                }
-
-                res.status(200).json({
-                    ok: true,
-                    existencias: storages
-                });
-
-            });
-
-});
-
 
 module.exports = app;

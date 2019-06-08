@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 
 var Material = require('../models/material');
-var Cellar = require('../models/cellar');
+var Cellar = require('../models/materialCellar');
 var User = require('../models/user');
 
 /**

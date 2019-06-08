@@ -31,6 +31,8 @@ var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
 var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
+// Taller
+var partRoutes = require('./routes/autoPart');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -46,6 +48,8 @@ app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
+// Taller
+app.use('/repuesto', partRoutes);
 app.use('/material', materialRoutes);
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

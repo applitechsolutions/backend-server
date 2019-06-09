@@ -68,6 +68,12 @@ app.get('/todo/:busqueda', function(req, res) {
                 bodegas: respuestas[1],
                 usuarios: respuestas[2]
             });
+        })
+        .catch(function(error) {
+            res.status(400).json({
+                ok: true,
+                error: error
+            });
         });
 });
 

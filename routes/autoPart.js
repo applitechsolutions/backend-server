@@ -12,12 +12,8 @@ var AutoCellar = require('../models/autoCellar');
 
 app.get('/', function(req, res) {
 
-    var desde = req.query.desde;
-    desde = Number(desde);
-
     AutoPart.find({ state: false })
-        .skip(desde)
-        .limit(5)
+        .populate('cellar', 'name storage.stock')
         .sort({ _id: 'desc' })
         .exec(
             function(err, parts) {
@@ -30,21 +26,9 @@ app.get('/', function(req, res) {
                     });
                 }
 
-                AutoPart.countDocuments({ state: false }, function(err, conteo) {
-
-                    if (err) {
-                        return res.status(500).json({
-                            ok: false,
-                            mensaje: 'Error listando repuestos',
-                            errors: err
-                        });
-                    }
-
-                    res.status(200).json({
-                        ok: true,
-                        repuestos: parts,
-                        total: conteo
-                    });
+                res.status(200).json({
+                    ok: true,
+                    repuestos: parts
                 });
 
             });
@@ -148,14 +132,16 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
  * INSERTAR REPUESTOS
  */
 
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/:id', mdAuth.verificaToken, function(req, res) {
 
+    var id = req.params.id;
     var body = req.body;
 
     var part = new AutoPart({
         code: body.code,
         desc: body.name,
-        minStock: body.minStock
+        minStock: body.minStock,
+        cellar: [{ _autoCellar: id }]
     });
 
     part.save(function(err, repuestoGuardado) {

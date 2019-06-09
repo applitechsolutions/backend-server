@@ -1,5 +1,6 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
+var mongoose = require('mongoose');
 
 var mdAuth = require('../middlewares/auth');
 
@@ -161,41 +162,35 @@ app.post('/', function(req, res) {
         role: body.role,
     });
 
-    user.save(function(err, usuarioGuardado) {
-        if (err) {
-            return res.status(400).json({
+    user.save()
+        .then(function(user) {
+            body.userArea.forEach(function(area) {
+                userMany.push({
+                    _user: user._id,
+                    _area: area._id
+                });
+            });
+            UserArea.insertMany(userMany)
+                .then(function(resp) {
+                    res.status(201).json({
+                        ok: true,
+                        usuario: user,
+                        usuarioToken: req.usuario
+                    });
+                }).catch(function(Error) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'El usuario ha sido guardado, error al guardar áreas. Por favor ingrese las áreas desde el listado',
+                        errors: Error
+                    });
+                });
+        }).catch(function(Error) {
+            res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear usuario',
-                errors: err
-            });
-        }
-
-        body.userArea.forEach(function(area) {
-            userMany.push({
-                _user: usuarioGuardado._id,
-                _area: area._id
+                errors: Error
             });
         });
-
-        UserArea.insertMany(userMany, function(erro, UAguardada) {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'Error al guardar área',
-                    errors: err
-                });
-            }
-        });
-
-        res.status(201).json({
-            ok: true,
-            usuario: usuarioGuardado,
-            usuarioToken: req.usuario
-        });
-
-    });
-
-
 });
 
 module.exports = app;

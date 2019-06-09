@@ -12,8 +12,10 @@ var AutoCellar = require('../models/autoCellar');
 
 app.get('/', function(req, res) {
 
-    AutoPart.find({ state: false })
-        .populate('cellar', 'name storage.stock')
+    var stock = 0;
+
+    AutoCellar.find({ state: false })
+        .populate('storage._autopart', 'code desc minStock')
         .sort({ _id: 'desc' })
         .exec(
             function(err, parts) {
@@ -28,7 +30,8 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    repuestos: parts
+                    repuestos: parts,
+                    existencia: stock
                 });
 
             });

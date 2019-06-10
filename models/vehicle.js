@@ -36,4 +36,5 @@ var vehicleSchema = new Schema({
     state: { type: Boolean, required: true, default: false }
 });
 
+
 module.exports = mongoose.model('Vehicle', vehicleSchema);

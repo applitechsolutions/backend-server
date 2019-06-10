@@ -30,9 +30,63 @@ app.get('/', function(req, res) {
                     vehiculos: vehicles
                 });
             });
+});
 
+/**
+ * ACTUALIZAR VEHICULOS
+ */
 
+app.put('/', mdAuth.verificaToken, function(req, res) {
 
+    var id = req.params.id;
+    var body = req.body;
+
+    Vehicle.findById(id, function(err, vehiculo) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar repuesto',
+                errors: err
+            });
+        }
+
+        if (!vehiculo) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El vehiculo con el id' + id + ' no existe',
+                errors: { message: 'No existe un vehiculo con ese ID' }
+            });
+        }
+
+        vehiculo.cp = body.cp;
+        vehiculo.type = body.type;
+        vehiculo._gondola = body.gondola;
+        vehiculo._make = body.make;
+        vehiculo.plate = body.plate;
+        vehiculo.no = body.no;
+        vehiculo.model = body.model;
+        vehiculo.km = body.km;
+        vehiculo.mts = body.mts;
+        vehiculo.basics = body.basics;
+        vehiculo.pits = body.rims;
+
+        vehiculo.save(function(err, vehiculoAct) {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar vehiculo',
+                    errors: err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                repuesto: vehiculoAct
+            });
+
+        });
+
+    });
 });
 
 /**
@@ -71,5 +125,6 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     });
 
 });
+
 
 module.exports = app;

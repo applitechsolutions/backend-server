@@ -150,7 +150,8 @@ app.post('/:id', mdAuth.verificaToken, function(req, res) {
                 .then(function(cellar) {
                     var part = { _autopart: repuestoGuardado._id, stock: 0 };
                     cellar.storage.push(part);
-                    cellar.save().then(function(cellarGuardado) {
+                    cellar.save()
+                        .then(function(cellarGuardado) {
                             res.status(201).json({
                                 ok: true,
                                 repuesto: repuestoGuardado,

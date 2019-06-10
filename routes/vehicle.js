@@ -30,6 +30,9 @@ app.get('/', function(req, res) {
                     vehiculos: vehicles
                 });
             });
+
+
+
 });
 
 /**
@@ -39,6 +42,33 @@ app.get('/', function(req, res) {
 app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
+
+    var vehiculo = new Vehicle({
+        cp: body.cp,
+        type: body.type,
+        _make: body.make,
+        plate: body.plate,
+        no: body.no,
+        model: body.model,
+        km: body.km,
+        mts: body.mts
+    });
+
+    vehiculo.save(function(err, vehiculoGuardado) {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al crear vehiculo',
+                errors: err
+            });
+        }
+
+        res.status(201).json({
+            ok: true,
+            repuesto: vehiculoGuardado,
+            usuarioToken: req.usuario
+        });
+    });
 
 });
 

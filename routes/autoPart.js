@@ -12,8 +12,6 @@ var AutoCellar = require('../models/autoCellar');
 
 app.get('/', function(req, res) {
 
-    var stock = 0;
-
     AutoCellar.find({ state: false })
         .populate('storage._autopart', 'code desc minStock')
         .sort({ _id: 'desc' })
@@ -30,8 +28,7 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    repuestos: parts,
-                    existencia: stock
+                    repuestos: parts
                 });
 
             });
@@ -142,26 +139,47 @@ app.post('/:id', mdAuth.verificaToken, function(req, res) {
 
     var part = new AutoPart({
         code: body.code,
-        desc: body.name,
+        desc: body.desc,
         minStock: body.minStock,
-        cellar: [{ _autoCellar: id }]
+        cellar: id
     });
 
-    part.save(function(err, repuestoGuardado) {
-        if (err) {
-            return res.status(400).json({
+    part.save()
+        .then(function(repuestoGuardado) {
+            AutoCellar.findById(id)
+                .then(function(cellar) {
+                    var part = { _autopart: repuestoGuardado._id, stock: 0 };
+                    cellar.storage.push(part);
+                    cellar.save().then(function(cellarGuardado) {
+                            res.status(201).json({
+                                ok: true,
+                                repuesto: repuestoGuardado,
+                                usuarioToken: req.usuario
+                            });
+                        })
+                        .catch(function(err) {
+                            res.status(400).json({
+                                ok: false,
+                                mensaje: 'Error al crear bodega',
+                                errors: err
+                            });
+                        });
+                })
+                .catch(function(err) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'La bodega con el id' + id + ' no existe',
+                        errors: { message: 'No existe una bodega con ese ID' }
+                    });
+                });
+        })
+        .catch(function(err) {
+            res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear repuesto',
                 errors: err
             });
-        }
-
-        res.status(201).json({
-            ok: true,
-            repuesto: repuestoGuardado,
-            usuarioToken: req.usuario
         });
-    });
 });
 
 /**

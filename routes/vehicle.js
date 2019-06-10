@@ -119,7 +119,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
         res.status(201).json({
             ok: true,
-            repuesto: vehiculoGuardado,
+            vehiculo: vehiculoGuardado,
             usuarioToken: req.usuario
         });
     });

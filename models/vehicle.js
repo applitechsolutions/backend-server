@@ -25,7 +25,7 @@ var vehicleSchema = new Schema({
     }],
     pits: [{
         rim: { type: Schema.Types.ObjectId, ref: 'Rim', required: false },
-        kmr: { type: Schema.Types.Decimal128 },
+        km: { type: Schema.Types.Decimal128 },
         counter: { type: Schema.Types.Decimal128 },
         axis: { type: String, require: false },
         place: { type: String, require: false },

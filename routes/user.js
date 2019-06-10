@@ -1,6 +1,5 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
-var mongoose = require('mongoose');
 
 var mdAuth = require('../middlewares/auth');
 

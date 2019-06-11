@@ -81,7 +81,7 @@ app.put('/', mdAuth.verificaToken, function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                repuesto: vehiculoAct
+                vehiculo: vehiculoAct
             });
 
         });
@@ -96,11 +96,18 @@ app.put('/', mdAuth.verificaToken, function(req, res) {
 app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
+    var cp;
+
+    if (body.cp === null) {
+        cp = new Date().getMilliseconds();
+    } else {
+        cp = body.cp;
+    }
 
     var vehiculo = new Vehicle({
-        cp: body.cp,
+        cp: cp,
         type: body.type,
-        _make: body.make,
+        _make: body._make,
         plate: body.plate,
         no: body.no,
         model: body.model,
@@ -119,7 +126,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
         res.status(201).json({
             ok: true,
-            repuesto: vehiculoGuardado,
+            vehiculo: vehiculoGuardado,
             usuarioToken: req.usuario
         });
     });

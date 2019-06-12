@@ -35,11 +35,46 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * BUSCAR REPUESTO
+ */
+
+app.get('/:id', function(req, res) {
+
+    var id = req.params.id;
+
+    AutoPart.findById(id, function(err, repuesto) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar repuesto',
+                errors: err
+            });
+        }
+
+        if (!repuesto) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El repuesto con el id' + id + ' no existe',
+                errors: { message: 'No existe un repuesto con ese ID' }
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            repuesto: repuesto
+        });
+
+    });
+});
+
+/**
  * BORRAR REPUESTOS
  */
 
 app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
     var id = req.params.id;
+    var body = req.body;
+    var storage = [];
 
     AutoPart.findById(id, function(err, repuesto) {
 
@@ -61,21 +96,58 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 
         repuesto.state = true;
 
-        repuesto.save(function(err, repuestoBorrado) {
+        repuesto.save()
+            .then(function(repuestoBorrado) {
 
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'Error al borrar repuesto',
-                    errors: err
+                body.storage.forEach(function(bodega) {
+                    storage.push({
+                        _autopart: bodega._id,
+                        stock: bodega.stock
+                    });
                 });
-            }
 
-            res.status(200).json({
-                ok: true,
-                usuario: repuestoBorrado
+                AutoCellar.findById(body.id)
+                    .then(function(cellar) {
+
+                        cellar.storage = storage.slice(0);
+
+                        cellar.save()
+                            .then(function(cellarGuardado) {
+
+                                res.status(200).json({
+                                    ok: true,
+                                    repuesto: repuestoBorrado,
+                                    body: body.storage
+                                });
+                            })
+                            .catch(function(err) {
+                                res.status(400).json({
+                                    ok: false,
+                                    mensaje: 'Error al Guardar storage',
+                                    errors: err
+                                });
+                            });
+
+                    })
+                    .catch(function(err) {
+                        res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error al buscar bodega',
+                            errors: err
+                        });
+                    });
+
+            })
+            .catch(function(err) {
+                if (err) {
+                    return res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al borrar repuesto',
+                        errors: err
+                    });
+                }
             });
-        });
+
 
     });
 });
@@ -169,7 +241,7 @@ app.post('/:id', mdAuth.verificaToken, function(req, res) {
                 .catch(function(err) {
                     res.status(400).json({
                         ok: false,
-                        mensaje: 'La bodega con el id' + id + ' no existe',
+                        mensaje: 'La bodega con el id ' + id + ' no existe',
                         errors: { message: 'No existe una bodega con ese ID' }
                     });
                 });
@@ -187,7 +259,7 @@ app.post('/:id', mdAuth.verificaToken, function(req, res) {
  * INSERTAR BODEGA
  */
 
-app.post('/bodega/:id', mdAuth.verificaToken, function(req, res) {
+app.post('/bodega/:id', function(req, res) {
 
     var id = req.params.id;
     var body = req.body;

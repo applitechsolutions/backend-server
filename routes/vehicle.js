@@ -11,7 +11,7 @@ var Vehicle = require('../models/vehicle');
 
 app.get('/', function(req, res) {
 
-    Vehicle.find({ state: false }, 'cp type plate no model km mts')
+    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits')
         .populate('_make', 'name')
         .sort({ _id: 'desc' })
         .exec(
@@ -36,7 +36,7 @@ app.get('/', function(req, res) {
  * ACTUALIZAR VEHICULOS
  */
 
-app.put('/', mdAuth.verificaToken, function(req, res) {
+app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;

@@ -13,7 +13,7 @@ app.get('/', function(req, res) {
 
     Vehicle.find({ state: false }, 'cp type plate no model km mts')
         .populate('_make', 'name')
-        .sort({ _id: 'desc' })
+        .sort({ plate: 'asc' })
         .exec(
             function(err, vehicles) {
 
@@ -81,7 +81,7 @@ app.put('/', mdAuth.verificaToken, function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                repuesto: vehiculoAct
+                vehiculo: vehiculoAct
             });
 
         });
@@ -100,12 +100,12 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     var vehiculo = new Vehicle({
         cp: body.cp,
         type: body.type,
-        _make: body.make,
+        _make: body._make._id,
         plate: body.plate,
         no: body.no,
         model: body.model,
-        km: body.km,
-        mts: body.mts
+        km: body.km.$numberDecimal,
+        mts: body.mts.$numberDecimal
     });
 
     vehiculo.save(function(err, vehiculoGuardado) {

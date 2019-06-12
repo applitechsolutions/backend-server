@@ -9,7 +9,7 @@ var vehiclesValidos = {
 
 var vehicleSchema = new Schema({
 
-    cp: { type: String, unique: true, required: [true, 'El código es necesario'] },
+    cp: { type: String, unique: true, required: false },
     type: { type: String, required: true, default: 'camion', enum: vehiclesValidos },
     _gondola: { type: Schema.Types.ObjectId, ref: 'Gondola' },
     _make: { type: Schema.Types.ObjectId, ref: 'Make', required: [true, 'La marca es necesaria'] },

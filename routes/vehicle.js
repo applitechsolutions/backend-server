@@ -33,6 +33,42 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * BUSCAR VEHICULO
+ */
+
+app.get('/:id', function(req, res) {
+
+    var id = req.params.id;
+
+    Vehicle.findById(id, 'cp type plate no model km mts')
+        .populate('_make')
+        .exec(function(err, vehiculo) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar vehículo',
+                    errors: err
+                });
+            }
+
+            if (!vehiculo) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El vehículo con el id' + id + ' no existe',
+                    errors: { message: 'No existe un vehículo con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                vehiculo: vehiculo
+            });
+
+        });
+});
+
+
+/**
  * ACTUALIZAR VEHICULOS
  */
 
@@ -53,8 +89,8 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         if (!vehiculo) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El vehiculo con el id' + id + ' no existe',
-                errors: { message: 'No existe un vehiculo con ese ID' }
+                mensaje: 'El vehículo con el id' + id + ' no existe',
+                errors: { message: 'No existe un vehículo con ese ID' }
             });
         }
 
@@ -74,7 +110,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar vehiculo',
+                    mensaje: 'Error al actualizar vehículo',
                     errors: err
                 });
             }
@@ -84,6 +120,52 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
                 vehiculo: vehiculoAct
             });
 
+        });
+
+    });
+});
+
+/**
+ * BORRAR VEHICULOS
+ */
+
+app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
+    var id = req.params.id;
+
+    Vehicle.findById(id, function(err, vehiculo) {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar vehículo',
+                errors: err
+            });
+        }
+
+        if (!vehiculo) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El vehículo con el id' + id + ' no existe',
+                errors: { message: 'No existe un vehículo con ese ID' }
+            });
+        }
+
+        vehiculo.state = true;
+
+        vehiculo.save(function(err, vehiculoBorrado) {
+
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al borrar vehículo',
+                    errors: err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                vehiculo: vehiculoBorrado
+            });
         });
 
     });

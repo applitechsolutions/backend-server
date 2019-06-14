@@ -26,7 +26,7 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    buySpares: buySpares
+                    compras: buySpares
                 });
             });
 });
@@ -70,7 +70,7 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                buySpare: buySpareB
+                compra: buySpareB
             });
         });
 
@@ -106,7 +106,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
         res.status(201).json({
             ok: true,
-            buySpare: buySpareG,
+            compra: buySpareG,
             usuarioToken: req.usuario
         });
     });

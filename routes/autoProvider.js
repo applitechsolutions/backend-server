@@ -26,7 +26,7 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    autoProviders: autoProviders
+                    proveedores: autoProviders
                 });
             });
 });
@@ -59,7 +59,7 @@ app.get('/:id', function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                autoProvider: autoProvider
+                proveedor: autoProvider
             });
 
         });
@@ -112,7 +112,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                autoProvider: autoProviderA
+                proveedor: autoProviderA
             });
 
         });
@@ -159,7 +159,7 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 
             res.status(200).json({
                 ok: true,
-                autoProvider: autoProviderB
+                proveedor: autoProviderB
             });
         });
 
@@ -196,7 +196,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
         res.status(201).json({
             ok: true,
-            autoProvider: autoProviderG,
+            proveedor: autoProviderG,
             usuarioToken: req.usuario
         });
     });

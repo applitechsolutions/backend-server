@@ -53,8 +53,8 @@ app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 // Taller
-app.use('compraRepuesto', buySpareRoutes);
-app.use('autoProveedor', autoProviderRoutes);
+app.use('/compraRepuesto', buySpareRoutes);
+app.use('/autoProveedor', autoProviderRoutes);
 app.use('/repuesto', partRoutes);
 app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);

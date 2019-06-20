@@ -13,7 +13,7 @@ var buySpareSchema = new Schema({
         quantity: { type: Number },
         cost: { type: Schema.Types.Decimal128 }
     }],
-    total: { type: Schema.Types.Decimal128, required: true },
+    total: { type: Schema.Types.Decimal128 },
     state: { type: Boolean, default: false }
 });
 

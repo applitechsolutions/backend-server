@@ -35,6 +35,7 @@ var userAreaRoutes = require('./routes/userArea');
 var partRoutes = require('./routes/autoPart');
 var vehiclesRoutes = require('./routes/vehicle');
 var makeRoutes = require('./routes/make');
+var rimRoutes = require('./routes/rim');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -55,6 +56,7 @@ app.use('/repuesto', partRoutes);
 app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);
 app.use('/marca', makeRoutes);
+app.use('/llanta', rimRoutes);
 
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

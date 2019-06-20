@@ -13,6 +13,7 @@ app.get('/', function(req, res) {
 
     Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits')
         .populate('_make', 'name')
+        .populate('pits.rim')
         .sort({ plate: 'asc' })
         .exec(
             function(err, vehicles) {
@@ -61,14 +62,14 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         vehiculo.cp = body.cp;
         vehiculo.type = body.type;
         vehiculo._gondola = body.gondola;
-        vehiculo._make = body.make;
+        vehiculo._make = body._make._id;
         vehiculo.plate = body.plate;
         vehiculo.no = body.no;
         vehiculo.model = body.model;
         vehiculo.km = body.km;
         vehiculo.mts = body.mts;
         vehiculo.basics = body.basics;
-        vehiculo.pits = body.rims;
+        vehiculo.pits = body.pits;
 
         vehiculo.save(function(err, vehiculoAct) {
             if (err) {

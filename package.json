@@ -19,6 +19,7 @@
         "google-auth-library": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.5.9",
+        "mongoose-float": "^1.0.4",
         "mongoose-unique-validator": "^2.0.3"
     },
     "devDependencies": {

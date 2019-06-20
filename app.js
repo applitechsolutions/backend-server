@@ -32,6 +32,8 @@ var imagesRoutes = require('./routes/images');
 var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
 // Taller
+var buySpareRoutes = require('./routes/buySpare');
+var autoProviderRoutes = require('./routes/autoProvider');
 var partRoutes = require('./routes/autoPart');
 var vehiclesRoutes = require('./routes/vehicle');
 var makeRoutes = require('./routes/make');
@@ -46,12 +48,14 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', function(error
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });
 
-// Rutas
+// Transportes
 app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 // Taller
+app.use('/compraRepuesto', buySpareRoutes);
+app.use('/autoProveedor', autoProviderRoutes);
 app.use('/repuesto', partRoutes);
 app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);

@@ -13,6 +13,7 @@ var AutoCellar = require('../models/autoCellar');
 app.get('/', function(req, res) {
 
     BuySpare.find({ state: false }, '_provider date noBill serie noDoc details total')
+        .populate('_provider', 'name')
         .sort({ date: 'desc' })
         .exec(
             function(err, buySpares) {
@@ -93,7 +94,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         serie: body.serie,
         noDoc: body.noDoc,
         details: body.details,
-        total: body.total.$numberDecimal
+        total: body.total
     });
 
     buySpare.save()

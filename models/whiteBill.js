@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
+var Float = require('mongoose-float').loadType(mongoose, 2);
 
 var Schema = mongoose.Schema;
 
@@ -13,7 +14,7 @@ var whiteBillSchema = new Schema({
     pulls: [{
         _pull: { type: Schema.Types.ObjectId, ref: 'Pull', required: [true, 'El pull es necesario'] },
     }],
-    total: { type: Schema.Types.Decimal128 },
+    total: { type: Float },
     paid: { type: Boolean, default: false },
     state: { type: Boolean, default: false }
 });

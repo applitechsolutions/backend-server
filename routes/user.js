@@ -7,6 +7,8 @@ var app = express();
 
 var User = require('../models/user');
 var UserArea = require('../models/userArea');
+
+
 /**
  * LISTAR USUARIOS
  */

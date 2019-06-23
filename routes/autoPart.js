@@ -204,7 +204,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
  * INSERTAR REPUESTOS
  */
 
-app.post('/:id', mdAuth.verificaToken, function(req, res) {
+app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;
@@ -218,7 +218,7 @@ app.post('/:id', mdAuth.verificaToken, function(req, res) {
 
     part.save()
         .then(function(repuestoGuardado) {
-            AutoCellar.findById(id)
+            AutoCellar.findOne({ name: 'Bodega Principal' })
                 .then(function(cellar) {
                     var part = { _autopart: repuestoGuardado._id, stock: 0 };
                     cellar.storage.push(part);

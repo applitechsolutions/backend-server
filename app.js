@@ -38,6 +38,7 @@ var partRoutes = require('./routes/autoPart');
 var vehiclesRoutes = require('./routes/vehicle');
 var makeRoutes = require('./routes/make');
 var rimRoutes = require('./routes/rim');
+var mechRoutes = require('./routes/mechanic');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -61,6 +62,7 @@ app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);
 app.use('/marca', makeRoutes);
 app.use('/llanta', rimRoutes);
+app.use('/mecanico', mechRoutes);
 
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

@@ -116,10 +116,13 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            res.status(200).json({
-                ok: true,
-                vehiculo: vehiculoAct
-            });
+            vehiculoAct
+                .populate('pits.rim', function(err, vehiculoP) {
+                    res.status(200).json({
+                        ok: true,
+                        vehiculo: vehiculoP
+                    });
+                });
 
         });
 

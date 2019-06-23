@@ -17,8 +17,8 @@ var vehicleSchema = new Schema({
     plate: { type: String, unique: true, required: [true, 'La placa es necesaria'] },
     no: { type: Number },
     model: { type: Number },
-    km: { type: Schema.Types.Decimal128, default: 0 },
-    mts: { type: Schema.Types.Decimal128, default: 0 },
+    km: { type: Float, default: 0 },
+    mts: { type: Float, default: 0 },
     basics: [{
         code: String,
         name: String,

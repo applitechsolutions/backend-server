@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
+var Float = require('mongoose-float').loadType(mongoose, 2);
 
 var Schema = mongoose.Schema;
 
@@ -10,10 +11,10 @@ var saleSchema = new Schema({
     bill: { type: String, unique: true, required: [true, 'El número de factura es necesario'] },
     details: [{
         _material: { type: Schema.Types.ObjectId, ref: 'Material', required: [true, 'El material es necesario'] },
-        total: { type: Schema.Types.Decimal128, requerido: [true, 'La cantidad es necesaria'] },
-        price: { type: Schema.Types.Decimal128, requerido: [true, 'El precio es necesario'] }
+        total: { type: Float, requerido: [true, 'La cantidad es necesaria'] },
+        price: { type: Float, requerido: [true, 'El precio es necesario'] }
     }],
-    total: { type: Schema.Types.Decimal128, required: true },
+    total: { type: Float, required: true },
     state: { type: Boolean, required: true, default: false }
 });
 

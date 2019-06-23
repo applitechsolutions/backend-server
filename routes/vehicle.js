@@ -102,8 +102,8 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         vehiculo.plate = body.plate;
         vehiculo.no = body.no;
         vehiculo.model = body.model;
-        vehiculo.km = body.km.$numberDecimal;
-        vehiculo.mts = body.mts.$numberDecimal;
+        vehiculo.km = body.km;
+        vehiculo.mts = body.mts;
         vehiculo.basics = body.basics;
         vehiculo.pits = body.pits;
 
@@ -197,8 +197,8 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         plate: body.plate,
         no: body.no,
         model: body.model,
-        km: body.km.$numberDecimal,
-        mts: body.mts.$numberDecimal
+        km: body.km,
+        mts: body.mts
     });
 
     vehiculo.save(function(err, vehiculoGuardado) {

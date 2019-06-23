@@ -13,6 +13,21 @@ const { OAuth2Client } = require('google-auth-library');
 const GOOGLE_CLIENT_ID = require('../config/config').GOOGLE_CLIENT_ID;
 const GOOGLE_SECRET = require('../config/config').GOOGLE_SECRET;
 
+var mdAutentificacion = require('../middlewares/auth');
+
+/**
+ * RENOVAR TOKEN
+ */
+
+app.get('/renuevatoken', mdAutentificacion.verificaToken, function(req, res) {
+    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 });
+
+    res.status(200).json({
+        ok: true,
+        token: token
+    });
+});
+
 /**
  * LOGIN CON GOOGLE
  */
@@ -67,33 +82,39 @@ app.post('/google', function(req, res) {
                     });
                 }
             } else { // SI NO EXISTE USUARIO
-                var usuarioGoogle = new User();
 
-                usuarioGoogle.name = payload.name;
-                usuarioGoogle.email = payload.email;
-                usuarioGoogle.password = ':O';
-                usuarioGoogle.img = payload.img;
-                usuarioGoogle.role = 'USER_ROLE';
-                usuarioGoogle.google = true;
-
-                usuarioGoogle.save(function(err, usuarioDB) {
-                    if (err) {
-                        return res.status(500).json({
-                            ok: false,
-                            mensaje: 'Error al crear usuario con Google',
-                            errors: err
-                        });
-                    }
-
-                    var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 });
-
-                    res.status(200).json({
-                        ok: true,
-                        usuario: usuarioDB,
-                        token: token,
-                        id: usuarioDB._id
-                    });
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Debe usar su autenticación normal',
+                    errors: err
                 });
+                // var usuarioGoogle = new User();
+
+                // usuarioGoogle.name = payload.name;
+                // usuarioGoogle.email = payload.email;
+                // usuarioGoogle.password = ':O';
+                // usuarioGoogle.img = payload.img;
+                // usuarioGoogle.role = 'USER_ROLE';
+                // usuarioGoogle.google = true;
+
+                // usuarioGoogle.save(function(err, usuarioDB) {
+                //     if (err) {
+                //         return res.status(500).json({
+                //             ok: false,
+                //             mensaje: 'Error al crear usuario con Google',
+                //             errors: err
+                //         });
+                //     }
+
+                //     var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14400 });
+
+                //     res.status(200).json({
+                //         ok: true,
+                //         usuario: usuarioDB,
+                //         token: token,
+                //         id: usuarioDB._id
+                //     });
+                // });
 
             }
 

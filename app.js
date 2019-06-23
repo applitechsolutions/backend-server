@@ -43,7 +43,7 @@ var mechRoutes = require('./routes/mechanic');
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
 
-mongoose.connection.openUri('mongodb://edcf5cdf-0ee0-4-231-b9ee:wtY15ZlNRiRXmUzXRFEjZqAab1RLHQV8pHnK8I6rgwNuJQWNL39mxAK4lc0kIxwvHBNTa1f6h9DO1CjqK7gelw==@edcf5cdf-0ee0-4-231-b9ee.documents.azure.com:10255/?ssl=true&replicaSet=globaldb', { useNewUrlParser: true }, function(error, res) {
+mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');

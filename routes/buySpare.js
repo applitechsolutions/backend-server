@@ -14,6 +14,7 @@ app.get('/', function(req, res) {
 
     BuySpare.find({ state: false }, '_provider date noBill serie noDoc details total')
         .populate('_provider', 'name')
+        .populate('details._part')
         .sort({ date: 'desc' })
         .exec(
             function(err, buySpares) {

@@ -122,7 +122,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
                         var newStock = cellar.storage[0].stock + e.quantity;
 
-                        AutoCellar.update({ 'storage._autopart': e._part }, { 'storage.$.stock': newStock }, function(err, storageAct) {
+                        AutoCellar.updateOne({ 'storage._autopart': e._part }, { 'storage.$.stock': newStock }, function(err, storageAct) {
                             if (err) {
                                 res.status(400).json({
                                     ok: false,

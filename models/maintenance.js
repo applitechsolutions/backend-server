@@ -14,7 +14,12 @@ var maintenanceSchema = new Schema({
     noBill: { type: String },
     serie: { type: String },
     noDoc: { type: String },
-    details: [{
+    detailsV: [{
+        _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
+        quantity: { type: Number },
+        cost: { type: Float }
+    }],
+    detailsG: [{
         _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Number },
         cost: { type: Float }

@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 var pitSchema = new Schema({
 
-    _vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
+    vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
     rim: { type: Schema.Types.ObjectId, ref: 'Rim', required: false },
     km: { type: Float, default: 0.00 },
     counter: { type: Float, default: 0.00 },

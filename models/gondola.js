@@ -6,7 +6,6 @@ var Schema = mongoose.Schema;
 var gondolaSchema = new Schema({
     plate: { type: String, required: [true, 'La placa es necesaria'] },
     _truck: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
-    mts: { type: Float, default: 0 },
     basics: [{
         code: String,
         name: String,

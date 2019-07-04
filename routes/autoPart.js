@@ -116,8 +116,7 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 
                                 res.status(200).json({
                                     ok: true,
-                                    repuesto: repuestoBorrado,
-                                    body: body.storage
+                                    repuesto: repuestoBorrado
                                 });
                             })
                             .catch(function(err) {

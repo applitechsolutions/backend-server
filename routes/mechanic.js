@@ -34,6 +34,76 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * BUSCAR MECANICO
+ */
+
+app.get('/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+
+    Mech.findById(id, function(err, mechDB) {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar mecanico',
+                errors: err
+            });
+        }
+
+        if (!mechDB) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El mecanico con el id' + id + ' no existe',
+                errors: { message: 'No existe un mecanico con ese ID' }
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            mecanico: mechDB
+        });
+
+    });
+
+});
+
+/**
+ * ELIMINAR MECANICOS
+ */
+
+app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Mech.findByIdAndUpdate(id, { $set: { state: body.state } }, { new: true })
+        .then(function(mechBorrado) {
+            if (!mechBorrado) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El mecanico con el id' + id + ' no existe',
+                    errors: { message: 'No existe un mecanico con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                mecanico: mechBorrado
+            });
+
+        })
+        .catch(function(err) {
+            res.status(400).json({
+                ok: false,
+                mensaje: 'Error al borrar mecanico',
+                errors: err
+            });
+        });
+
+});
+
+/**
  * ACTUALIZAR MECANICOS
  */
 

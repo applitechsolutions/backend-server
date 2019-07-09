@@ -1,9 +1,11 @@
+var mongoose = require('mongoose');
 var express = require('express');
 var mdAuth = require('../middlewares/auth');
 
 var app = express();
 
 var Vehicle = require('../models/vehicle');
+var ObjectId = mongoose.Types.ObjectId;
 
 /**
  * LISTAR VEHICULOS
@@ -11,7 +13,7 @@ var Vehicle = require('../models/vehicle');
 
 app.get('/', function(req, res) {
 
-    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits')
+    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits gasoline')
         .populate('_make', 'name')
         .populate('pits.rim')
         .sort({ plate: 'asc' })
@@ -31,6 +33,59 @@ app.get('/', function(req, res) {
                     vehiculos: vehicles
                 });
             });
+});
+
+/**
+ * LISTAR CUPONES DE GASOLINA
+ */
+
+app.get('/gasolines', function(req, res) {
+
+    console.log(req.query);
+
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+    var id = req.query.id;
+
+    console.log(startDate);
+
+    Vehicle.aggregate([{
+        $match: { _id: ObjectId(id) }
+    }, {
+        $match: {
+            "gasoline.date": {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }
+    }, {
+        $unwind: "$gasoline"
+    }, {
+        $match: {
+            "gasoline.date": {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }
+    }, {
+        $project: {
+            codigo: '$gasoline.code',
+            date: '$gasoline.date'
+        }
+    }], function(err, gasolines) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error listando historial de cupones',
+                errors: err
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            gasoline: gasolines
+        });
+    });
 });
 
 /**
@@ -106,6 +161,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         vehiculo.mts = body.mts;
         vehiculo.basics = body.basics;
         vehiculo.pits = body.pits;
+        vehiculo.gasoline = body.gasoline;
 
         vehiculo.save(function(err, vehiculoAct) {
             if (err) {

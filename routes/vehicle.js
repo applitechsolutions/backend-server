@@ -69,8 +69,10 @@ app.get('/gasolines', function(req, res) {
         }
     }, {
         $project: {
-            codigo: '$gasoline.code',
-            date: '$gasoline.date'
+            code: '$gasoline.code',
+            date: '$gasoline.date',
+            gallons: '$gasoline.gallons',
+            total: '$gasoline.total'
         }
     }], function(err, gasolines) {
         if (err) {
@@ -228,6 +230,63 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
                 ok: true,
                 vehiculo: vehiculoBorrado
             });
+        });
+
+    });
+});
+
+/**
+ * INSERTAR GASOLINE
+ */
+
+app.post('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Vehicle.findById(id, function(err, vehiculo) {
+
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar vehículo',
+                errors: err
+            });
+        }
+
+        if (!vehiculo) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El vehículo con el id' + id + ' no existe',
+                errors: { message: 'No existe un vehículo con ese ID' }
+            });
+        }
+
+        var gasoline = {
+            code: body.code,
+            date: body.date,
+            gallons: body.gallons,
+            total: body.total
+        };
+
+        vehiculo.gasoline.push(gasoline);
+
+        vehiculo.save(function(err, vehiculoAct) {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar vehículo',
+                    errors: err
+                });
+            }
+
+            vehiculoAct
+                .populate('pits.rim', function(err, vehiculoP) {
+                    res.status(200).json({
+                        ok: true,
+                        vehiculo: vehiculoP
+                    });
+                });
         });
 
     });

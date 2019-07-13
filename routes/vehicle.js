@@ -13,7 +13,7 @@ var ObjectId = mongoose.Types.ObjectId;
 
 app.get('/', function(req, res) {
 
-    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits gasoline')
+    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits')
         .populate('_make', 'name')
         .populate('pits.rim')
         .sort({ plate: 'asc' })
@@ -280,13 +280,16 @@ app.post('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            vehiculoAct
-                .populate('pits.rim', function(err, vehiculoP) {
-                    res.status(200).json({
-                        ok: true,
-                        vehiculo: vehiculoP
-                    });
-                });
+            Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
+                .populate('pits.rim')
+                .exec(
+                    function(err, vehiculoG) {
+                        res.status(200).json({
+                            ok: true,
+                            vehiculo: vehiculoG
+                        });
+                    }
+                );
         });
 
     });

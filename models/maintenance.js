@@ -24,7 +24,7 @@ var maintenanceSchema = new Schema({
         quantity: { type: Number },
         cost: { type: Float }
     }],
-    total: { type: Schema.Float, required: true },
+    total: { type: Float, required: true },
     state: { type: Boolean, default: false }
 });
 

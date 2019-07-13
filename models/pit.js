@@ -13,7 +13,7 @@ var pitSchema = new Schema({
     axis: { type: String, require: false },
     place: { type: String, require: false },
     side: { type: String, require: false },
-    date: { type: DateOnly, require: false },
+    date: { type: Date, require: false },
     total: { type: Float }
 
 });

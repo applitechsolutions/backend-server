@@ -36,10 +36,12 @@ var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
 var partRoutes = require('./routes/autoPart');
 var vehiclesRoutes = require('./routes/vehicle');
+var gondolaRoutes = require('./routes/gondola');
 var makeRoutes = require('./routes/make');
 var rimRoutes = require('./routes/rim');
 var mechRoutes = require('./routes/mechanic');
 var pitRoutes = require('./routes/pit');
+var maintRoutes = require('./routes/maintenance');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -61,10 +63,12 @@ app.use('/autoProveedor', autoProviderRoutes);
 app.use('/repuesto', partRoutes);
 app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);
+app.use('/gondola', gondolaRoutes);
 app.use('/marca', makeRoutes);
 app.use('/llanta', rimRoutes);
 app.use('/mecanico', mechRoutes);
 app.use('/pit', pitRoutes);
+app.use('/mantenimiento', maintRoutes);
 
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

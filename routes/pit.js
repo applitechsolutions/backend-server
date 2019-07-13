@@ -4,7 +4,6 @@ var mdAuth = require('../middlewares/auth');
 var app = express();
 
 var Pit = require('../models/pit');
-var Vehicle = require('../models/vehicle');
 
 /**
  * LISTAR HISTORIAL PITS

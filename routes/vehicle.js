@@ -137,7 +137,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar repuesto',
+                mensaje: 'Error al buscar vehiculo',
                 errors: err
             });
         }
@@ -172,14 +172,16 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            vehiculoAct
-                .populate('pits.rim', function(err, vehiculoP) {
-                    res.status(200).json({
-                        ok: true,
-                        vehiculo: vehiculoP
-                    });
-                });
-
+            Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
+                .populate('pits.rim')
+                .exec(
+                    function(err, vehiculoG) {
+                        res.status(200).json({
+                            ok: true,
+                            vehiculo: vehiculoG
+                        });
+                    }
+                );
         });
 
     });

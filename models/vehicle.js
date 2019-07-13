@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Float = require('mongoose-float').loadType(mongoose, 2);
+var DateOnly = require('mongoose-dateonly');
 var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
@@ -36,7 +37,7 @@ var vehicleSchema = new Schema({
     }],
     gasoline: [{
         code: { type: String, required: false },
-        date: { type: Date, required: true },
+        date: { type: Date, require: false },
         gallons: { type: Number, required: true },
         total: { type: Float, required: true }
     }],

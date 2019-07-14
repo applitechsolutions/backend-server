@@ -12,7 +12,7 @@ var Gondola = require('../models/gondola');
 app.get('/', function(req, res) {
 
     Gondola.find({ state: false })
-        .populate('_vehicle', 'plate')
+        .populate('_truck', 'plate')
         .populate('pits.rim')
         .sort({ plate: 'asc' })
         .exec(
@@ -21,7 +21,7 @@ app.get('/', function(req, res) {
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error al buscar vehículo',
+                        mensaje: 'Error al buscar gondola',
                         errors: err
                     });
                 }
@@ -63,7 +63,7 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
         .catch(function(err) {
             res.status(400).json({
                 ok: false,
-                mensaje: 'Error al borrar mecanico',
+                mensaje: 'Error al borrar gondola',
                 errors: err
             });
         });
@@ -107,7 +107,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
                 .catch(function(err) {
                     res.status(400).json({
                         ok: false,
-                        mensaje: 'Error al actualizar vehículo',
+                        mensaje: 'Error al actualizar gondola',
                         errors: err
                     });
                 });
@@ -142,14 +142,14 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         .then(function(gondolaGuardada) {
             res.status(201).json({
                 ok: true,
-                vehiculo: gondolaGuardada,
+                gondola: gondolaGuardada,
                 usuarioToken: req.usuario
             });
         })
         .catch(function(err) {
             res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear vehiculo',
+                mensaje: 'Error al crear gondola',
                 errors: err
             });
         });

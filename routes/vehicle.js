@@ -13,7 +13,7 @@ var ObjectId = mongoose.Types.ObjectId;
 
 app.get('/', function(req, res) {
 
-    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits gasoline')
+    Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits')
         .populate('_make', 'name')
         .populate('_gondola', 'plate')
         .populate('pits.rim')
@@ -70,6 +70,7 @@ app.get('/gasolines', function(req, res) {
         }
     }, {
         $project: {
+            _id: '$gasoline._id',
             code: '$gasoline.code',
             date: '$gasoline.date',
             gallons: '$gasoline.gallons',
@@ -126,6 +127,45 @@ app.get('/:id', function(req, res) {
         });
 });
 
+/**
+ * ACTUALIZAR GASOLINE
+ */
+
+app.put('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Vehicle.findOneAndUpdate({ "_id": id, "gasoline._id": body._id }, {
+            "$set": {
+                "gasoline.$.code": body.code,
+                "gasoline.$.date": body.date,
+                "gasoline.$.gallons": body.gallons,
+                "gasoline.$.total": body.total
+            }
+        },
+        function(err, vehiculoAct) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar vehículo',
+                    errors: err
+                });
+            }
+            Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
+                .populate('pits.rim')
+                .exec(
+                    function(err, vehiculoG) {
+                        res.status(200).json({
+                            ok: true,
+                            vehiculo: vehiculoG
+                        });
+                    }
+                );
+        }
+    );
+});
+
 
 /**
  * ACTUALIZAR VEHICULOS
@@ -162,9 +202,12 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         vehiculo.model = body.model;
         vehiculo.km = body.km;
         vehiculo.mts = body.mts;
-        vehiculo.basics = body.basics;
-        vehiculo.pits = body.pits;
-        vehiculo.gasoline = body.gasoline;
+        if (body.basics.length > 0) {
+            vehiculo.basics = body.basics;
+        }
+        if (body.pits.length > 0) {
+            vehiculo.pits = body.pits;
+        }
 
         vehiculo.save(function(err, vehiculoAct) {
             if (err) {
@@ -188,6 +231,45 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         });
 
     });
+});
+
+/**
+ * BORRAR GASOLINE
+ */
+
+app.put('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Vehicle.findOneAndDelete({ "_id": id, "gasoline._id": body._id }, {
+            "$set": {
+                "gasoline.$.code": body.code,
+                "gasoline.$.date": body.date,
+                "gasoline.$.gallons": body.gallons,
+                "gasoline.$.total": body.total
+            }
+        },
+        function(err, vehiculoAct) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar vehículo',
+                    errors: err
+                });
+            }
+            Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
+                .populate('pits.rim')
+                .exec(
+                    function(err, vehiculoG) {
+                        res.status(200).json({
+                            ok: true,
+                            vehiculo: vehiculoG
+                        });
+                    }
+                );
+        }
+    );
 });
 
 /**
@@ -281,13 +363,16 @@ app.post('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            vehiculoAct
-                .populate('pits.rim', function(err, vehiculoP) {
-                    res.status(200).json({
-                        ok: true,
-                        vehiculo: vehiculoP
-                    });
-                });
+            Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
+                .populate('pits.rim')
+                .exec(
+                    function(err, vehiculoG) {
+                        res.status(200).json({
+                            ok: true,
+                            vehiculo: vehiculoG
+                        });
+                    }
+                );
         });
 
     });

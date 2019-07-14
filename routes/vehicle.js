@@ -57,7 +57,8 @@ app.get('/gasolines', function(req, res) {
             "gasoline.date": {
                 $gte: startDate,
                 $lte: endDate
-            }
+            },
+            "gasoline.state": false
         }
     }, {
         $unwind: "$gasoline"
@@ -66,7 +67,8 @@ app.get('/gasolines', function(req, res) {
             "gasoline.date": {
                 $gte: startDate,
                 $lte: endDate
-            }
+            },
+            "gasoline.state": false
         }
     }, {
         $project: {
@@ -237,17 +239,14 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
  * BORRAR GASOLINE
  */
 
-app.put('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
+app.put('/gasoline/delete/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;
 
-    Vehicle.findOneAndDelete({ "_id": id, "gasoline._id": body._id }, {
+    Vehicle.findOneAndUpdate({ "_id": id, "gasoline._id": body._id }, {
             "$set": {
-                "gasoline.$.code": body.code,
-                "gasoline.$.date": body.date,
-                "gasoline.$.gallons": body.gallons,
-                "gasoline.$.total": body.total
+                "gasoline.$.state": true
             }
         },
         function(err, vehiculoAct) {

@@ -39,7 +39,8 @@ var vehicleSchema = new Schema({
         code: { type: String, required: false },
         date: { type: Date, require: false },
         gallons: { type: Number, required: true },
-        total: { type: Float, required: true }
+        total: { type: Float, required: true },
+        state: { type: Boolean, required: true, default: false }
     }],
     state: { type: Boolean, required: true, default: false }
 });

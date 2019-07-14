@@ -15,6 +15,7 @@ app.get('/', function(req, res) {
 
     Vehicle.find({ state: false }, 'cp type plate no model km mts basics pits gasoline')
         .populate('_make', 'name')
+        .populate('_gondola', 'plate')
         .populate('pits.rim')
         .sort({ plate: 'asc' })
         .exec(

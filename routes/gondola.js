@@ -133,7 +133,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var gondola = new Gondola({
         plate: body.plate,
-        _truck: body._truck,
+        _truck: body._truck._id,
         basics: body.basics,
         pits: body.pits
     });

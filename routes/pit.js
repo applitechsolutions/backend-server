@@ -39,6 +39,34 @@ app.get('/:id', function(req, res) {
 
 });
 
+app.get('/gondola/:id', function(req, res) {
+
+    var id = req.params.id;
+
+    Pit.find({ gondola: id })
+        .populate('gondola', 'plate')
+        .populate('rim', 'code desc')
+        .sort({ date: 'desc' })
+        .exec(
+            function(err, pits) {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error listando repuestos',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    pits: pits
+                });
+
+            });
+});
+
+
 /**
  * CREAR HISTORIAL DE PITS
  */

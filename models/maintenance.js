@@ -11,9 +11,6 @@ var maintenanceSchema = new Schema({
     ],
     datestart: { type: Date, required: true },
     dateEnd: { type: Date, required: true },
-    noBill: { type: String },
-    serie: { type: String },
-    noDoc: { type: String },
     detailsV: [{
         _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Number },
@@ -24,7 +21,8 @@ var maintenanceSchema = new Schema({
         quantity: { type: Number },
         cost: { type: Float }
     }],
-    total: { type: Float, required: true },
+    totalV: { type: Float, required: true },
+    totalG: { type: Float, required: true },
     state: { type: Boolean, default: false }
 });
 

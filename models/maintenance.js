@@ -9,21 +9,21 @@ var maintenanceSchema = new Schema({
     _mech: [
         { type: Schema.Types.ObjectId, ref: 'Mech' }
     ],
-    datestart: { type: Date, required: true },
+    dateStart: { type: Date, required: true },
     dateEnd: { type: Date, required: true },
     detailsV: [{
-        _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
+        part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Number },
         cost: { type: Float }
     }],
     detailsG: [{
-        _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
+        part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Number },
         cost: { type: Float }
     }],
     totalV: { type: Float, required: true },
     totalG: { type: Float, required: true },
-    state: { type: Boolean, default: false }
+    state: { type: Number, default: 0 }
 });
 
 module.exports = mongoose.model('Maintenance', maintenanceSchema);

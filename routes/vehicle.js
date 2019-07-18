@@ -400,7 +400,8 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         no: body.no,
         model: body.model,
         km: body.km,
-        mts: body.mts
+        mts: body.mts,
+        _gondola: body._gondola
     });
 
     vehiculo.save(function(err, vehiculoGuardado) {

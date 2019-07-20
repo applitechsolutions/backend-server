@@ -230,11 +230,12 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;
+    console.log(id);
 
     Gondola.findById(id)
         .then(function(gondola) {
             if (!gondola) {
-                res.status(400).json({
+                return res.status(400).json({
                     ok: false,
                     mensaje: 'La gondola con el id' + id + ' no existe',
                     errors: { message: 'No existe una gondola con ese ID' }
@@ -242,7 +243,6 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
             }
 
             gondola.plate = body.plate;
-            gondola._truck = body._truck._id;
             gondola.basics = body.basics;
             gondola.pits = body.pits;
 

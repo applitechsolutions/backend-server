@@ -68,7 +68,7 @@ app.get('/gondola/:id', function(req, res) {
 
 
 /**
- * CREAR HISTORIAL DE PITS
+ * CREAR HISTORIAL DE PITS VEHICULOS
  */
 
 app.post('/', mdAuth.verificaToken, function(req, res) {
@@ -77,7 +77,8 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var pit = new Pit({
 
-        vehicle: body.vehicle,
+        vehicle: body.vehicle._id,
+        gondola: null,
         rim: body.rim,
         km: body.km,
         counter: body.counter,
@@ -95,6 +96,63 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
             pitGuardado
                 .populate('rim', 'code desc')
                 .populate('vehicle', 'type plate')
+                .execPopulate()
+                .then(function(pitP) {
+
+                    res.status(201).json({
+                        ok: true,
+                        pit: pitP,
+                        usuarioToken: req.usuario
+                    });
+
+                }).catch(function(err) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al crear historial del pit',
+                        errors: err
+                    });
+                });
+
+        })
+        .catch(function(err) {
+            res.status(400).json({
+                ok: false,
+                mensaje: 'Error al crear historial del pit',
+                errors: err
+            });
+        });
+
+});
+
+/**
+ * CREAR HISTORIAL DE PITS GONDOLAS
+ */
+
+app.post('/gondola', mdAuth.verificaToken, function(req, res) {
+
+    var body = req.body;
+
+    var pit = new Pit({
+
+        vehicle: null,
+        gondola: body.gondola._id,
+        rim: body.rim,
+        km: body.km,
+        counter: body.counter,
+        axis: body.axis,
+        place: body.place,
+        side: body.side,
+        date: body.date,
+        total: body.total
+
+    });
+
+    pit.save()
+        .then(function(pitGuardado) {
+
+            pitGuardado
+                .populate('rim', 'code desc')
+                .populate('gondola', 'plate')
                 .execPopulate()
                 .then(function(pitP) {
 

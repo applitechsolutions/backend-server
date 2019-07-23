@@ -4,6 +4,7 @@ var Float = require('mongoose-float').loadType(mongoose, 2);
 var Schema = mongoose.Schema;
 
 var maintenanceSchema = new Schema({
+    _user: { type: Schema.Types.ObjectId, ref: 'User' },
     _vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
     _gondola: { type: Schema.Types.ObjectId, ref: 'Gondola' },
     _mech: [
@@ -13,16 +14,17 @@ var maintenanceSchema = new Schema({
     dateEnd: { type: Date, required: true },
     detailsV: [{
         part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
-        quantity: { type: Number },
+        quantity: { type: Float },
         cost: { type: Float }
     }],
     detailsG: [{
         part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
-        quantity: { type: Number },
+        quantity: { type: Float },
         cost: { type: Float }
     }],
     totalV: { type: Float, required: true },
     totalG: { type: Float, required: true },
+    details: { type: String, requiere: false },
     state: { type: Number, default: 0 }
 });
 

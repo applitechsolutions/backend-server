@@ -11,7 +11,7 @@ var maintenanceSchema = new Schema({
         { type: Schema.Types.ObjectId, ref: 'Mech' }
     ],
     dateStart: { type: Date, required: true },
-    dateEnd: { type: Date, required: true },
+    dateEnd: { type: Date, required: false },
     detailsV: [{
         part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Float },

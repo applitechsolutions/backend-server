@@ -5,14 +5,13 @@ var app = express();
 
 var Maintenance = require('../models/maintenance');
 
-app.get('/activos', function(req, res) {
-
-    Maintenance.find({ state: 0 }, 'dateStart dateEnd totalV totalG')
-        .populate('_vehicle', 'plate')
-        .populate('_gondola', 'plate')
+app.get('/activeV/:id', function(req, res) {
+    var id = req.params.id;
+    Maintenance.find({ state: 0, _vehicle: id }, 'dateStart totalV totalG details')
+        .populate('_user', 'name lastName')
+        .populate('_mech', 'code name')
         .populate('detailsV.part', 'code desc')
         .populate('detailsG.part', 'code desc')
-        .sort({ plate: 'asc' })
         .exec(
             function(err, mants) {
 
@@ -20,6 +19,7 @@ app.get('/activos', function(req, res) {
                     return res.status(500).json({
                         ok: false,
                         mensaje: 'Error al listar mantenimientos activos',
+                        mantenimientos: null,
                         errors: err
                     });
                 }

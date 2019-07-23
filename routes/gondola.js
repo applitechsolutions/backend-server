@@ -136,7 +136,6 @@ app.put('/desasignar/:id', mdAuth.verificaToken, function(req, res) {
     var id = req.params.id;
     var body = req.body;
 
-    console.log(id);
 
     Gondola.findById(id)
         .then(function(gondola) {

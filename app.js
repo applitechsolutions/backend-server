@@ -42,6 +42,7 @@ var rimRoutes = require('./routes/rim');
 var mechRoutes = require('./routes/mechanic');
 var pitRoutes = require('./routes/pit');
 var maintRoutes = require('./routes/maintenance');
+var typeMaintenanceRoutes = require('./routes/typeMaintenance');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
@@ -69,6 +70,7 @@ app.use('/llanta', rimRoutes);
 app.use('/mecanico', mechRoutes);
 app.use('/pit', pitRoutes);
 app.use('/mantenimiento', maintRoutes);
+app.use('/tipoMantenimiento', typeMaintenanceRoutes);
 
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

@@ -58,11 +58,26 @@ mongoose.set('useCreateIndex', true);
 // USER: cosmosapplitech
 // PASS: Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==
 
-mongoose.connection.openUri('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true', { useNewUrlParser: true }, function(error, res) {
-    if (error) throw error;
+// mongoose.connection.openUri('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true', { useNewUrlParser: true }, function(error, res) {
+//     if (error) throw error;
 
-    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-});
+//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+// });
+
+mongoose.connect('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true&replicaSet=globaldb'); //Creates a new DB, if it doesn't already exist
+
+mongoose.connect('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255?ssl=true&replicaSet=globaldb', {
+        auth: {
+            user: 'cosmosapplitech',
+            password: 'Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ=='
+        }
+    })
+    .then(function() {
+        console.log('Connection to CosmosDB successful');
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
 
 // Transportes
 app.use('/userArea', userAreaRoutes);

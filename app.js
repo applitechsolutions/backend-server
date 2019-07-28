@@ -44,11 +44,21 @@ var rimRoutes = require('./routes/rim');
 var mechRoutes = require('./routes/mechanic');
 var pitRoutes = require('./routes/pit');
 var maintRoutes = require('./routes/maintenance');
+var typeMaintenanceRoutes = require('./routes/typeMaintenance');
 
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
 
-mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+// mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+//     if (error) throw error;
+
+//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+// });
+
+// USER: cosmosapplitech
+// PASS: Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==
+
+mongoose.connection.openUri('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true', { useNewUrlParser: true }, function(error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
@@ -73,6 +83,7 @@ app.use('/llanta', rimRoutes);
 app.use('/mecanico', mechRoutes);
 app.use('/pit', pitRoutes);
 app.use('/mantenimiento', maintRoutes);
+app.use('/tipoMantenimiento', typeMaintenanceRoutes);
 
 app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);

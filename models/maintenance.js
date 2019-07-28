@@ -24,7 +24,8 @@ var maintenanceSchema = new Schema({
     }],
     totalV: { type: Float, required: true },
     totalG: { type: Float, required: true },
-    details: { type: String, requiere: false },
+    detailsRev: { type: String, requiere: false },
+    detailsRep: { type: String, requiere: false },
     state: { type: Number, default: 0 }
 });
 

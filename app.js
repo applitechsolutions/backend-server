@@ -53,6 +53,9 @@ mongoose.set('useCreateIndex', true);
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
+// USER: cosmosapplitech
+// PASS: Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==
+
 mongoose.connection.openUri('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true', { useNewUrlParser: true }, function(error, res) {
     if (error) throw error;
 

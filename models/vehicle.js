@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 var Float = require('mongoose-float').loadType(mongoose, 2);
-var DateOnly = require('mongoose-dateonly');
-var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 

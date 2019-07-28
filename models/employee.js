@@ -1,17 +1,24 @@
 var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
 var Float = require('mongoose-float').loadType(mongoose, 2);
+var jobsValidos = {
+    values: ['ADMINISTRADOR', 'PLANILLA', 'CD'],
+    message: '{VALUE} no es un rol permitido'
+};
 
 var Schema = mongoose.Schema;
 
 var employeeSchema = new Schema({
-    _job: { type: Schema.Types.ObjectId, ref: 'Job', required: [true, 'El tipo de trabajador es necesario'] },
+    job: { type: String, required: [true, 'El trabajo es necesario'], enum: jobsValidos },
     entry: { type: Number, unique: true, required: [true, 'El número de entrada es necesario'] },
     account: { type: String },
     name: { type: String },
-    dateStart: { type: Date },
+    datestart: { type: Date },
     pay: { type: Float, required: [true, 'El salario es necesario'] },
-    dpi: { type: String }
+    dpi: { type: String },
+    address: { type: String },
+    mobile: { type: String },
+    igss: { type: String },
+    state: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Employee', employeeSchema);

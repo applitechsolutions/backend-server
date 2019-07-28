@@ -31,6 +31,8 @@ var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
 var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
+// VIAJES
+var employeeRoutes = require('./routes/employee');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -57,6 +59,8 @@ app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
+// VIAJES
+app.use('/empleado', employeeRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

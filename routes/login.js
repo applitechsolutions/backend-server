@@ -6,6 +6,7 @@ var SEED = require('../config/config').SEED;
 
 var app = express();
 var User = require('../models/user');
+var UserArea = require('../models/userArea');
 
 // GOOGLE
 const { OAuth2Client } = require('google-auth-library');
@@ -74,11 +75,37 @@ app.post('/google', function(req, res) {
 
                     var token = jwt.sign({ usuario: usuario }, SEED, { expiresIn: 14400 });
 
+                    var menuTaller = [];
+                    var menuTransporte = [];
+                    var menuDistribucion = [];
+                    var menuContabilidad = [];
+                    areas.forEach(function(area) {
+                        switch (area._area.name) {
+                            case 'TALLER':
+                                menuTaller = obtenerMenu(usuario.role, 'TALLER');
+                                break;
+                            case 'TRANSPORTE':
+                                menuTransporte = obtenerMenu(usuario.role, 'TRANSPORTE');
+                                break;
+                            case 'DISTRIBUCIÓN':
+                                menuDistribucion = obtenerMenu(usuario.role, 'DISTRIBUCIÓN');
+                                break;
+                            case 'CONTABILIDAD':
+                                menuContabilidad = obtenerMenu(usuario.role, 'CONTABILIDAD');
+                                break;
+                            default:
+                                break;
+                        }
+                    });
                     res.status(200).json({
                         ok: true,
                         usuario: usuario,
                         token: token,
-                        id: usuario._id
+                        id: usuario._id,
+                        menuTaller: menuTaller,
+                        menuTransporte: menuTransporte,
+                        menuDistribucion: menuDistribucion,
+                        menuContabilidad: menuContabilidad
                     });
                 }
             } else { // SI NO EXISTE USUARIO
@@ -164,16 +191,150 @@ app.post('/', function(req, res) {
         usuarioBD.password = ':O';
         var token = jwt.sign({ usuario: usuarioBD }, SEED, { expiresIn: 14400 });
 
-        res.status(200).json({
-            ok: true,
-            usuario: usuarioBD,
-            token: token,
-            id: usuarioBD._id
-        });
+        UserArea.find({ _user: usuarioBD._id }, '')
+            .populate('_area', 'name')
+            .exec(
+                function(err, areas) {
+
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error listando áreas de usuario',
+                            errors: err
+                        });
+                    }
+                    var menuTaller = [];
+                    var menuTransporte = [];
+                    var menuDistribucion = [];
+                    var menuContabilidad = [];
+                    areas.forEach(function(area) {
+                        switch (area._area.name) {
+                            case 'TALLER':
+                                menuTaller = obtenerMenu(usuarioBD.role, 'TALLER');
+                                break;
+                            case 'TRANSPORTE':
+                                menuTransporte = obtenerMenu(usuarioBD.role, 'TRANSPORTE');
+                                break;
+                            case 'DISTRIBUCIÓN':
+                                menuDistribucion = obtenerMenu(usuarioBD.role, 'DISTRIBUCIÓN');
+                                break;
+                            case 'CONTABILIDAD':
+                                menuContabilidad = obtenerMenu(usuarioBD.role, 'CONTABILIDAD');
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                    res.status(200).json({
+                        ok: true,
+                        usuario: usuarioBD,
+                        token: token,
+                        id: usuarioBD._id,
+                        menuTaller: menuTaller,
+                        menuTransporte: menuTransporte,
+                        menuDistribucion: menuDistribucion,
+                        menuContabilidad: menuContabilidad
+                    });
+                });
 
     });
 
 });
+
+function obtenerMenu(ROLE, AREA) {
+
+    var menu = [];
+    switch (AREA) {
+        case 'TALLER':
+            if (ROLE === 'ADMIN_ROLE') {
+                menu = [{
+                        titulo: 'Vehículos',
+                        icono: 'menu-icon fas fa-truck',
+                        submenu: [
+                            { titulo: 'Listar Vehículos', url: '/vehicles' },
+                            { titulo: 'Crear Vehículo', url: '/vehicle/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Mantenimientos',
+                        icono: 'menu-icon fas fa-tools',
+                        submenu: [
+                            { titulo: 'Listar Mantenimientos', url: '/maintenances' },
+                            { titulo: 'Crear Mantenimiento', url: '/maintenance/new' },
+                            { titulo: 'Tipos', url: '/typeMaintenances' }
+                        ]
+                    },
+                    {
+                        titulo: 'Repuestos',
+                        icono: 'menu-icon fas fa-cogs',
+                        submenu: [
+                            { titulo: 'Inventario', url: '/parts' },
+                            { titulo: 'Crear Repuesto', url: '/part/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Compras',
+                        icono: 'menu-icon fas fa-shopping-cart',
+                        submenu: [
+                            { titulo: 'Nueva Compra', url: '/buySpare/new' },
+                            { titulo: 'Historial de Compras', url: '/buySpares' }
+                        ]
+                    },
+                    {
+                        titulo: 'Proveedores',
+                        icono: 'menu-icon fas fa-industry',
+                        submenu: [
+                            { titulo: 'Listar Proveedores', url: '/autoProviders' },
+                            { titulo: 'Crear Proveedor', url: '/autoProvider/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Mecánicos',
+                        icono: 'menu-icon fas fa-user-cog',
+                        submenu: [
+                            { titulo: 'Listado Mecánicos', url: '/mechs' },
+                            { titulo: 'Crear Mecánico', url: '/mech/new' }
+                        ]
+                    }
+                ];
+            } else if (ROLE === 'USER_ROLE') {
+                menu = [{
+                    titulo: 'Mantenimientos',
+                    icono: 'menu-icon fas fa-tools',
+                    submenu: [
+                        { titulo: 'Listar Mantenimientos', url: '/maintenances' },
+                        { titulo: 'Crear Mantenimiento', url: '/maintenance/new' }
+                    ]
+                }];
+            }
+            break;
+        case 'TRANSPORTE':
+            if (ROLE === 'ADMIN_ROLE') {
+
+            } else if (ROLE === 'USER_ROLE') {
+
+            }
+            break;
+        case 'DISTRIBUCIÓN':
+            if (ROLE === 'ADMIN_ROLE') {
+
+            } else if (ROLE === 'USER_ROLE') {
+
+            }
+            break;
+        case 'CONTABILIDAD':
+            if (ROLE === 'ADMIN_ROLE') {
+
+            } else if (ROLE === 'USER_ROLE') {
+
+            }
+            break;
+        default:
+            break;
+    }
+
+    return menu;
+}
 
 
 module.exports = app;

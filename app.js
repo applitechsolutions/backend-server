@@ -57,9 +57,9 @@ mongoose.Promise = global.Promise;
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
-mongoose.connect(process.env.COSMOSDB_CONNSTR + "?ssl=true&replicaSet=globaldb", {
+mongoose.connect(process.env.COSMOS_CONNSTR + "?ssl=true&replicaSet=globaldb", {
         auth: {
-            user: process.env.COSMODDB_USER,
+            user: process.env.COSMOSDB_USER,
             password: process.env.COSMOSDB_PASSWORD
         }
     })

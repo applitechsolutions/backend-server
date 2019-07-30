@@ -57,11 +57,14 @@ mongoose.Promise = global.Promise;
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
-mongoose.connection.openUri('mongodb+srv://dbAdmin:28XHC5QT@xelatrucks-nmtsy.azure.mongodb.net/trucksDB?retryWrites=true&w=majority', { useNewUrlParser: true }, function(error, res) {
-    if (error) throw error;
+const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
+    .then(() => console.log('Connection to CosmosDB successful'))
+    .catch((err) => console.error(err));
 
-    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-});
+// mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true }, function(error, res) {
+
+//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+// });
 
 // mongoose.connect(process.env.COSMOS_CONNSTR + "?ssl=true&replicaSet=globaldb", {
 //         auth: {
@@ -100,6 +103,7 @@ app.use('/', appRoutes);
 
 
 // Escuchar Peticiones
-app.listen(3000, function() {
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
     console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });

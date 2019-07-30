@@ -64,6 +64,99 @@ app.get('/:id', mdAuth.verificaToken, function(req, res) {
 });
 
 /**
+ * BORRAR EMPLEADOS
+ */
+
+app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Employee.findByIdAndUpdate(id, { $set: { state: body.state } }, { new: true })
+        .then(function(empDEL) {
+            if (!empDEL) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El empleado con el id' + id + ' no existe',
+                    errors: { message: 'No existe un empleado con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                empleado: empDEL
+            });
+        })
+        .catch(function(err) {
+            res.status(400).json({
+                ok: false,
+                mensaje: 'Error al borrar empleado',
+                errors: err
+            });
+        });
+
+});
+
+/**
+ * ACTUALIZAR EMPLEADOS
+ */
+
+app.put('/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Employee.findById(id)
+        .then(function(empDB) {
+
+            if (!empDB) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El empleado con el id' + id + ' no existe',
+                    errors: { message: 'No existe un empleado con ese ID' }
+                });
+            }
+
+            empDB.job = body.job;
+            empDB.entry = body.entry;
+            empDB.account = body.account;
+            empDB.name = body.name;
+            empDB.datestart = body.datestart;
+            empDB.pay = body.pay;
+            empDB.dpi = body.dpi;
+            empDB.address = body.address;
+            empDB.mobile = body.mobile;
+            empDB.igss = body.igss;
+
+            empDB.save()
+                .then(function(empAct) {
+                    res.status(200).json({
+                        ok: true,
+                        empleado: empAct
+                    });
+                })
+                .catch(function(err) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar empleado',
+                        errors: err
+                    });
+                });
+
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar empleado',
+                errors: err
+            });
+
+            console.log(err);
+        });
+
+});
+
+/**
  * CREAR EMPLEADOS
  */
 

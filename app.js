@@ -1,6 +1,7 @@
 // REQUIRES 
 var express = require('express');
 var mongoose = require('mongoose');
+var env = require('dotenv');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 
@@ -49,14 +50,23 @@ var typeMaintenanceRoutes = require('./routes/typeMaintenance');
 // Conexion a la DB
 mongoose.set('useCreateIndex', true);
 
-// mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
-//     if (error) throw error;
+mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+    if (error) throw error;
 
-//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-// });
+    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+});
 
 // USER: cosmosapplitech
 // PASS: Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==
+
+// mongoose.connect(process.env.COSMOSDB_CONNSTR + "?ssl=true&replicaSet=globaldb", {
+//         auth: {
+//             user: process.env.COSMODDB_USER,
+//             password: process.env.COSMOSDB_PASSWORD
+//         }
+//     })
+//     .then(() => console.log('Connection to CosmosDB successful'))
+//     .catch((err) => console.error(err));
 
 // mongoose.connection.openUri('mongodb://cosmosapplitech:Dkc2ADexLHANj3M0mvFBInQv24pvhioHDlCoVz9fa2rV50oH5546IYJ9MgDwWPnlIVOuLtCYQc5D6j2xYYneSQ==@cosmosapplitech.documents.azure.com:10255/trucksDB?ssl=true', { useNewUrlParser: true }, function(error, res) {
 //     if (error) throw error;
@@ -64,20 +74,16 @@ mongoose.set('useCreateIndex', true);
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
-mongoose.connect(process.env.COSMOSDB_CONNSTR + process.env.COSMOSDB_DBNAME + "?ssl=true&replicaSet=globaldb"); //Creates a new DB, if it doesn't already exist
+// mongoose.connect(process.env.COSMOSDB_CONNSTR + process.env.COSMOSDB_DBNAME + "?ssl=true&replicaSet=globaldb"); //Creates a new DB, if it doesn't already exist
 
-mongoose.connect(process.env.COSMOSDB_CONNSTR + "?ssl=true&replicaSet=globaldb", {
-        auth: {
-            user: process.env.COSMODDB_USER,
-            password: process.env.COSMOSDB_PASSWORD
-        }
-    })
-    .then(function() {
-        console.log('Connection to CosmosDB successful');
-    })
-    .catch(function(err) {
-        console.error(err);
-    });
+// mongoose.connect(process.env.COSMOSDB_CONNSTR + "?ssl=true&replicaSet=globaldb", {
+//         auth: {
+//             user: process.env.COSMODDB_USER,
+//             password: process.env.COSMOSDB_PASSWORD
+//         }
+//     })
+//     .then(() => console.log('connection successful'))
+//     .catch((err) => console.error('\x1b[32m%s\x1b[0m', err));
 
 // Transportes
 app.use('/userArea', userAreaRoutes);

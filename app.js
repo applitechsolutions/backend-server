@@ -57,7 +57,7 @@ mongoose.Promise = global.Promise;
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
-mongoose.connection.openUri(process.env.COSMOS_CONNSTR, { useNewUrlParser: true }, function(error, res) {
+mongoose.connection.openUri('mongodb+srv://dbAdmin:28XHC5QT@xelatrucks-nmtsy.azure.mongodb.net/trucksDB?retryWrites=true&w=majority', { useNewUrlParser: true }, function(error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');

@@ -51,27 +51,13 @@ var typeMaintenanceRoutes = require('./routes/typeMaintenance');
 mongoose.set('useCreateIndex', true);
 mongoose.Promise = global.Promise;
 
-// mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
-//     if (error) throw error;
+mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+    if (error) throw error;
 
-//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-// });
+    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+});
 
-const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
-    .then(() => console.log('Connection to CosmosDB successful'))
-    .catch((err) => console.error(err));
-
-// mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true }, function(error, res) {
-
-//     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-// });
-
-// mongoose.connect(process.env.COSMOS_CONNSTR + "?ssl=true&replicaSet=globaldb", {
-//         auth: {
-//             user: process.env.COSMOSDB_USER,
-//             password: process.env.COSMOSDB_PASSWORD
-//         }
-//     })
+// const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
 //     .then(() => console.log('Connection to CosmosDB successful'))
 //     .catch((err) => console.error(err));
 

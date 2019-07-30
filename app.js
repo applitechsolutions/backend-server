@@ -57,14 +57,20 @@ mongoose.Promise = global.Promise;
 //     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 // });
 
-mongoose.connect(process.env.COSMOS_CONNSTR + "?ssl=true&replicaSet=globaldb", {
-        auth: {
-            user: process.env.COSMOSDB_USER,
-            password: process.env.COSMOSDB_PASSWORD
-        }
-    })
-    .then(() => console.log('Connection to CosmosDB successful'))
-    .catch((err) => console.error(err));
+mongoose.connection.openUri(process.env.COSMOS_CONNSTR, { useNewUrlParser: true }, function(error, res) {
+    if (error) throw error;
+
+    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+});
+
+// mongoose.connect(process.env.COSMOS_CONNSTR + "?ssl=true&replicaSet=globaldb", {
+//         auth: {
+//             user: process.env.COSMOSDB_USER,
+//             password: process.env.COSMOSDB_PASSWORD
+//         }
+//     })
+//     .then(() => console.log('Connection to CosmosDB successful'))
+//     .catch((err) => console.error(err));
 
 // Transportes
 app.use('/userArea', userAreaRoutes);

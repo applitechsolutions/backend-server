@@ -79,6 +79,7 @@ app.post('/google', function(req, res) {
                     var menuTransporte = [];
                     var menuDistribucion = [];
                     var menuContabilidad = [];
+                    var menuAdmin = [];
                     areas.forEach(function(area) {
                         switch (area._area.name) {
                             case 'TALLER':
@@ -93,6 +94,9 @@ app.post('/google', function(req, res) {
                             case 'CONTABILIDAD':
                                 menuContabilidad = obtenerMenu(usuario.role, 'CONTABILIDAD');
                                 break;
+                            case 'ADMINISTRACIÓN':
+                                menuAdmin = obtenerMenu(usuario.role, 'ADMINISTRACIÓN');
+                                break;
                             default:
                                 break;
                         }
@@ -105,7 +109,8 @@ app.post('/google', function(req, res) {
                         menuTaller: menuTaller,
                         menuTransporte: menuTransporte,
                         menuDistribucion: menuDistribucion,
-                        menuContabilidad: menuContabilidad
+                        menuContabilidad: menuContabilidad,
+                        menuAdmin: menuAdmin
                     });
                 }
             } else { // SI NO EXISTE USUARIO
@@ -207,6 +212,7 @@ app.post('/', function(req, res) {
                     var menuTransporte = [];
                     var menuDistribucion = [];
                     var menuContabilidad = [];
+                    var menuAdmin = [];
                     areas.forEach(function(area) {
                         switch (area._area.name) {
                             case 'TALLER':
@@ -221,6 +227,9 @@ app.post('/', function(req, res) {
                             case 'CONTABILIDAD':
                                 menuContabilidad = obtenerMenu(usuarioBD.role, 'CONTABILIDAD');
                                 break;
+                            case 'ADMINISTRACIÓN':
+                                menuAdmin = obtenerMenu(usuarioBD.role, 'ADMINISTRACIÓN');
+                                break;
                             default:
                                 break;
                         }
@@ -233,7 +242,8 @@ app.post('/', function(req, res) {
                         menuTaller: menuTaller,
                         menuTransporte: menuTransporte,
                         menuDistribucion: menuDistribucion,
-                        menuContabilidad: menuContabilidad
+                        menuContabilidad: menuContabilidad,
+                        menuAdmin: menuAdmin
                     });
                 });
 
@@ -245,6 +255,20 @@ function obtenerMenu(ROLE, AREA) {
 
     var menu = [];
     switch (AREA) {
+        case 'ADMINISTRACIÓN':
+            if (ROLE === 'ADMIN_ROLE') {
+                menu = [{
+                    titulo: 'Usuarios',
+                    icono: 'menu-icon oi oi-person',
+                    submenu: [
+                        { titulo: 'Listar Usuarios', url: '/usuarios' },
+                        { titulo: 'Crear Nuevo', url: '/usuario/new' }
+                    ]
+                }];
+            } else if (ROLE === 'USER_ROLE') {
+
+            }
+            break;
         case 'TALLER':
             if (ROLE === 'ADMIN_ROLE') {
                 menu = [{
@@ -310,7 +334,30 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'TRANSPORTE':
             if (ROLE === 'ADMIN_ROLE') {
-
+                menu = [{
+                        titulo: 'Empleados',
+                        icono: 'menu-icon fas fa-user-tie',
+                        submenu: [
+                            { titulo: 'Listar Empleados', url: '/employees' },
+                            { titulo: 'Crear Empleado', url: '/employee/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Pedidos',
+                        icono: 'menu-icon fas fa-file-invoice',
+                        submenu: [
+                            { titulo: 'Listar Pedidos', url: '/orders' },
+                            { titulo: 'Crear Pedido', url: '/order/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Reporte Cuadros',
+                        icono: 'menu-icon fas fa-file-invoice',
+                        submenu: [
+                            { titulo: 'Listar Reportes', url: '/gtrips' }
+                        ]
+                    }
+                ];
             } else if (ROLE === 'USER_ROLE') {
 
             }

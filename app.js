@@ -34,6 +34,7 @@ var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
+var tripRoutes = require('./routes/trip');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -57,9 +58,9 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlPar
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });
 
-const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
-    .then(() => console.log('Connection to CosmosDB successful'))
-    .catch((err) => console.error(err));
+// const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
+//     .then(() => console.log('Connection to CosmosDB successful'))
+//     .catch((err) => console.error(err));
 
 // mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true }, function(error, res) {
 
@@ -82,6 +83,7 @@ app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
+app.use('/tviajes', tripRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

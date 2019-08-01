@@ -153,6 +153,99 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
 });
 
 /**
+ * ACTUALIZAR REPUESTOS SUMAR STOCK
+ */
+
+app.put('/purchase/', mdAuth.verificaToken, function(req, res) {
+
+    var body = req.body;
+
+    AutoCellar.findOne({ 'storage._autopart': body._part }, { 'storage.$': 1 })
+        .exec(function(err, cellar) {
+            if (err) {
+                res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar repuesto',
+                    errors: err
+                });
+            }
+
+            if (!cellar) {
+                res.status(400).json({
+                    ok: false,
+                    mensaje: 'El cellar no existe',
+                    errors: { message: 'No existe un cellar con ese ID' }
+                });
+            }
+
+            var newStock = cellar.storage[0].stock + body.quantity;
+
+            AutoCellar.updateOne({ 'storage._autopart': body._part }, { 'storage.$.stock': newStock }, function(err, storageAct) {
+                if (err) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar existencia',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    mensaje: 'Storage actualizado',
+                    storage: storageAct
+                });
+            });
+        });
+});
+
+
+/**
+ * ACTUALIZAR REPUESTOS RESTAR STOCK
+ */
+
+app.put('/sale/', mdAuth.verificaToken, function(req, res) {
+
+    var body = req.body;
+
+    AutoCellar.findOne({ 'storage._autopart': body._part }, { 'storage.$': 1 })
+        .exec(function(err, cellar) {
+            if (err) {
+                res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar repuesto',
+                    errors: err
+                });
+            }
+
+            if (!cellar) {
+                res.status(400).json({
+                    ok: false,
+                    mensaje: 'El cellar no existe',
+                    errors: { message: 'No existe un cellar con ese ID' }
+                });
+            }
+
+            var newStock = cellar.storage[0].stock - body.quantity;
+
+            AutoCellar.updateOne({ 'storage._autopart': body._part }, { 'storage.$.stock': newStock }, function(err, storageAct) {
+                if (err) {
+                    res.status(400).json({
+                        ok: false,
+                        mensaje: 'Error al actualizar existencia',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    mensaje: 'Storage actualizado',
+                    storage: storageAct
+                });
+            });
+        });
+});
+
+/**
  * ACTUALIZAR REPUESTOS
  */
 

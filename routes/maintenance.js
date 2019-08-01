@@ -9,11 +9,11 @@ var Maintenance = require('../models/maintenance');
 app.get('/activeV/:id', function(req, res) {
     var id = req.params.id;
 
-    Maintenance.findOne({ state: false, _vehicle: id }, 'dateStart totalV totalG detailsRev detailsRep')
+    Maintenance.findOne({ state: false, _vehicle: id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
         .populate('_user', 'name lastName img')
         .populate('_mech', '')
-        .populate('detailsV.part', 'code desc')
-        .populate('detailsG.part', 'code desc')
+        .populate('detailsV._part', '')
+        .populate('detailsG._part', '')
         .exec(
             function(err, mant) {
 
@@ -39,11 +39,11 @@ app.get('/activeV/:id', function(req, res) {
 // BUSCAR MANTENIMIENTO ACTIVO DE UNA gondola
 app.get('/activeG/:id', function(req, res) {
     var id = req.params.id;
-    Maintenance.findOne({ state: 0, _gondola: id }, 'dateStart totalV totalG detailsRev detailsRep')
+    Maintenance.findOne({ state: 0, _gondola: id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
         .populate('_user', 'name lastName img')
         .populate('_mech', '')
-        .populate('detailsV.part', 'code desc')
-        .populate('detailsG.part', 'code desc')
+        .populate('detailsV._part', '')
+        .populate('detailsG._part', '')
         .exec(
             function(err, mant) {
 
@@ -113,8 +113,8 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
             Maintenance.findById(mantenimientoAct._id, { state: false })
                 .populate('_user', 'name lastName img')
                 .populate('_mech', '')
-                .populate('detailsV.part', 'code desc')
-                .populate('detailsG.part', 'code desc')
+                .populate('detailsV._part', '')
+                .populate('detailsG._part', '')
                 .exec(
                     function(err, mantenimientoG) {
                         res.status(200).json({
@@ -145,7 +145,9 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         dateStart: body.dateStart,
         _typeMaintenance: null,
         detailsRev: '',
-        detailsRep: ''
+        detailsRep: '',
+        totalV: body.totalV,
+        totalG: body.totalG
     });
 
     mantenimiento.save(function(err, mantenimientoG) {
@@ -157,11 +159,11 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
             });
         }
 
-        Maintenance.findById({ _id: mantenimientoG._id }, 'dateStart totalV totalG detailsRev detailsRep')
+        Maintenance.findById({ _id: mantenimientoG._id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
             .populate('_user', 'name lastName img')
             .populate('_mech', '')
-            .populate('detailsV.part', 'code desc')
-            .populate('detailsG.part', 'code desc')
+            .populate('detailsV._part', '')
+            .populate('detailsG._part', '')
             .exec(
                 function(err, mant) {
 

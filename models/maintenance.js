@@ -14,12 +14,12 @@ var maintenanceSchema = new Schema({
     _typeMaintenance: { type: Schema.Types.ObjectId, ref: 'TypeMaintenance' },
     dateEnd: { type: Date, required: false },
     detailsV: [{
-        part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
+        _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Float },
         cost: { type: Float }
     }],
     detailsG: [{
-        part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
+        _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Float },
         cost: { type: Float }
     }],

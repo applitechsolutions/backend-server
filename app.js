@@ -34,6 +34,8 @@ var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
+var typeTripRoutes = require('./routes/typeTrip');
+var greenTripsRoutes = require('./routes/greenTrips');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -68,11 +70,13 @@ app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
+app.use('/tviajes', typeTripRoutes);
+app.use('/material', materialRoutes);
+app.use('/viajeV', greenTripsRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);
 app.use('/repuesto', partRoutes);
-app.use('/material', materialRoutes);
 app.use('/vehiculo', vehiclesRoutes);
 app.use('/gondola', gondolaRoutes);
 app.use('/marca', makeRoutes);

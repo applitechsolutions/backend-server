@@ -14,6 +14,7 @@ var Material = require('../models/material');
 app.get('/', function(req, res, next) {
 
     Material.find({})
+        .sort({ _id: 'desc' })
         .exec(
             function(err, materials) {
 

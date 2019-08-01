@@ -162,6 +162,64 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
     });
 });
 
+/**
+ * FINALIZAR MANTENIMIENTO
+ */
+
+app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    Maintenance.findById(id, function(err, mantenimiento) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar mantenimiento',
+                errors: err
+            });
+        }
+
+        if (!mantenimiento) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El mantenimiento con el id' + id + ' no existe',
+                errors: { message: 'No existe un mantenimiento con ese ID' }
+            });
+        }
+
+
+        mantenimiento._typeMaintenance = body.typeMaintenance;
+        mantenimiento.dateEnd = body.dateEnd;
+        mantenimiento.state = body.state;
+
+        mantenimiento.save(function(err, mantenimientoAct) {
+            if (err) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar mantenimiento',
+                    errors: err
+                });
+            }
+
+            Maintenance.findById(mantenimientoAct._id, { state: false })
+                .populate('_user', 'name lastName img')
+                .populate('_mech', '')
+                .populate('detailsV._part', '')
+                .populate('detailsG._part', '')
+                .exec(
+                    function(err, mantenimientoG) {
+                        res.status(200).json({
+                            ok: true,
+                            mantenimiento: mantenimientoG
+                        });
+                    }
+                );
+        });
+
+    });
+});
+
 
 /**
  * CREAR MANTENIMIENTO

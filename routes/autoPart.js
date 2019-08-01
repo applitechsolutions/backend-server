@@ -102,7 +102,8 @@ app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
                 body.storage.forEach(function(bodega) {
                     storage.push({
                         _autopart: bodega._id,
-                        stock: bodega.stock
+                        stock: bodega.stock,
+                        cost: bodega.cost
                     });
                 });
 
@@ -219,7 +220,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         .then(function(repuestoGuardado) {
             AutoCellar.findOne({ name: 'Bodega Principal' })
                 .then(function(cellar) {
-                    var part = { _autopart: repuestoGuardado._id, stock: 0 };
+                    var part = { _autopart: repuestoGuardado._id, stock: 0, cost: 0.00 };
                     cellar.storage.push(part);
                     cellar.save()
                         .then(function(cellarGuardado) {
@@ -268,7 +269,8 @@ app.post('/bodega/:id', function(req, res) {
         name: 'Bodega Principal',
         storage: [{
             _autopart: id,
-            stock: body.stock
+            stock: body.stock,
+            cost: body.cost
         }]
     });
 

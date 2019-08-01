@@ -10,7 +10,7 @@ var maintenanceSchema = new Schema({
     _mech: [
         { type: Schema.Types.ObjectId, ref: 'Mech' }
     ],
-    dateStart: { type: Date, required: true },
+    dateStart: { type: Date, timezone: "-0600", required: true },
     _typeMaintenance: { type: Schema.Types.ObjectId, ref: 'TypeMaintenance' },
     dateEnd: { type: Date, required: false },
     detailsV: [{

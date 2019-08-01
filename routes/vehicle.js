@@ -197,7 +197,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
         vehiculo.cp = body.cp;
         vehiculo.type = body.type;
-        vehiculo._gondola = body.gondola;
+        vehiculo._gondola = body._gondola;
         vehiculo._make = body._make._id;
         vehiculo.plate = body.plate;
         vehiculo.no = body.no;

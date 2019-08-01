@@ -7,7 +7,8 @@ var autoCellarSchema = new Schema({
     name: { type: String, required: true },
     storage: [{
         _autopart: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
-        stock: { type: Float, require: true }
+        stock: { type: Float, require: true },
+        cost: { type: Float, require: true }
     }],
     state: { type: Boolean, required: true, default: false }
 });

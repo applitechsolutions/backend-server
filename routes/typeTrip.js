@@ -3,15 +3,15 @@ var mdAuth = require('../middlewares/auth');
 
 var app = express();
 
-var Trip = require('../models/trip');
+var typeTrip = require('../models/typeTrip');
 
 /**
- * LISTAR EMPLEADOS
+ * LISTAR TIPOS DE VIAJES
  */
 
 app.get('/', function(req, res) {
 
-    Trip.find({})
+    typeTrip.find({})
         .sort({ _id: 'desc' })
         .exec(
             function(err, viajes) {
@@ -32,14 +32,14 @@ app.get('/', function(req, res) {
 });
 
 /**
- * CREAR EMPLEADOS
+ * CREAR TIPOS DE VIAJES
  */
 
 app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
 
-    var trip = new Trip({
+    var trip = new typeTrip({
         name: body.name,
         km: body.km
     });

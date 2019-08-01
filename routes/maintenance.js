@@ -66,6 +66,40 @@ app.get('/activeG/:id', function(req, res) {
 });
 
 /**
+ * LISTAR MANTENIMIENTOS TERMINADOS
+ */
+
+app.get('/terminados', function(req, res) {
+
+    Maintenance.find({ state: true }, 'dateStart dateEnd totalV totalG detailsRev detailsRep detailsV detailsG')
+        .populate('_vehicle', 'type plate')
+        .populate('_gondola', 'plate')
+        .populate('_user', 'name lastName img')
+        .populate('_mech', '')
+        .populate('_typeMaintenance', 'name')
+        .populate('detailsV._part', '')
+        .populate('detailsG._part', '')
+        .exec(
+            function(err, mantens) {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al listar mantenimiento terminados',
+                        mantenimiento: null,
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    mantenimientos: mantens
+                });
+
+            });
+});
+
+/**
  * ACTUALIZAR MANTENIMIENTO
  */
 

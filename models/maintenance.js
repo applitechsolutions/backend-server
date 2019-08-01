@@ -12,7 +12,7 @@ var maintenanceSchema = new Schema({
     ],
     dateStart: { type: Date, timezone: "-0600", required: true },
     _typeMaintenance: { type: Schema.Types.ObjectId, ref: 'TypeMaintenance' },
-    dateEnd: { type: Date, required: false },
+    dateEnd: { type: Date, timezone: "-0600", required: false },
     detailsV: [{
         _part: { type: Schema.Types.ObjectId, ref: 'AutoPart' },
         quantity: { type: Float },

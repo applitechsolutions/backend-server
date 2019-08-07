@@ -326,7 +326,6 @@ function obtenerMenu(ROLE, AREA) {
                     titulo: 'Mantenimientos',
                     icono: 'menu-icon fas fa-tools',
                     submenu: [
-                        { titulo: 'Listar Mantenimientos', url: '/maintenances' },
                         { titulo: 'Crear Mantenimiento', url: '/maintenance/new' }
                     ]
                 }];
@@ -334,30 +333,30 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'TRANSPORTE':
             if (ROLE === 'ADMIN_ROLE') {
-                menu = [{
-                        titulo: 'Empleados',
-                        icono: 'menu-icon fas fa-user-tie',
-                        submenu: [
-                            { titulo: 'Listar Empleados', url: '/employees' },
-                            { titulo: 'Crear Empleado', url: '/employee/new' }
-                        ]
-                    },
-                    {
-                        titulo: 'Pedidos',
-                        icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Listar Pedidos', url: '/orders' },
-                            { titulo: 'Crear Pedido', url: '/order/new' }
-                        ]
-                    },
-                    {
-                        titulo: 'Reporte Cuadros',
-                        icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Listar Reportes', url: '/gtrips' }
-                        ]
-                    }
-                ];
+                // menu = [{
+                //         titulo: 'Empleados',
+                //         icono: 'menu-icon fas fa-user-tie',
+                //         submenu: [
+                //             { titulo: 'Listar Empleados', url: '/employees' },
+                //             { titulo: 'Crear Empleado', url: '/employee/new' }
+                //         ]
+                //     },
+                //     {
+                //         titulo: 'Pedidos',
+                //         icono: 'menu-icon fas fa-file-invoice',
+                //         submenu: [
+                //             { titulo: 'Listar Pedidos', url: '/orders' },
+                //             { titulo: 'Crear Pedido', url: '/order/new' }
+                //         ]
+                //     },
+                //     {
+                //         titulo: 'Reporte Cuadros',
+                //         icono: 'menu-icon fas fa-file-invoice',
+                //         submenu: [
+                //             { titulo: 'Listar Reportes', url: '/gtrips' }
+                //         ]
+                //     }
+                // ];
             } else if (ROLE === 'USER_ROLE') {
 
             }

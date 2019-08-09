@@ -36,6 +36,96 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * LISTAR REPORTES VERDES
+ */
+
+app.get('/reports', function(req, res) {
+
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    GreenTrips.aggregate([{
+        $match: {
+            "date": {
+                $gte: startDate,
+                $lte: endDate
+            },
+            "state": false
+        }
+    }, {
+        $match: {
+            "date": {
+                $gte: startDate,
+                $lte: endDate
+            },
+            "state": false
+        }
+    }, {
+        $lookup: {
+            from: "employees",
+            localField: "_employee",
+            foreignField: "_id",
+            as: "_employee"
+        },
+    }, {
+        $unwind: '$_employee'
+    }, {
+        $lookup: {
+            from: "typetrips",
+            localField: "_type",
+            foreignField: "_id",
+            as: "_type"
+        },
+    }, {
+        $unwind: '$_type'
+    }, {
+        $lookup: {
+            from: "vehicles",
+            localField: "_vehicle",
+            foreignField: "_id",
+            as: "_vehicle"
+        },
+    }, {
+        $unwind: '$_vehicle'
+    }, {
+        $lookup: {
+            from: "materials",
+            localField: "_material",
+            foreignField: "_id",
+            as: "_material"
+        },
+    }, {
+        $unwind: '$_material'
+    }, {
+        $project: {
+            _id: '$_id',
+            _employee: { _id: 1, name: 1 },
+            _type: { _id: 1, name: 1 },
+            _vehicle: { _id: 1, type: 1, plate: 1 },
+            _material: { _id: 1, code: 1, name: 1 },
+            date: '$date',
+            checkIN: '$checkIN',
+            checkOUT: '$checkOUT',
+            trips: '$trips',
+            details: '$details'
+        }
+    }], function(err, reports) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error listando reportes verdes',
+                errors: err
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            viajesV: reports
+        });
+    });
+});
+
+/**
  * CREAR REPORTE CUADROS
  */
 

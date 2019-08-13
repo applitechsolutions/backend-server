@@ -126,6 +126,33 @@ app.get('/reports', function(req, res) {
 });
 
 /**
+ * BORRAR REPORTE CUADROS
+ */
+
+app.delete('/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+
+    GreenTrips.findByIdAndDelete(id)
+        .then(function(tripBorrado) {
+            res.status(200).json({
+                ok: true,
+                viajeV: tripBorrado,
+                usuarioToken: req.usuario
+            });
+        })
+        .catch(function(err) {
+            res.status(400).json({
+                ok: false,
+                mensaje: 'Error al crear reporte cuadros',
+                errors: err
+            });
+        });
+
+
+});
+
+/**
  * CREAR REPORTE CUADROS
  */
 

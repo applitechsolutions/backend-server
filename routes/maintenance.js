@@ -71,7 +71,16 @@ app.get('/activeG/:id', function(req, res) {
 
 app.get('/terminados', function(req, res) {
 
-    Maintenance.find({ state: true }, 'dateStart dateEnd totalV totalG detailsRev detailsRep detailsV detailsG')
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    Maintenance.find({
+            state: true,
+            dateStart: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }, 'dateStart dateEnd totalV totalG detailsRev detailsRep detailsV detailsG')
         .populate('_vehicle', 'type plate')
         .populate('_gondola', 'plate')
         .populate('_user', 'name lastName img')

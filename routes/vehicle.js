@@ -177,7 +177,6 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;
-    console.log(body);
 
     Vehicle.findById(id, function(err, vehiculo) {
         if (err) {

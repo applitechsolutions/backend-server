@@ -32,6 +32,39 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * CARGAR TIPOS DE VIAJES
+ */
+
+app.get('/:id', function(req, res) {
+
+    var id = req.params.id;
+
+    typeTrip.findById(id)
+        .then(function(typtrip) {
+            if (!empDB) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El tipo de viaje con el id' + id + ' no existe',
+                    errors: { message: 'No existe un tipo de viaje con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                tipoviaje: typtrip
+            });
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar tipo de viaje',
+                errors: err
+            });
+        });
+
+});
+
+/**
  * CREAR TIPOS DE VIAJES
  */
 

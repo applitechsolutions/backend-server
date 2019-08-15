@@ -4,6 +4,8 @@ var mdAuth = require('../middlewares/auth');
 var app = express();
 
 var GreenTrips = require('../models/greenTrips');
+var Vehicle = require('../models/vehicle');
+var Gondola = require('../models/gondola');
 
 /**
  * LISTAR REPORTE CUADROS
@@ -132,9 +134,29 @@ app.get('/reports', function(req, res) {
 app.delete('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
+    var body = req.body;
+    var km = body._type.km * body.trips * -1;
+    console.log(body);
 
     GreenTrips.findByIdAndDelete(id)
         .then(function(tripBorrado) {
+
+            Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { "km": km, "pits.$[elem].km": km } }, {
+                    multi: true,
+                    arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                })
+                .then(function(tripKm) {})
+                .catch(function(err) {});
+
+            if (body._vehicle.type === 'camionG') {
+                Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { "pits.$[elem].km": km } }, {
+                        multi: true,
+                        arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                    })
+                    .then(function(gkm) {})
+                    .catch(function(err) {});
+            }
+
             res.status(200).json({
                 ok: true,
                 viajeV: tripBorrado,
@@ -159,12 +181,13 @@ app.delete('/:id', mdAuth.verificaToken, function(req, res) {
 app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
+    var km = body._type.km * body.trips;
 
     var greenTrip = new GreenTrips({
 
         _employee: body._employee,
-        _type: body._type,
-        _vehicle: body._vehicle,
+        _type: body._type._id,
+        _vehicle: body._vehicle._id,
         _material: body._material,
         date: body.date,
         checkIN: body.checkIN,
@@ -174,16 +197,34 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     });
 
+
+
     greenTrip.save()
         .then(function(viajeVGuardado) {
 
             viajeVGuardado
                 .populate('_employee', 'name')
-                .populate('_type', 'name')
-                .populate('_vehicle', 'plate type')
+                .populate('_type', 'name km')
+                .populate('_vehicle', 'plate type _gondola')
                 .populate('_material', 'code name')
                 .execPopulate()
                 .then(function(greenTripP) {
+
+                    Vehicle.updateOne({ _id: body._vehicle._id }, { $inc: { "km": km, "pits.$[elem].km": km } }, {
+                            multi: true,
+                            arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                        })
+                        .then(function(tripKm) {})
+                        .catch(function(err) {});
+
+                    if (body._vehicle.type === 'camionG') {
+                        Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { "pits.$[elem].km": km } }, {
+                                multi: true,
+                                arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                            })
+                            .then(function(gkm) {})
+                            .catch(function(err) {});
+                    }
 
                     res.status(201).json({
                         ok: true,

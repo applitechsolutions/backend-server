@@ -276,6 +276,7 @@ function obtenerMenu(ROLE, AREA) {
                         icono: 'menu-icon fas fa-truck',
                         submenu: [
                             { titulo: 'Listar Vehículos', url: '/vehicles' },
+                            { titulo: 'Combustible', url: '/gasolines' },
                             { titulo: 'Crear Vehículo', url: '/vehicle/new' }
                         ]
                     },

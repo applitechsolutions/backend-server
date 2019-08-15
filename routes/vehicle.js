@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var express = require('express');
 var mdAuth = require('../middlewares/auth');
+mongoose.set('useFindAndModify', false);
 
 var app = express();
 
@@ -37,7 +38,65 @@ app.get('/', function(req, res) {
 });
 
 /**
- * LISTAR CUPONES DE GASOLINA
+ * LISTAR CUPONES DE GASOLINA DE TODOS LOS VEHICULOS
+ */
+
+app.get('/gasolines/all', function(req, res) {
+
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    Vehicle.aggregate([{
+        $match: {
+            "gasoline.date": {
+                $gte: startDate,
+                $lte: endDate
+            },
+            "gasoline.state": false
+        }
+    }, {
+        $unwind: "$gasoline"
+    }, {
+        $match: {
+            "gasoline.date": {
+                $gte: startDate,
+                $lte: endDate
+            },
+            "gasoline.state": false
+        }
+    }, {
+        $sort: {
+            "gasoline.date": 1
+        }
+    }, {
+        $project: {
+            _id: '$gasoline._id',
+            code: '$gasoline.code',
+            date: '$gasoline.date',
+            gallons: '$gasoline.gallons',
+            total: '$gasoline.total',
+            type: '$type',
+            plate: '$plate',
+            idVehicle: '$_id'
+        }
+    }], function(err, gasolines) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error listando historial de cupones',
+                errors: err
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            gasoline: gasolines
+        });
+    });
+});
+
+/**
+ * LISTAR CUPONES DE GASOLINA DE UN VEHICULO
  */
 
 app.get('/gasolines', function(req, res) {
@@ -154,6 +213,7 @@ app.put('/gasoline/:id', mdAuth.verificaToken, function(req, res) {
                     errors: err
                 });
             }
+
             Vehicle.findById(vehiculoAct._id, { gasoline: 0 })
                 .populate('pits.rim')
                 .exec(

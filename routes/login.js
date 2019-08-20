@@ -334,22 +334,15 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'TRANSPORTE':
             if (ROLE === 'ADMIN_ROLE') {
-                menu = [{
-                        titulo: 'Empleados',
-                        icono: 'menu-icon fas fa-user-tie',
-                        submenu: [
-                            { titulo: 'Listar Empleados', url: '/employees' },
-                            { titulo: 'Crear Empleado', url: '/employee/new' }
-                        ]
-                    },
-                    {
-                        titulo: 'Pedidos',
-                        icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Listar Pedidos', url: '/orders' },
-                            { titulo: 'Crear Pedido', url: '/order/new' }
-                        ]
-                    },
+                menu = [
+                    // {
+                    //     titulo: 'Pedidos',
+                    //     icono: 'menu-icon fas fa-file-invoice',
+                    //     submenu: [
+                    //         { titulo: 'Listar Pedidos', url: '/orders' },
+                    //         { titulo: 'Crear Pedido', url: '/order/new' }
+                    //     ]
+                    // },
                     {
                         titulo: 'Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice',
@@ -371,7 +364,14 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'CONTABILIDAD':
             if (ROLE === 'ADMIN_ROLE') {
-
+                menu = [{
+                    titulo: 'Empleados',
+                    icono: 'menu-icon fas fa-user-tie',
+                    submenu: [
+                        { titulo: 'Listar Empleados', url: '/employees' },
+                        { titulo: 'Crear Empleado', url: '/employee/new' }
+                    ]
+                }];
             } else if (ROLE === 'USER_ROLE') {
 
             }

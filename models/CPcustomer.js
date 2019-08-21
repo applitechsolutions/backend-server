@@ -11,4 +11,4 @@ var customerSchema = new Schema({
     state: { type: Boolean, default: false }
 });
 
-module.exports = mongoose.model('Customer', customerSchema);
+module.exports = mongoose.model('CPcustomer', customerSchema);

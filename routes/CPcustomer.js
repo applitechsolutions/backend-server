@@ -6,7 +6,7 @@ var app = express();
 var CPcustomer = require('../models/CPcustomer.js');
 
 /**
- * LISTAR CPclientes
+ * LISTAR CPCLIENTES
  */
 
 app.get('/', function(req, res) {

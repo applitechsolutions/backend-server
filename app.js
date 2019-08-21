@@ -32,10 +32,13 @@ var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
 var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
+// CENTRO DE DISTRIBUCION
+var customerRoutes = require('./routes/customer');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
 var greenTripsRoutes = require('./routes/greenTrips');
+var CPcustomerRoutes = require('./routes/CPcustomer');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -64,16 +67,19 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlPar
 //     .then(() => console.log('Connection to CosmosDB successful'))
 //     .catch((err) => console.error(err));
 
-// Transportes
+// ADMIN
 app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
 app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
+// CENTRO DE DISTRIBUCION
+app.use('/cliente', customerRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);
 app.use('/material', materialRoutes);
 app.use('/viajeV', greenTripsRoutes);
+app.use('/CPcliente', CPcustomerRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

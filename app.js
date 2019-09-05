@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Importaciones
+/* #region  Importaciones */
 var appRoutes = require('./routes/app');
 var userRoutes = require('./routes/user');
 var loginRoutes = require('./routes/login');
@@ -51,8 +51,9 @@ var mechRoutes = require('./routes/mechanic');
 var pitRoutes = require('./routes/pit');
 var maintRoutes = require('./routes/maintenance');
 var typeMaintenanceRoutes = require('./routes/typeMaintenance');
+/* #endregion */
 
-// Conexion a la DB
+/* #region  Conexion a la DB */
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
@@ -66,7 +67,9 @@ mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlPar
 // const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, { useNewUrlParser: true })
 //     .then(() => console.log('Connection to CosmosDB successful'))
 //     .catch((err) => console.error(err));
+/* #endregion */
 
+/* #region  Rutas */
 // ADMIN
 app.use('/userArea', userAreaRoutes);
 app.use('/area', areaRoutes);
@@ -97,6 +100,7 @@ app.use('/search', searchRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/img', imagesRoutes);
 app.use('/', appRoutes);
+/* #endregion */
 
 
 // Escuchar Peticiones

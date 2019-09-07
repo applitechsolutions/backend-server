@@ -348,6 +348,13 @@ function obtenerMenu(ROLE, AREA) {
                         submenu: [
                             { titulo: 'Listar Reportes', url: '/gtrips' }
                         ]
+                    },
+                    {
+                        titulo: 'Clientes',
+                        icono: 'menu-icon fas fa-building',
+                        submenu: [
+                            { titulo: 'Listar clientes', url: '/CPcustomers' }
+                        ]
                     }
                 ];
             } else if (ROLE === 'USER_ROLE') {
@@ -356,7 +363,13 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'DISTRIBUCIÓN':
             if (ROLE === 'ADMIN_ROLE') {
-
+                menu = [{
+                    titulo: 'Clientes',
+                    icono: 'menu-icon fas fa-user-tag',
+                    submenu: [
+                        { titulo: 'Listar clientes', url: '/customers' }
+                    ]
+                }];
             } else if (ROLE === 'USER_ROLE') {
 
             }

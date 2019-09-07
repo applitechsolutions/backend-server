@@ -346,7 +346,15 @@ function obtenerMenu(ROLE, AREA) {
                         titulo: 'Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice',
                         submenu: [
-                            { titulo: 'Listar Reportes', url: '/gtrips' }
+                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' }
+                        ]
+                    },
+                    {
+                        titulo: 'Factura Reporte Cuadros',
+                        icono: 'menu-icon fas fa-file-invoice-dollar',
+                        submenu: [
+                            { titulo: 'Listar Facturas', url: '/gbills' },
+                            { titulo: 'Crear Factura', url: '/gbill/new' }
                         ]
                     }
                 ];

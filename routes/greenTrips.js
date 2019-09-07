@@ -103,7 +103,7 @@ app.get('/reports', function(req, res) {
             _id: '$_id',
             _employee: { _id: 1, name: 1 },
             _type: { _id: 1, name: 1 },
-            _vehicle: { _id: 1, type: 1, plate: 1 },
+            _vehicle: { _id: 1, type: 1, plate: 1, mts: 1 },
             _material: { _id: 1, code: 1, name: 1 },
             date: '$date',
             checkIN: '$checkIN',

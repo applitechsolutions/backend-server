@@ -359,7 +359,7 @@ function obtenerMenu(ROLE, AREA) {
                     },
                     {
                         titulo: 'Clientes',
-                        icono: 'menu-icon fas fa-building',
+                        icono: 'menu-icon fas fa-landmark',
                         submenu: [
                             { titulo: 'Listar clientes', url: '/CPcustomers' }
                         ]

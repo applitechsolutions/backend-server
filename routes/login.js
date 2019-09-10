@@ -356,6 +356,13 @@ function obtenerMenu(ROLE, AREA) {
                             { titulo: 'Listar Facturas', url: '/gbills' },
                             { titulo: 'Crear Factura', url: '/gbill/new' }
                         ]
+                    },
+                    {
+                        titulo: 'Clientes',
+                        icono: 'menu-icon fas fa-landmark',
+                        submenu: [
+                            { titulo: 'Listar clientes', url: '/CPcustomers' }
+                        ]
                     }
                 ];
             } else if (ROLE === 'USER_ROLE') {
@@ -364,7 +371,13 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'DISTRIBUCIÓN':
             if (ROLE === 'ADMIN_ROLE') {
-
+                menu = [{
+                    titulo: 'Clientes',
+                    icono: 'menu-icon fas fa-user-tag',
+                    submenu: [
+                        { titulo: 'Listar clientes', url: '/customers' }
+                    ]
+                }];
             } else if (ROLE === 'USER_ROLE') {
 
             }

@@ -170,14 +170,14 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
 
-    var CPcustomer = new AutoProvider({
+    var cpcustomer = new CPcustomer({
         name: body.name,
         nit: body.nit,
         address: body.address,
         mobile: body.mobile
     });
 
-    CPcustomer.save(function(err, CPcustomerG) {
+    cpcustomer.save(function(err, CPcustomerG) {
         if (err) {
             return res.status(400).json({
                 ok: false,

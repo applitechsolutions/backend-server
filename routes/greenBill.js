@@ -10,6 +10,42 @@ var GreenTrip = require('../models/greenTrips');
  * LISTAR DETALLE FACTURA VERDE POR FECHAS
  */
 
+app.get('/', function(req, res) {
+
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    GreenBill.find({
+            state: false,
+            "date": {
+                $gte: startDate,
+                $lte: endDate
+            }
+        }, 'noBill serie date oc ac details total paid')
+        .populate('_customer', 'name nit address mobile')
+        .exec(
+            function(err, bills) {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al listar facturas',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    facturas: bills
+                });
+
+            });
+});
+
+/**
+ * LISTAR DETALLE FACTURA VERDE POR FECHAS
+ */
+
 app.get('/detalles', function(req, res) {
 
     var startDate = new Date(req.query.fecha1);
@@ -52,7 +88,7 @@ app.get('/detalles', function(req, res) {
         },
         {
             $group: {
-                _id: "$_type._id",
+                _id: "$_type._id", // El valor por el cual se agrupa
                 prod: { $first: "$_type.name" },
                 totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
                 trips: { $sum: 1 }
@@ -72,6 +108,32 @@ app.get('/detalles', function(req, res) {
             preDetail: reports
         });
     });
+});
+
+/**
+ * ACTUALIZAR FACTURA REPORTE CUADROS
+ */
+
+app.put('/:id', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.params.id;
+    var body = req.body;
+
+    GreenBill.findByIdAndUpdate(id, { "oc": body.oc, "ac": body.ac, "paid": body.paid, "state": body.state }, { new: true })
+        .then(function(billActualizada) {
+            res.status(200).json({
+                ok: true,
+                bill: billActualizada
+            });
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error actualizando facturas',
+                errors: err
+            });
+        });
+
 });
 
 /**

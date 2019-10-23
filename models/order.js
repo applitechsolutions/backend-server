@@ -5,7 +5,8 @@ var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
     _destination: { type: Schema.Types.ObjectId, ref: 'Destination', required: [true, 'El destino es necesario'] },
-    order: { type: String, unique: true, required: [true, 'El número de orden es necesario'] }
+    order: { type: String, unique: true, required: [true, 'El número de orden es necesario'] },
+    timestamp: true
 });
 
 orderSchema.plugin(uniqueValidator, { message: '{PATH} debe ser unico' });

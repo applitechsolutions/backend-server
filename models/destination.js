@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var destinationSchema = new Schema({
 
     name: { type: String, required: [true, 'El nombre es necesario'] },
-    km: { type: Float, required: [true, 'Los kilometros son necesario'] }
+    km: { type: Float, required: [true, 'Los kilometros son necesarios'] }
 
 });
 

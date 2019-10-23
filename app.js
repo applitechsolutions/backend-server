@@ -26,7 +26,6 @@ app.use(bodyParser.json());
 var appRoutes = require('./routes/app');
 var userRoutes = require('./routes/user');
 var loginRoutes = require('./routes/login');
-var materialRoutes = require('./routes/material');
 var searchRoutes = require('./routes/search');
 var uploadRoutes = require('./routes/upload');
 var imagesRoutes = require('./routes/images');
@@ -34,12 +33,15 @@ var areaRoutes = require('./routes/area');
 var userAreaRoutes = require('./routes/userArea');
 // CENTRO DE DISTRIBUCION
 var customerRoutes = require('./routes/customer');
+var materialCellarRoutes = require('./routes/materialCellar');
+var materialRoutes = require('./routes/material');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
 var greenTripsRoutes = require('./routes/greenTrips');
 var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
+var destinationRoutes = require('./models/destination');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -78,13 +80,15 @@ app.use('/usuario', userRoutes);
 app.use('/login', loginRoutes);
 // CENTRO DE DISTRIBUCION
 app.use('/cliente', customerRoutes);
+app.use('/material', materialRoutes);
+app.use('/materialCellar', materialCellarRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);
-app.use('/material', materialRoutes);
 app.use('/viajeV', greenTripsRoutes);
 app.use('/CPcliente', CPcustomerRoutes);
 app.use('/facturaV', greenBillRoutes);
+app.use('/destino', destinationRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    Materiales: materials
+                    materiales: materials
                 });
 
             });
@@ -317,7 +317,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
                         .then(function(cellarGuardado) {
                             res.status(201).json({
                                 ok: true,
-                                repuesto: materialG,
+                                material: materialG,
                                 usuarioToken: req.usuario
                             });
                         })

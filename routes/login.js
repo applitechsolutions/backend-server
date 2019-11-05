@@ -266,7 +266,7 @@ function obtenerMenu(ROLE, AREA) {
                     ]
                 }];
             } else if (ROLE === 'USER_ROLE') {
-
+                // TODO:agregar menu
             }
             break;
         case 'TALLER':

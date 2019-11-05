@@ -14,6 +14,7 @@ var buySpareSchema = new Schema({
         quantity: { type: Number },
         cost: { type: Float }
     }],
+    discount: { type: Float },
     total: { type: Float },
     state: { type: Boolean, default: false }
 });

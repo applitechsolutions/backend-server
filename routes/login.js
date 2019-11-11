@@ -258,13 +258,21 @@ function obtenerMenu(ROLE, AREA) {
         case 'ADMINISTRACIÓN':
             if (ROLE === 'ADMIN_ROLE') {
                 menu = [{
-                    titulo: 'Usuarios',
-                    icono: 'menu-icon oi oi-person',
-                    submenu: [
-                        { titulo: 'Listar Usuarios', url: '/usuarios' },
-                        { titulo: 'Crear Nuevo', url: '/usuario/new' }
-                    ]
-                }];
+                        titulo: 'Reportes',
+                        icono: 'menu-icon fas fa-chart-line',
+                        submenu: [
+                            { titulo: 'Ver todos', url: '/reports' }
+                        ]
+                    },
+                    {
+                        titulo: 'Usuarios',
+                        icono: 'menu-icon oi oi-person',
+                        submenu: [
+                            { titulo: 'Listar Usuarios', url: '/usuarios' },
+                            { titulo: 'Crear Nuevo', url: '/usuario/new' }
+                        ]
+                    }
+                ];
             } else if (ROLE === 'USER_ROLE') {
                 // TODO:agregar menu
             }
@@ -334,36 +342,37 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'TRANSPORTE':
             if (ROLE === 'ADMIN_ROLE') {
-                menu = [{
-                        titulo: 'Pedidos',
-                        icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Listar Pedidos', url: '/orders' },
-                            { titulo: 'Crear Pedido', url: '/order/new' }
-                        ]
-                    },
-                    {
-                        titulo: 'Reporte Cuadros',
-                        icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' }
-                        ]
-                    },
-                    {
-                        titulo: 'Factura Reporte Cuadros',
-                        icono: 'menu-icon fas fa-file-invoice-dollar',
-                        submenu: [
-                            { titulo: 'Listar Facturas', url: '/gbills' },
-                            { titulo: 'Crear Factura', url: '/gbill/new' }
-                        ]
-                    },
-                    {
-                        titulo: 'Clientes',
-                        icono: 'menu-icon fas fa-landmark',
-                        submenu: [
-                            { titulo: 'Listar clientes', url: '/CPcustomers' }
-                        ]
-                    }
+                menu = [
+                    // {
+                    //     titulo: 'Pedidos',
+                    //     icono: 'menu-icon fas fa-file-invoice',
+                    //     submenu: [
+                    //         { titulo: 'Listar Pedidos', url: '/orders' },
+                    //         { titulo: 'Crear Pedido', url: '/order/new' }
+                    //     ]
+                    // },
+                    // {
+                    //     titulo: 'Reporte Cuadros',
+                    //     icono: 'menu-icon fas fa-file-invoice',
+                    //     submenu: [
+                    //         { titulo: 'Mantenimiento Reportes', url: '/gtrips' }
+                    //     ]
+                    // },
+                    // {
+                    //     titulo: 'Factura Reporte Cuadros',
+                    //     icono: 'menu-icon fas fa-file-invoice-dollar',
+                    //     submenu: [
+                    //         { titulo: 'Listar Facturas', url: '/gbills' },
+                    //         { titulo: 'Crear Factura', url: '/gbill/new' }
+                    //     ]
+                    // },
+                    // {
+                    //     titulo: 'Clientes',
+                    //     icono: 'menu-icon fas fa-landmark',
+                    //     submenu: [
+                    //         { titulo: 'Listar clientes', url: '/CPcustomers' }
+                    //     ]
+                    // }
                 ];
             } else if (ROLE === 'USER_ROLE') {
 

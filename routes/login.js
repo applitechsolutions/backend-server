@@ -343,37 +343,38 @@ function obtenerMenu(ROLE, AREA) {
             break;
         case 'TRANSPORTE':
             if (ROLE === 'ADMIN_ROLE') {
-                // menu = [{
-                //         titulo: 'Pedidos',
-                //         icono: 'menu-icon fas fa-file-invoice',
-                //         submenu: [
-                //             { titulo: 'Listar Pedidos', url: '/orders' },
-                //             { titulo: 'Crear Pedido', url: '/order/new' }
-                //         ]
-                //     },
-                //     {
-                //         titulo: 'Reporte Cuadros',
-                //         icono: 'menu-icon fas fa-file-invoice',
-                //         submenu: [
-                //             { titulo: 'Mantenimiento Reportes', url: '/gtrips' }
-                //         ]
-                //     },
-                //     {
-                //         titulo: 'Factura Reporte Cuadros',
-                //         icono: 'menu-icon fas fa-file-invoice-dollar',
-                //         submenu: [
-                //             { titulo: 'Listar Facturas', url: '/gbills' },
-                //             { titulo: 'Crear Factura', url: '/gbill/new' }
-                //         ]
-                //     },
-                //     {
-                //         titulo: 'Clientes',
-                //         icono: 'menu-icon fas fa-landmark',
-                //         submenu: [
-                //             { titulo: 'Listar clientes', url: '/CPcustomers' }
-                //         ]
-                //     }
-                // ];
+                menu = [{
+                        titulo: 'Pedidos',
+                        icono: 'menu-icon fas fa-file-invoice',
+                        submenu: [
+                            { titulo: 'Listar Pedidos', url: '/orders' },
+                            { titulo: 'Crear Pedido', url: '/order/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Reporte Cuadros',
+                        icono: 'menu-icon fas fa-file-invoice',
+                        submenu: [
+                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' },
+                            { titulo: 'Tipo de Viaje', url: '/typeTrips' }
+                        ]
+                    },
+                    {
+                        titulo: 'Factura Reporte Cuadros',
+                        icono: 'menu-icon fas fa-file-invoice-dollar',
+                        submenu: [
+                            { titulo: 'Listar Facturas', url: '/gbills' },
+                            { titulo: 'Crear Factura', url: '/gbill/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Clientes',
+                        icono: 'menu-icon fas fa-landmark',
+                        submenu: [
+                            { titulo: 'Listar clientes', url: '/CPcustomers' }
+                        ]
+                    }
+                ];
             } else if (ROLE === 'USER_ROLE') {
 
             }

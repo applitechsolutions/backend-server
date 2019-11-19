@@ -74,7 +74,8 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var trip = new typeTrip({
         name: body.name,
-        km: body.km
+        km: body.km,
+        tariff: body.tariff
     });
 
     trip.save()

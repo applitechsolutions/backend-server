@@ -229,6 +229,65 @@ app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
     });
 });
 
+/**
+ * CREAR AJUSTE
+ */
+
+app.post('/repair', mdAuth.verificaToken, function(req, res) {
+
+    var body = req.body;
+
+    var mantenimiento = new Maintenance({
+        _user: body._user._id,
+        _vehicle: body._vehicle,
+        _gondola: body._gondola,
+        _mech: body._mech,
+        dateStart: body.dateStart,
+        _typeMaintenance: body.typeMaintenance,
+        dateEnd: body.dateEnd,
+        detailsV: body.detailsV,
+        detailsG: body.detailsG,
+        totalV: body.totalV,
+        totalG: body.totalG,
+        detailsRev: '*AJUSTES',
+        detailsRep: body.detailsRep,
+        state: body.state
+    });
+
+    mantenimiento.save(function(err, mantenimientoG) {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'Error al crear mantenimiento',
+                errors: err
+            });
+        }
+
+        Maintenance.findById({ _id: mantenimientoG._id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
+            .populate('_user', 'name lastName img')
+            .populate('_mech', '')
+            .populate('detailsV._part', '')
+            .populate('detailsG._part', '')
+            .exec(
+                function(err, mant) {
+
+                    if (err) {
+                        return res.status(500).json({
+                            ok: false,
+                            mensaje: 'Error al listar mantenimiento del vehículo',
+                            mantenimiento: null,
+                            errors: err
+                        });
+                    }
+
+                    res.status(200).json({
+                        ok: true,
+                        mantenimiento: mant
+                    });
+
+                });
+    });
+});
 
 /**
  * CREAR MANTENIMIENTO

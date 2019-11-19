@@ -238,7 +238,7 @@ app.post('/repair', mdAuth.verificaToken, function(req, res) {
     var body = req.body;
 
     var mantenimiento = new Maintenance({
-        _user: body._user._id,
+        _user: body._user,
         _vehicle: body._vehicle,
         _gondola: body._gondola,
         _mech: body._mech,

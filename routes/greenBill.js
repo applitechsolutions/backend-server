@@ -1,5 +1,7 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
+var ObjectId = mongoose.Types.ObjectId;
 
 var app = express();
 
@@ -7,7 +9,7 @@ var GreenBill = require('../models/greenBill');
 var GreenTrip = require('../models/greenTrips');
 
 /**
- * LISTAR DETALLE FACTURA VERDE POR FECHAS
+ * LISTAR FACTURAS VERDES PAGADAS POR FECHAS
  */
 
 app.get('/', function(req, res) {
@@ -43,16 +45,48 @@ app.get('/', function(req, res) {
 });
 
 /**
+ * LISTAR FACTURAS VERDES NO PAGADAS
+ */
+
+app.get('/nopaid', function(req, res) {
+
+    GreenBill.find({
+            state: false,
+            paid: false
+        }, 'date details total paid')
+        .populate('_customer', 'name nit address mobile')
+        .exec(
+            function(err, bills) {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error al listar facturas',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    facturas: bills
+                });
+
+            });
+});
+
+/**
  * LISTAR DETALLE FACTURA VERDE POR FECHAS
  */
 
 app.get('/detalles', function(req, res) {
 
+    var id = req.query.id;
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
 
     GreenTrip.aggregate([{
             $match: {
+                "_type": ObjectId(id),
                 "date": {
                     $gte: startDate,
                     $lte: endDate
@@ -61,6 +95,7 @@ app.get('/detalles', function(req, res) {
             }
         }, {
             $match: {
+                "_type": ObjectId(id),
                 "date": {
                     $gte: startDate,
                     $lte: endDate
@@ -89,10 +124,15 @@ app.get('/detalles', function(req, res) {
         {
             $group: {
                 _id: "$_type._id", // El valor por el cual se agrupa
+                code: { $first: "$_type.code" },
                 prod: { $first: "$_type.name" },
                 totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
-                trips: { $sum: 1 }
+                trips: { $sum: 1 },
+                tariff: { $first: "$_type.tariff" }
             }
+        },
+        {
+            $limit: 1
         }
     ], function(err, reports) {
         if (err) {
@@ -105,10 +145,81 @@ app.get('/detalles', function(req, res) {
 
         res.status(200).json({
             ok: true,
-            preDetail: reports
+            preDetail: reports,
         });
     });
 });
+
+/**
+ * LISTAR DETALLE FACTURA VERDE POR FECHAS GROUP BY
+    app.get('/detalles', function(req, res) {
+
+        var startDate = new Date(req.query.fecha1);
+        var endDate = new Date(req.query.fecha2);
+
+        GreenTrip.aggregate([{
+                $match: {
+                    "date": {
+                        $gte: startDate,
+                        $lte: endDate
+                    },
+                    "state": false
+                }
+            }, {
+                $match: {
+                    "date": {
+                        $gte: startDate,
+                        $lte: endDate
+                    },
+                    "state": false
+                }
+            }, {
+                $lookup: {
+                    from: "typetrips",
+                    localField: "_type",
+                    foreignField: "_id",
+                    as: "_type"
+                },
+            }, {
+                $unwind: '$_type'
+            }, {
+                $lookup: {
+                    from: "vehicles",
+                    localField: "_vehicle",
+                    foreignField: "_id",
+                    as: "_vehicle"
+                },
+            }, {
+                $unwind: '$_vehicle'
+            },
+            {
+                $group: {
+                    _id: "$_type._id", // El valor por el cual se agrupa
+                    prod: { $first: "$_type.name" },
+                    totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
+                    trips: { $sum: 1 }
+                }
+            }
+        ], function(err, reports) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error listando reportes verdes',
+                    errors: err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                preDetail: reports
+            });
+        });
+    });
+ */
+
+
+
+
 
 /**
  * ACTUALIZAR FACTURA REPORTE CUADROS
@@ -144,6 +255,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
 
+    console.log(body);
     var greenbill = new GreenBill({
         _customer: body._customer,
         noBill: body.noBill,

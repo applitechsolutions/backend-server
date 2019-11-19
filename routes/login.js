@@ -346,7 +346,8 @@ function obtenerMenu(ROLE, AREA) {
                         titulo: 'Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice',
                         submenu: [
-                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' }
+                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' },
+                            { titulo: 'Tipo de Viaje', url: '/typeTrips' }
                         ]
                     },
                     {

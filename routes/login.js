@@ -258,15 +258,23 @@ function obtenerMenu(ROLE, AREA) {
         case 'ADMINISTRACIÓN':
             if (ROLE === 'ADMIN_ROLE') {
                 menu = [{
-                    titulo: 'Usuarios',
-                    icono: 'menu-icon oi oi-person',
-                    submenu: [
-                        { titulo: 'Listar Usuarios', url: '/usuarios' },
-                        { titulo: 'Crear Nuevo', url: '/usuario/new' }
-                    ]
-                }];
+                        titulo: 'Reportes',
+                        icono: 'menu-icon fas fa-chart-line',
+                        submenu: [
+                            { titulo: 'Ver todos', url: '/reports' }
+                        ]
+                    },
+                    {
+                        titulo: 'Usuarios',
+                        icono: 'menu-icon oi oi-person',
+                        submenu: [
+                            { titulo: 'Listar Usuarios', url: '/usuarios' },
+                            { titulo: 'Crear Nuevo', url: '/usuario/new' }
+                        ]
+                    }
+                ];
             } else if (ROLE === 'USER_ROLE') {
-
+                // TODO:agregar menu
             }
             break;
         case 'TALLER':

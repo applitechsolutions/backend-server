@@ -12,7 +12,42 @@ var AutoCellar = require('../models/autoCellar');
 
 app.get('/', function(req, res) {
 
-    BuySpare.find({ state: false }, '_provider date noBill serie noDoc details total')
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    BuySpare.find({ state: false, date: { $gte: startDate, $lte: endDate } }, '_provider date noBill serie noDoc details discount total')
+        .populate('_provider', 'name')
+        .populate('details._part')
+        .sort({ date: 'desc' })
+        .exec(
+            function(err, buySpares) {
+
+                if (err) {
+                    return res.status(500).json({
+                        ok: false,
+                        mensaje: 'Error listando historial de compras',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    compras: buySpares
+                });
+            });
+});
+
+/**
+ * LISTAR COMPRAS DE REPUESTOS POR PROVEEDOR
+ */
+
+app.get('/provider/', function(req, res) {
+
+    var idAutoProvider = req.query._id;
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    BuySpare.find({ state: false, _provider: idAutoProvider, date: { $gte: startDate, $lte: endDate } }, '_provider date noBill serie noDoc details discount total')
         .populate('_provider', 'name')
         .populate('details._part')
         .sort({ date: 'desc' })
@@ -95,6 +130,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         serie: body.serie,
         noDoc: body.noDoc,
         details: body.details,
+        discount: body.discount,
         total: body.total
     });
 

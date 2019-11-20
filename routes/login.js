@@ -360,14 +360,14 @@ function obtenerMenu(ROLE, AREA) {
                             { titulo: 'Tipo de Viaje', url: '/typeTrips' }
                         ]
                     },
-                    // {
-                    //     titulo: 'Factura Reporte Cuadros',
-                    //     icono: 'menu-icon fas fa-file-invoice-dollar',
-                    //     submenu: [
-                    //         { titulo: 'Listar Facturas', url: '/gbills' },
-                    //         { titulo: 'Crear Factura', url: '/gbill/new' }
-                    //     ]
-                    // },
+                    {
+                        titulo: 'Factura Reporte Cuadros',
+                        icono: 'menu-icon fas fa-file-invoice-dollar',
+                        submenu: [
+                            { titulo: 'Listar Facturas', url: '/gbills' },
+                            { titulo: 'Crear Factura', url: '/gbill/new' }
+                        ]
+                    },
                     {
                         titulo: 'Clientes',
                         icono: 'menu-icon fas fa-landmark',

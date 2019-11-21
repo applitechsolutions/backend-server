@@ -17,7 +17,7 @@ var greenBillSchema = new Schema({
         trips: { type: Number },
         cost: { type: Float }
     }],
-    tariffop: { type: Float },
+    tariffopt: { type: Float },
     total: { type: Float },
     paid: { type: Boolean, default: false },
     state: { type: Boolean, default: false }

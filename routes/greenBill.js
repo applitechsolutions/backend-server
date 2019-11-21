@@ -19,6 +19,7 @@ app.get('/', function(req, res) {
 
     GreenBill.find({
             state: false,
+            paid: true,
             "date": {
                 $gte: startDate,
                 $lte: endDate
@@ -217,7 +218,29 @@ app.get('/detalles', function(req, res) {
     });
  */
 
+/**
+ * ELIMINAR FACTURA REPORTE CUADROS
+ */
 
+app.put('/delete', mdAuth.verificaToken, function(req, res) {
+    var id = req.query.id;
+    var body = req.body;
+
+    GreenBill.findByIdAndUpdate(id, { "state": body.state }, { new: true })
+        .then(function(billBorrada) {
+            res.status(200).json({
+                ok: true,
+                bill: billBorrada
+            });
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error borrando facturas',
+                errors: err
+            });
+        });
+});
 
 
 
@@ -230,7 +253,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
     var id = req.params.id;
     var body = req.body;
 
-    GreenBill.findByIdAndUpdate(id, { "oc": body.oc, "ac": body.ac, "paid": body.paid, "state": body.state }, { new: true })
+    GreenBill.findByIdAndUpdate(id, { "noBill": body.noBill, "serie": body.serie, "date": body.date, "oc": body.oc, "ac": body.ac, "paid": body.paid }, { new: true })
         .then(function(billActualizada) {
             res.status(200).json({
                 ok: true,
@@ -254,8 +277,6 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
 app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
-
-    console.log(body);
     var greenbill = new GreenBill({
         _customer: body._customer,
         noBill: body.noBill,
@@ -264,6 +285,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         oc: body.oc,
         ac: body.ac,
         details: body.details,
+        tariffop: body.tariffop,
         total: body.total,
         paid: body.paid,
         state: body.state

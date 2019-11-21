@@ -4,8 +4,9 @@ var uniqueValidator = require('mongoose-unique-validator');
 var Schema = mongoose.Schema;
 
 var orderSchema = new Schema({
-    _destination: { type: Schema.Types.ObjectId, ref: 'Destination', required: [true, 'El destino es necesario'] },
+    date: { type: Date, required: true },
     order: { type: String, unique: true, required: [true, 'El número de orden es necesario'] },
+    _destination: { type: Schema.Types.ObjectId, ref: 'Destination', required: [true, 'El destino es necesario'] },
     timestamp: true
 });
 

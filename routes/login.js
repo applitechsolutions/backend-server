@@ -355,8 +355,16 @@ function obtenerMenu(ROLE, AREA) {
                         titulo: 'Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice',
                         submenu: [
-                            { titulo: 'Mantenimiento Reportes', url: '/gtrips' },
-                            { titulo: 'Tipo de Viaje', url: '/typeTrips' }
+                            { titulo: 'Listar Reportes', url: '/gtrips' },
+                            { titulo: 'Crear Reportes', url: '/gtrip/new' }
+                        ]
+                    },
+                    {
+                        titulo: 'Tipo de Producción',
+                        icono: 'menu-icon fas fa-suitcase-rolling',
+                        submenu: [
+                            { titulo: 'Listar tipos', url: '/typeTrips' },
+                            { titulo: 'Crear Tipo de Viaje', url: '/typeTrip/new' }
                         ]
                     },
                     {

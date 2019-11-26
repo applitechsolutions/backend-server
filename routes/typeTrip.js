@@ -41,7 +41,7 @@ app.get('/:id', function(req, res) {
 
     typeTrip.findById(id)
         .then(function(typtrip) {
-            if (!empDB) {
+            if (!typtrip) {
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'El tipo de viaje con el id' + id + ' no existe',
@@ -62,6 +62,31 @@ app.get('/:id', function(req, res) {
             });
         });
 
+});
+
+/**
+ * CREAR TIPOS DE VIAJES
+ */
+
+app.put('/', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.query.id;
+    var body = req.body;
+
+    typeTrip.findByIdAndUpdate(id, { "code": body.code, "name": body.name, "km": body.km }, { new: true })
+        .then(function(typeUpdate) {
+            res.status(200).json({
+                ok: true,
+                tipo: typeUpdate
+            });
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error actualizando tipos',
+                errors: err
+            });
+        });
 });
 
 /**

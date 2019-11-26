@@ -10,7 +10,7 @@ var app = express();
 
 app.use(cors());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
@@ -19,7 +19,9 @@ app.use(function(req, res, next) {
 
 // BODY PARSER
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(bodyParser.json());
 
 /* #region  Importaciones */
@@ -41,7 +43,7 @@ var typeTripRoutes = require('./routes/typeTrip');
 var greenTripsRoutes = require('./routes/greenTrips');
 var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
-var destinationRoutes = require('./models/destination');
+var destinationRoutes = require('./routes/destination');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -61,7 +63,9 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 
-mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', {
+    useNewUrlParser: true
+}, function (error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
@@ -111,6 +115,6 @@ app.use('/', appRoutes);
 
 // Escuchar Peticiones
 var port = process.env.PORT || 3000;
-app.listen(port, function() {
+app.listen(port, function () {
     console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });

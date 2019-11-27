@@ -6,7 +6,7 @@ var app = express();
 var Destination = require('../models/destination');
 
 /**
- * LISTAR TIPOS DE VIAJES
+ * LISTAR destinos
  */
 
 app.get('/', function (req, res) {
@@ -34,7 +34,7 @@ app.get('/', function (req, res) {
 });
 
 /**
- * CARGAR TIPOS DE VIAJES
+ * CARGAR destino
  */
 
 app.get('/:id', function (req, res) {
@@ -42,26 +42,26 @@ app.get('/:id', function (req, res) {
     var id = req.params.id;
 
     Destination.findById(id)
-        .then(function (typtrip) {
-            if (!empDB) {
+        .then(function (destination) {
+            if (!destination) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El tipo de viaje con el id' + id + ' no existe',
+                    mensaje: 'El destino con el id' + id + ' no existe',
                     errors: {
-                        message: 'No existe un tipo de viaje con ese ID'
+                        message: 'No existe un destino con ese ID'
                     }
                 });
             }
 
             res.status(200).json({
                 ok: true,
-                tipoviaje: typtrip
+                destino: destination
             });
         })
         .catch(function (err) {
             res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar tipo de viaje',
+                mensaje: 'Error al buscar destino',
                 errors: err
             });
         });
@@ -69,7 +69,40 @@ app.get('/:id', function (req, res) {
 });
 
 /**
- * CREAR DESTINO
+ * EDITAR destino
+ */
+
+app.put('/', mdAuth.verificaToken, function (req, res) {
+
+    var id = req.query.id;
+    var body = req.body;
+
+    console.log('editando');
+
+    Destination.findByIdAndUpdate(id, {
+            "name": body.name,
+            "type": body.type,
+            "km": body.km
+        }, {
+            new: true
+        })
+        .then(function (destinationU) {
+            res.status(200).json({
+                ok: true,
+                destino: destinationU
+            });
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error actualizando destino',
+                errors: err
+            });
+        });
+});
+
+/**
+ * CREAR destino
  */
 
 app.post('/', mdAuth.verificaToken, function (req, res) {

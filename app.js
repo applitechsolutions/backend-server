@@ -38,10 +38,11 @@ var materialRoutes = require('./routes/material');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
-var greenTripsRoutes = require('./routes/greenTrips');
+var greenTripRoutes = require('./routes/greenTrip');
 var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
 var destinationRoutes = require('./models/destination');
+var whiteTripRoutes = require('./routes/whiteTrip');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -85,10 +86,11 @@ app.use('/materialCellar', materialCellarRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);
-app.use('/viajeV', greenTripsRoutes);
+app.use('/viajeV', greenTripRoutes);
 app.use('/CPcliente', CPcustomerRoutes);
 app.use('/facturaV', greenBillRoutes);
 app.use('/destino', destinationRoutes);
+app.use('/viajeB', whiteTripRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

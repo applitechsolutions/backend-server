@@ -6,7 +6,7 @@ var ObjectId = mongoose.Types.ObjectId;
 var app = express();
 
 var GreenBill = require('../models/greenBill');
-var GreenTrip = require('../models/greenTrips');
+var GreenTrip = require('../models/greenTrip');
 
 /**
  * LISTAR FACTURAS VERDES PAGADAS POR FECHAS

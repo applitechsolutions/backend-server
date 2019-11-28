@@ -19,7 +19,9 @@ app.use(function(req, res, next) {
 
 // BODY PARSER
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(bodyParser.json());
 
 /* #region  Importaciones */
@@ -43,6 +45,7 @@ var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
 var destinationRoutes = require('./models/destination');
 var whiteTripRoutes = require('./routes/whiteTrip');
+var destinationRoutes = require('./routes/destination');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -62,7 +65,9 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 
-mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', { useNewUrlParser: true }, function(error, res) {
+mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', {
+    useNewUrlParser: true
+}, function(error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');

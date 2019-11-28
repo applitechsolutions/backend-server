@@ -6,15 +6,17 @@ var app = express();
 var Destination = require('../models/destination');
 
 /**
- * LISTAR DESTINOS
+ * LISTAR destinos
  */
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 
     Destination.find({})
-        .sort({ _id: 'desc' })
+        .sort({
+            _id: 'desc'
+        })
         .exec(
-            function(err, destinations) {
+            function (err, destinations) {
 
                 if (err) {
                     return res.status(500).json({
@@ -32,20 +34,22 @@ app.get('/', function(req, res) {
 });
 
 /**
- * CARGAR DESTINO
+ * CARGAR destino
  */
 
-app.get('/:id', function(req, res) {
+app.get('/:id', function (req, res) {
 
     var id = req.params.id;
 
     Destination.findById(id)
-        .then(function(destination) {
+        .then(function (destination) {
             if (!destination) {
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'El destino con el id' + id + ' no existe',
-                    errors: { message: 'No existe un destino con ese ID' }
+                    errors: {
+                        message: 'No existe un destino con ese ID'
+                    }
                 });
             }
 
@@ -54,7 +58,7 @@ app.get('/:id', function(req, res) {
                 destino: destination
             });
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(500).json({
                 ok: false,
                 mensaje: 'Error al buscar destino',
@@ -65,121 +69,62 @@ app.get('/:id', function(req, res) {
 });
 
 /**
- * ACTUALIZAR DESTINO
+ * EDITAR destino
  */
 
-app.put('/:id', mdAuth.verificaToken, function(req, res) {
+app.put('/', mdAuth.verificaToken, function (req, res) {
 
-    var id = req.params.id;
+    var id = req.query.id;
     var body = req.body;
 
-    Destination.findById(id, function(err, destination) {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error al buscar destino',
-                errors: err
-            });
-        }
+    console.log('editando');
 
-        if (!destination) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'El destino con el id' + id + ' no existe',
-                errors: { message: 'No existe un destino con ese ID' }
-            });
-        }
-
-        destination.name = body.name;
-        destination.km = body.km;
-
-        destination.save(function(err, destinationG) {
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'Error al actualizar destino',
-                    errors: err
-                });
-            }
-
+    Destination.findByIdAndUpdate(id, {
+            "name": body.name,
+            "type": body.type,
+            "km": body.km
+        }, {
+            new: true
+        })
+        .then(function (destinationU) {
             res.status(200).json({
                 ok: true,
-                destino: destinationG
+                destino: destinationU
             });
-
+        })
+        .catch(function (err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error actualizando destino',
+                errors: err
+            });
         });
-
-    });
 });
 
 /**
- * BORRAR DESTINO
+ * CREAR destino
  */
 
-app.put('/delete/:id', mdAuth.verificaToken, function(req, res) {
-    var id = req.params.id;
-
-    Destination.findById(id, function(err, destination) {
-
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error al buscar destino',
-                errors: err
-            });
-        }
-
-        if (!destination) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'El destino con el id' + id + ' no existe',
-                errors: { message: 'No existe un destino con ese ID' }
-            });
-        }
-
-        destination.state = true;
-
-        destination.save(function(err, destinationG) {
-
-            if (err) {
-                return res.status(400).json({
-                    ok: false,
-                    mensaje: 'Error al borrar destino',
-                    errors: err
-                });
-            }
-
-            res.status(200).json({
-                ok: true,
-                destino: destinationG
-            });
-        });
-
-    });
-});
-
-/**
- * CREAR DESTINO
- */
-
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
 
     var destination = new Destination({
         name: body.name,
-        km: body.km
+        type: body.type,
+        km: body.km,
+        tariff: body.tariff
     });
 
     destination.save()
-        .then(function(destinationG) {
+        .then(function (destinationG) {
             res.status(201).json({
                 ok: true,
                 destino: destinationG,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear destino',

@@ -43,7 +43,6 @@ var typeTripRoutes = require('./routes/typeTrip');
 var greenTripRoutes = require('./routes/greenTrip');
 var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
-var destinationRoutes = require('./models/destination');
 var whiteTripRoutes = require('./routes/whiteTrip');
 var destinationRoutes = require('./routes/destination');
 // Taller

@@ -3,7 +3,7 @@ var mdAuth = require('../middlewares/auth');
 
 var app = express();
 
-var GreenTrips = require('../models/greenTrips');
+var GreenTrip = require('../models/greenTrip');
 var Vehicle = require('../models/vehicle');
 var Gondola = require('../models/gondola');
 
@@ -11,16 +11,18 @@ var Gondola = require('../models/gondola');
  * LISTAR REPORTE CUADROS
  */
 
-app.get('/', function(req, res) {
+app.get('/:id', function(req, res) {
 
-    GreenTrips.find({ state: false }, 'date checkIN checkOUT trips details')
+    var id = req.params.id;
+
+    GreenTrip.findById(id, { state: false }, 'date checkIN checkOUT trips details')
         .populate('_employee', 'name')
         .populate('_type', 'name')
-        .populate('_vehicle', 'plate type')
+        .populate('_vehicle', 'plate type km')
         .populate('_material', 'code name')
         .sort({ '_id': 'asc' })
         .exec(
-            function(err, Gviajes) {
+            function(err, Gviaje) {
 
                 if (err) {
                     return res.status(500).json({
@@ -32,9 +34,32 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    Gviajes: Gviajes
+                    Gviaje: Gviaje
                 });
             });
+
+    // GreenTrips.find({ state: false }, 'date checkIN checkOUT trips details')
+    //     .populate('_employee', 'name')
+    //     .populate('_type', 'name')
+    //     .populate('_vehicle', 'plate type km')
+    //     .populate('_material', 'code name')
+    //     .sort({ '_id': 'asc' })
+    //     .exec(
+    //         function(err, Gviajes) {
+
+    //             if (err) {
+    //                 return res.status(500).json({
+    //                     ok: false,
+    //                     mensaje: 'Error listando reporte cuadros',
+    //                     errors: err
+    //                 });
+    //             }
+
+    //             res.status(200).json({
+    //                 ok: true,
+    //                 Gviajes: Gviajes
+    //             });
+    //         });
 });
 
 /**
@@ -46,7 +71,7 @@ app.get('/reports', function(req, res) {
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
 
-    GreenTrips.aggregate([{
+    GreenTrip.aggregate([{
         $match: {
             "date": {
                 $gte: startDate,
@@ -103,7 +128,7 @@ app.get('/reports', function(req, res) {
             _id: '$_id',
             _employee: { _id: 1, name: 1 },
             _type: { _id: 1, name: 1 },
-            _vehicle: { _id: 1, type: 1, plate: 1, mts: 1 },
+            _vehicle: { _id: 1, type: 1, plate: 1, mts: 1, km: 1 },
             _material: { _id: 1, code: 1, name: 1 },
             date: '$date',
             checkIN: '$checkIN',
@@ -138,7 +163,7 @@ app.delete('/:id', mdAuth.verificaToken, function(req, res) {
     var km = body._type.km * body.trips * -1;
     console.log(body);
 
-    GreenTrips.findByIdAndDelete(id)
+    GreenTrip.findByIdAndDelete(id)
         .then(function(tripBorrado) {
 
             Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { "km": km, "pits.$[elem].km": km } }, {
@@ -183,7 +208,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     var body = req.body;
     var km = body._type.km * body.trips;
 
-    var greenTrip = new GreenTrips({
+    var greenTrip = new GreenTrip({
 
         _employee: body._employee,
         _type: body._type._id,

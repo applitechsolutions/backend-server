@@ -9,9 +9,11 @@ var whiteTrip = require('../models/whiteTrip');
  * LISTAR REPORTE LINEAS
  */
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 
-    whiteTrip.find({ state: false }, 'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT invoiced')
+    whiteTrip.find({
+            state: false
+        }, 'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT invoiced')
         .populate('_employee', 'name')
         .populate('_vehicle', 'plate type km')
         .populate({
@@ -23,9 +25,11 @@ app.get('/', function(req, res) {
                 }
             }
         })
-        .sort({ '_id': 'asc' })
+        .sort({
+            '_id': 'asc'
+        })
         .exec(
-            function(err, Wviajes) {
+            function (err, Wviajes) {
 
                 if (err) {
                     return res.status(500).json({
@@ -46,7 +50,7 @@ app.get('/', function(req, res) {
  * CREAR REPORTE LINEAS
  */
 
-app.post('/', mdAuth.verificaToken(), function(req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
 
@@ -66,14 +70,14 @@ app.post('/', mdAuth.verificaToken(), function(req, res) {
     });
 
     whitetrip.save()
-        .then(function(wtripsave) {
+        .then(function (wtripsave) {
             res.status(201).json({
                 ok: true,
                 viajeB: wtripsave,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear reporte cuadros',

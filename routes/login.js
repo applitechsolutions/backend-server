@@ -9,7 +9,9 @@ var User = require('../models/user');
 var UserArea = require('../models/userArea');
 
 // GOOGLE
-const { OAuth2Client } = require('google-auth-library');
+const {
+    OAuth2Client
+} = require('google-auth-library');
 
 const GOOGLE_CLIENT_ID = require('../config/config').GOOGLE_CLIENT_ID;
 const GOOGLE_SECRET = require('../config/config').GOOGLE_SECRET;
@@ -20,8 +22,12 @@ var mdAutentificacion = require('../middlewares/auth');
  * RENOVAR TOKEN
  */
 
-app.get('/renuevatoken', mdAutentificacion.verificaToken, function(req, res) {
-    var token = jwt.sign({ usuario: req.usuario }, SEED, { expiresIn: 14400 });
+app.get('/renuevatoken', mdAutentificacion.verificaToken, function (req, res) {
+    var token = jwt.sign({
+        usuario: req.usuario
+    }, SEED, {
+        expiresIn: 14400
+    });
 
     res.status(200).json({
         ok: true,
@@ -33,7 +39,7 @@ app.get('/renuevatoken', mdAutentificacion.verificaToken, function(req, res) {
  * LOGIN CON GOOGLE
  */
 
-app.post('/google', function(req, res) {
+app.post('/google', function (req, res) {
 
     var token = req.body.token;
 
@@ -52,7 +58,10 @@ app.post('/google', function(req, res) {
         // If request specified a G Suite domain:
         //const domain = payload['hd'];
 
-        User.findOne({ email: payload.email, state: false }, function(err, usuario) {
+        User.findOne({
+            email: payload.email,
+            state: false
+        }, function (err, usuario) {
 
             if (err) {
                 return res.status(500).json({
@@ -73,14 +82,18 @@ app.post('/google', function(req, res) {
                     // Crear un TOKEN
                     usuario.password = ':O';
 
-                    var token = jwt.sign({ usuario: usuario }, SEED, { expiresIn: 14400 });
+                    var token = jwt.sign({
+                        usuario: usuario
+                    }, SEED, {
+                        expiresIn: 14400
+                    });
 
                     var menuTaller = [];
                     var menuTransporte = [];
                     var menuDistribucion = [];
                     var menuContabilidad = [];
                     var menuAdmin = [];
-                    areas.forEach(function(area) {
+                    areas.forEach(function (area) {
                         switch (area._area.name) {
                             case 'TALLER':
                                 menuTaller = obtenerMenu(usuario.role, 'TALLER');
@@ -162,11 +175,14 @@ app.post('/google', function(req, res) {
  * LOGIN NORMAL
  */
 
-app.post('/', function(req, res) {
+app.post('/', function (req, res) {
 
     var body = req.body;
 
-    User.findOne({ email: body.email, state: false }, function(err, usuarioBD) {
+    User.findOne({
+        email: body.email,
+        state: false
+    }, function (err, usuarioBD) {
 
         if (err) {
             return res.status(500).json({
@@ -194,12 +210,18 @@ app.post('/', function(req, res) {
 
         // Crear un TOKEN
         usuarioBD.password = ':O';
-        var token = jwt.sign({ usuario: usuarioBD }, SEED, { expiresIn: 14400 });
+        var token = jwt.sign({
+            usuario: usuarioBD
+        }, SEED, {
+            expiresIn: 14400
+        });
 
-        UserArea.find({ _user: usuarioBD._id }, '')
+        UserArea.find({
+                _user: usuarioBD._id
+            }, '')
             .populate('_area', 'name')
             .exec(
-                function(err, areas) {
+                function (err, areas) {
 
                     if (err) {
                         return res.status(500).json({
@@ -213,7 +235,7 @@ app.post('/', function(req, res) {
                     var menuDistribucion = [];
                     var menuContabilidad = [];
                     var menuAdmin = [];
-                    areas.forEach(function(area) {
+                    areas.forEach(function (area) {
                         switch (area._area.name) {
                             case 'TALLER':
                                 menuTaller = obtenerMenu(usuarioBD.role, 'TALLER');
@@ -260,16 +282,22 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                         titulo: 'Reportes',
                         icono: 'menu-icon fas fa-chart-line',
-                        submenu: [
-                            { titulo: 'Ver todos', url: '/reports' }
-                        ]
+                        submenu: [{
+                            titulo: 'Ver todos',
+                            url: '/reports'
+                        }]
                     },
                     {
                         titulo: 'Usuarios',
                         icono: 'menu-icon oi oi-person',
-                        submenu: [
-                            { titulo: 'Listar Usuarios', url: '/usuarios' },
-                            { titulo: 'Crear Nuevo', url: '/usuario/new' }
+                        submenu: [{
+                                titulo: 'Listar Usuarios',
+                                url: '/usuarios'
+                            },
+                            {
+                                titulo: 'Crear Nuevo',
+                                url: '/usuario/new'
+                            }
                         ]
                     }
                 ];
@@ -282,52 +310,91 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                         titulo: 'Vehículos',
                         icono: 'menu-icon fas fa-truck',
-                        submenu: [
-                            { titulo: 'Listar Vehículos', url: '/vehicles' },
-                            { titulo: 'Combustible', url: '/gasolines' },
-                            { titulo: 'Crear Vehículo', url: '/vehicle/new' }
+                        submenu: [{
+                                titulo: 'Listar Vehículos',
+                                url: '/vehicles'
+                            },
+                            {
+                                titulo: 'Combustible',
+                                url: '/gasolines'
+                            },
+                            {
+                                titulo: 'Crear Vehículo',
+                                url: '/vehicle/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Mantenimientos',
                         icono: 'menu-icon fas fa-tools',
-                        submenu: [
-                            { titulo: 'Reparaciones y ajustes', url: '/repairs' },
-                            { titulo: 'Crear Mantenimiento', url: '/maintenance/new' },
-                            { titulo: 'Listar Mantenimientos', url: '/maintenances' },
-                            { titulo: 'Tipos disponibles', url: '/typeMaintenances' }
+                        submenu: [{
+                                titulo: 'Reparaciones y ajustes',
+                                url: '/repairs'
+                            },
+                            {
+                                titulo: 'Crear Mantenimiento',
+                                url: '/maintenance/new'
+                            },
+                            {
+                                titulo: 'Listar Mantenimientos',
+                                url: '/maintenances'
+                            },
+                            {
+                                titulo: 'Tipos disponibles',
+                                url: '/typeMaintenances'
+                            }
                         ]
                     },
                     {
                         titulo: 'Repuestos',
                         icono: 'menu-icon fas fa-cogs',
-                        submenu: [
-                            { titulo: 'Inventario', url: '/parts' },
-                            { titulo: 'Crear Repuesto', url: '/part/new' }
+                        submenu: [{
+                                titulo: 'Inventario',
+                                url: '/parts'
+                            },
+                            {
+                                titulo: 'Crear Repuesto',
+                                url: '/part/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Compras',
                         icono: 'menu-icon fas fa-shopping-cart',
-                        submenu: [
-                            { titulo: 'Nueva Compra', url: '/buySpare/new' },
-                            { titulo: 'Historial de Compras', url: '/buySpares' }
+                        submenu: [{
+                                titulo: 'Nueva Compra',
+                                url: '/buySpare/new'
+                            },
+                            {
+                                titulo: 'Historial de Compras',
+                                url: '/buySpares'
+                            }
                         ]
                     },
                     {
                         titulo: 'Proveedores',
                         icono: 'menu-icon fas fa-industry',
-                        submenu: [
-                            { titulo: 'Listar Proveedores', url: '/autoProviders' },
-                            { titulo: 'Crear Proveedor', url: '/autoProvider/new' }
+                        submenu: [{
+                                titulo: 'Listar Proveedores',
+                                url: '/autoProviders'
+                            },
+                            {
+                                titulo: 'Crear Proveedor',
+                                url: '/autoProvider/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Mecánicos',
                         icono: 'menu-icon fas fa-user-cog',
-                        submenu: [
-                            { titulo: 'Listado Mecánicos', url: '/mechs' },
-                            { titulo: 'Crear Mecánico', url: '/mech/new' }
+                        submenu: [{
+                                titulo: 'Listado Mecánicos',
+                                url: '/mechs'
+                            },
+                            {
+                                titulo: 'Crear Mecánico',
+                                url: '/mech/new'
+                            }
                         ]
                     }
                 ];
@@ -335,9 +402,10 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                     titulo: 'Mantenimientos',
                     icono: 'menu-icon fas fa-tools',
-                    submenu: [
-                        { titulo: 'Crear Mantenimiento', url: '/maintenance/new' }
-                    ]
+                    submenu: [{
+                        titulo: 'Crear Mantenimiento',
+                        url: '/maintenance/new'
+                    }]
                 }];
             }
             break;
@@ -346,57 +414,92 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                         titulo: 'Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice',
-                        submenu: [
-                            { titulo: 'Listar Reportes', url: '/gtrips' },
-                            { titulo: 'Crear Reportes', url: '/gtrip/new' }
+                        submenu: [{
+                                titulo: 'Listar Reportes',
+                                url: '/gtrips'
+                            },
+                            {
+                                titulo: 'Crear Reportes',
+                                url: '/gtrip/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Tipo de Producción',
                         icono: 'menu-icon fas fa-suitcase-rolling',
-                        submenu: [
-                            { titulo: 'Listar tipos', url: '/typeTrips' },
-                            { titulo: 'Crear Tipo de Viaje', url: '/typeTrip/new' }
+                        submenu: [{
+                                titulo: 'Listar tipos',
+                                url: '/typeTrips'
+                            },
+                            {
+                                titulo: 'Crear Tipo de Viaje',
+                                url: '/typeTrip/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Factura Reporte Cuadros',
                         icono: 'menu-icon fas fa-file-invoice-dollar',
-                        submenu: [
-                            { titulo: 'Listar Facturas', url: '/gbills' },
-                            { titulo: 'Crear Factura', url: '/gbill/new' }
+                        submenu: [{
+                                titulo: 'Listar Facturas',
+                                url: '/gbills'
+                            },
+                            {
+                                titulo: 'Crear Factura',
+                                url: '/gbill/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Reporte Lineas',
                         icono: 'menu-icon fas fa-file-alt',
-                        submenu: [
-                            { titulo: 'Listar Reportes', url: '/wtrips' },
-                            { titulo: 'Crear Reporte', url: '/wtrip/new' }
+                        submenu: [{
+                                titulo: 'Listar Reportes',
+                                url: '/wtrips'
+                            },
+                            {
+                                titulo: 'Crear Reporte',
+                                url: '/wtrip/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Ordenes',
                         icono: 'menu-icon fas fa-receipt',
-                        submenu: [
-                            { titulo: 'Listar Activas', url: '/orders' },
-                            { titulo: 'Crear Orden', url: '/order/new' }
+                        submenu: [{
+                                titulo: 'Listar Activas',
+                                url: '/orders'
+                            },
+                            {
+                                titulo: 'Listar Finalizadas',
+                                url: '/ordersFinished'
+                            },
+                            {
+                                titulo: 'Crear Orden',
+                                url: '/order/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Destinos',
                         icono: 'menu-icon fas fa-map-marked-alt',
-                        submenu: [
-                            { titulo: 'Listar Destinos', url: '/destinations' },
-                            { titulo: 'Crear Destino', url: '/destination/new' }
+                        submenu: [{
+                                titulo: 'Listar Destinos',
+                                url: '/destinations'
+                            },
+                            {
+                                titulo: 'Crear Destino',
+                                url: '/destination/new'
+                            }
                         ]
                     },
                     {
                         titulo: 'Clientes',
                         icono: 'menu-icon fas fa-landmark',
-                        submenu: [
-                            { titulo: 'Listar clientes', url: '/CPcustomers' }
-                        ]
+                        submenu: [{
+                            titulo: 'Listar clientes',
+                            url: '/CPcustomers'
+                        }]
                     }
                 ];
             } else if (ROLE === 'USER_ROLE') {
@@ -408,9 +511,10 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                     titulo: 'Clientes',
                     icono: 'menu-icon fas fa-user-tag',
-                    submenu: [
-                        { titulo: 'Listar clientes', url: '/customers' }
-                    ]
+                    submenu: [{
+                        titulo: 'Listar clientes',
+                        url: '/customers'
+                    }]
                 }];
             } else if (ROLE === 'USER_ROLE') {
 
@@ -421,9 +525,14 @@ function obtenerMenu(ROLE, AREA) {
                 menu = [{
                     titulo: 'Empleados',
                     icono: 'menu-icon fas fa-user-tie',
-                    submenu: [
-                        { titulo: 'Listar Empleados', url: '/employees' },
-                        { titulo: 'Crear Empleado', url: '/employee/new' }
+                    submenu: [{
+                            titulo: 'Listar Empleados',
+                            url: '/employees'
+                        },
+                        {
+                            titulo: 'Crear Empleado',
+                            url: '/employee/new'
+                        }
                     ]
                 }];
             } else if (ROLE === 'USER_ROLE') {

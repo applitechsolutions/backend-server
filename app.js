@@ -44,6 +44,8 @@ var greenTripsRoutes = require('./routes/greenTrips');
 var CPcustomerRoutes = require('./routes/CPcustomer');
 var greenBillRoutes = require('./routes/greenBill');
 var destinationRoutes = require('./routes/destination');
+var orderRoutes = require('./routes/order');
+var pullRoutes = require('./routes/pull');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -93,6 +95,8 @@ app.use('/viajeV', greenTripsRoutes);
 app.use('/CPcliente', CPcustomerRoutes);
 app.use('/facturaV', greenBillRoutes);
 app.use('/destino', destinationRoutes);
+app.use('/order', orderRoutes);
+app.use('/pull', pullRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);

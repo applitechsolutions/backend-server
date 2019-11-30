@@ -451,19 +451,6 @@ function obtenerMenu(ROLE, AREA) {
                         ]
                     },
                     {
-                        titulo: 'Reporte Lineas',
-                        icono: 'menu-icon fas fa-file-alt',
-                        submenu: [{
-                                titulo: 'Listar Reportes',
-                                url: '/wtrips'
-                            },
-                            {
-                                titulo: 'Crear Reporte',
-                                url: '/wtrip/new'
-                            }
-                        ]
-                    },
-                    {
                         titulo: 'Ordenes',
                         icono: 'menu-icon fas fa-receipt',
                         submenu: [{
@@ -478,6 +465,20 @@ function obtenerMenu(ROLE, AREA) {
                                 titulo: 'Crear Orden',
                                 url: '/order/new'
                             }
+                        ]
+                    },
+                    {
+                        titulo: 'Reporte Lineas',
+                        icono: 'menu-icon fas fa-file-alt',
+                        submenu: [{
+                                titulo: 'Listar Reportes',
+                                url: '/wtrips'
+                            }
+                            // ,
+                            // {
+                            //     titulo: 'Crear Reporte',
+                            //     url: '/wtrip/new'
+                            // }
                         ]
                     },
                     {

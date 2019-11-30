@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 var Float = require('mongoose-float').loadType(mongoose, 2);
 
 var Schema = mongoose.Schema;
@@ -19,5 +20,7 @@ var whiteTripSchema = new Schema({
     invoiced: { type: Boolean, default: false },
     state: { type: Boolean, default: false }
 });
+
+whiteTripSchema.plugin(uniqueValidator, { message: '{PATH} debe ser unico' });
 
 module.exports = mongoose.model('WhiteTrip', whiteTripSchema);

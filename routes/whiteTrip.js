@@ -4,12 +4,15 @@ var mdAuth = require('../middlewares/auth');
 var app = express();
 
 var whiteTrip = require('../models/whiteTrip');
+var Vehicle = require('../models/vehicle');
+var Gondola = require('../models/gondola');
+var Pull = require('../models/pull');
 
 /**
  * LISTAR REPORTE LINEAS
  */
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 
     whiteTrip.find({
             state: false
@@ -29,7 +32,7 @@ app.get('/', function (req, res) {
             '_id': 'asc'
         })
         .exec(
-            function (err, Wviajes) {
+            function(err, Wviajes) {
 
                 if (err) {
                     return res.status(500).json({
@@ -50,13 +53,14 @@ app.get('/', function (req, res) {
  * CREAR REPORTE LINEAS
  */
 
-app.post('/', mdAuth.verificaToken, function (req, res) {
+app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
+    var km = req.query.km;
 
     var whitetrip = new whiteTrip({
         _employee: body._employee,
-        _vehicle: body._vehicle._id,
+        _vehicle: body._vehicle,
         _pull: body._pull,
         date: body.date,
         noTicket: body.noTicket,
@@ -70,14 +74,35 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     });
 
     whitetrip.save()
-        .then(function (wtripsave) {
+        .then(function(wtripsave) {
+
+            Pull.updateOne({ _id: body._pull._id }, { $inc: { "mts": body.mts, "kg": body.kgT } })
+                .then(function() {})
+                .catch(function() {});
+
+            Vehicle.updateOne({ _id: body._vehicle._id }, { $inc: { "km": km, "pits.$[elem].km": km } }, {
+                    multi: true,
+                    arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                })
+                .then(function(tripKm) {})
+                .catch(function(err) {});
+
+
+            if (body._vehicle.type === 'camionG') {
+                Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { "pits.$[elem].km": km } }, {
+                        multi: true,
+                        arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                    })
+                    .then(function(gkm) {})
+                    .catch(function(err) {});
+            }
             res.status(201).json({
                 ok: true,
                 viajeB: wtripsave,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear reporte cuadros',

@@ -78,14 +78,14 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
 
             Pull.updateOne({ _id: body._pull._id }, { $inc: { "mts": body.mts, "kg": body.kgT } })
                 .then(function() {})
-                .catch(function() {});
+                .catch(function(err) { console.log(err); });
 
             Vehicle.updateOne({ _id: body._vehicle._id }, { $inc: { "km": km, "pits.$[elem].km": km } }, {
                     multi: true,
                     arrayFilters: [{ "elem.km": { $gte: 0 } }]
                 })
                 .then(function(tripKm) {})
-                .catch(function(err) {});
+                .catch(function(err) { console.log(err); });
 
 
             if (body._vehicle.type === 'camionG') {
@@ -94,7 +94,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
                         arrayFilters: [{ "elem.km": { $gte: 0 } }]
                     })
                     .then(function(gkm) {})
-                    .catch(function(err) {});
+                    .catch(function(err) { console.log(err); });
             }
             res.status(201).json({
                 ok: true,
@@ -108,6 +108,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
                 mensaje: 'Error al crear reporte cuadros',
                 errors: err
             });
+            console.log(err);
         });
 });
 

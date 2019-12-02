@@ -9,13 +9,16 @@ var Gondola = require('../models/gondola');
 var Pull = require('../models/pull');
 
 /**
- * LISTAR REPORTE LINEAS
+ * LISTAR REPORTE LINEAS POR PULL
  */
 
-app.get('/', function(req, res) {
+app.get('/:id', function (req, res) {
+
+    var id = req.params.id;
 
     whiteTrip.find({
-            state: false
+            state: false,
+            _pull: id
         }, 'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT invoiced')
         .populate('_employee', 'name')
         .populate('_vehicle', 'plate type km')
@@ -32,7 +35,7 @@ app.get('/', function(req, res) {
             '_id': 'asc'
         })
         .exec(
-            function(err, Wviajes) {
+            function (err, Wviajes) {
 
                 if (err) {
                     return res.status(500).json({
@@ -44,7 +47,7 @@ app.get('/', function(req, res) {
 
                 res.status(200).json({
                     ok: true,
-                    wviaje: Wviajes
+                    wviajes: Wviajes
                 });
             });
 });
@@ -53,7 +56,7 @@ app.get('/', function(req, res) {
  * CREAR REPORTE LINEAS
  */
 
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
     var km = req.query.km;
@@ -74,27 +77,59 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     });
 
     whitetrip.save()
-        .then(function(wtripsave) {
+        .then(function (wtripsave) {
 
-            Pull.updateOne({ _id: body._pull._id }, { $inc: { "mts": body.mts, "kg": body.kgT } })
-                .then(function() {})
-                .catch(function(err) { console.log(err); });
-
-            Vehicle.updateOne({ _id: body._vehicle._id }, { $inc: { "km": km, "pits.$[elem].km": km } }, {
-                    multi: true,
-                    arrayFilters: [{ "elem.km": { $gte: 0 } }]
+            Pull.updateOne({
+                    _id: body._pull._id
+                }, {
+                    $inc: {
+                        "mts": body.mts,
+                        "kg": body.kgT
+                    }
                 })
-                .then(function(tripKm) {})
-                .catch(function(err) { console.log(err); });
+                .then(function () {})
+                .catch(function (err) {
+                    console.log(err);
+                });
+
+            Vehicle.updateOne({
+                    _id: body._vehicle._id
+                }, {
+                    $inc: {
+                        "km": km,
+                        "pits.$[elem].km": km
+                    }
+                }, {
+                    multi: true,
+                    arrayFilters: [{
+                        "elem.km": {
+                            $gte: 0
+                        }
+                    }]
+                })
+                .then(function (tripKm) {})
+                .catch(function (err) {
+                    console.log(err);
+                });
 
 
             if (body._vehicle.type === 'camionG') {
-                Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { "pits.$[elem].km": km } }, {
+                Gondola.findByIdAndUpdate(body._vehicle._gondola, {
+                        $inc: {
+                            "pits.$[elem].km": km
+                        }
+                    }, {
                         multi: true,
-                        arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                        arrayFilters: [{
+                            "elem.km": {
+                                $gte: 0
+                            }
+                        }]
                     })
-                    .then(function(gkm) {})
-                    .catch(function(err) { console.log(err); });
+                    .then(function (gkm) {})
+                    .catch(function (err) {
+                        console.log(err);
+                    });
             }
             res.status(201).json({
                 ok: true,
@@ -102,7 +137,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
                 usuarioToken: req.usuario
             });
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear reporte cuadros',

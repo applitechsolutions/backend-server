@@ -35,35 +35,41 @@ var Order = require('../models/order');
  * BUSCAR PROVEEDOR
  */
 
-// app.get('/:id', function(req, res) {
+app.get('/uniqueValidator', function (req, res) {
 
-//     var id = req.params.id;
+    var date = new Date(req.query.fecha);
+    var order = req.query.order;
 
-//     Order.findById(id, 'name address mobile1 mobile2 email account1 account2 details')
-//         .exec(function(err, autoProvider) {
-//             if (err) {
-//                 return res.status(500).json({
-//                     ok: false,
-//                     mensaje: 'Error al buscar proveedor',
-//                     errors: err
-//                 });
-//             }
+    Order.find({
+            date: date,
+            order: order
+        }, '')
+        .exec(function (err, order) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar orden',
+                    errors: err
+                });
+            }
 
-//             if (!autoProvider) {
-//                 return res.status(400).json({
-//                     ok: false,
-//                     mensaje: 'El proveedor con el id' + id + ' no existe',
-//                     errors: { message: 'No existe un proveedor con ese ID' }
-//                 });
-//             }
+            if (!order) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'La orden con el id no existe',
+                    errors: {
+                        message: 'No existe un orden con ese ID'
+                    }
+                });
+            }
 
-//             res.status(200).json({
-//                 ok: true,
-//                 proveedor: autoProvider
-//             });
+            res.status(200).json({
+                ok: true,
+                orden: order
+            });
 
-//         });
-// });
+        });
+});
 
 
 /**
@@ -179,6 +185,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
         order: body.order,
         _destination: body._destination
     });
+
+    console.log(order);
 
     order.save(function (err, orderG) {
         if (err) {

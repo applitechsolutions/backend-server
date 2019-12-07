@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -10,7 +9,6 @@ var orderSchema = new Schema({
     },
     order: {
         type: String,
-        unique: true,
         required: [true, 'El número de orden es necesario']
     },
     _destination: {
@@ -24,10 +22,6 @@ var orderSchema = new Schema({
     }
 }, {
     timestamps: true
-});
-
-orderSchema.plugin(uniqueValidator, {
-    message: '{PATH} debe ser unico'
 });
 
 module.exports = mongoose.model('Order', orderSchema);

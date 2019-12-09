@@ -6,16 +6,19 @@ var app = express();
 var Maintenance = require('../models/maintenance');
 
 // BUSCAR MANTENIMIENTO ACTIVO DE UN vehiculo
-app.get('/activeV/:id', function(req, res) {
+app.get('/activeV/:id', function (req, res) {
     var id = req.params.id;
 
-    Maintenance.findOne({ state: false, _vehicle: id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
+    Maintenance.findOne({
+            state: false,
+            _vehicle: id
+        }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
         .populate('_user', 'name lastName img')
         .populate('_mech', '')
         .populate('detailsV._part', '')
         .populate('detailsG._part', '')
         .exec(
-            function(err, mant) {
+            function (err, mant) {
 
                 if (err) {
                     return res.status(500).json({
@@ -37,15 +40,18 @@ app.get('/activeV/:id', function(req, res) {
 });
 
 // BUSCAR MANTENIMIENTO ACTIVO DE UNA gondola
-app.get('/activeG/:id', function(req, res) {
+app.get('/activeG/:id', function (req, res) {
     var id = req.params.id;
-    Maintenance.findOne({ state: 0, _gondola: id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
+    Maintenance.findOne({
+            state: 0,
+            _gondola: id
+        }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
         .populate('_user', 'name lastName img')
         .populate('_mech', '')
         .populate('detailsV._part', '')
         .populate('detailsG._part', '')
         .exec(
-            function(err, mant) {
+            function (err, mant) {
 
                 if (err) {
                     return res.status(500).json({
@@ -69,7 +75,7 @@ app.get('/activeG/:id', function(req, res) {
  * LISTAR MANTENIMIENTOS TERMINADOS
  */
 
-app.get('/terminados', function(req, res) {
+app.get('/terminados', function (req, res) {
 
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
@@ -89,7 +95,7 @@ app.get('/terminados', function(req, res) {
         .populate('detailsV._part', '')
         .populate('detailsG._part', '')
         .exec(
-            function(err, mantens) {
+            function (err, mantens) {
 
                 if (err) {
                     return res.status(500).json({
@@ -112,12 +118,12 @@ app.get('/terminados', function(req, res) {
  * ACTUALIZAR MANTENIMIENTO
  */
 
-app.put('/:id', mdAuth.verificaToken, function(req, res) {
+app.put('/:id', mdAuth.verificaToken, function (req, res) {
 
     var id = req.params.id;
     var body = req.body;
 
-    Maintenance.findById(id, function(err, mantenimiento) {
+    Maintenance.findById(id, function (err, mantenimiento) {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -130,7 +136,9 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'El mantenimiento con el id' + id + ' no existe',
-                errors: { message: 'No existe un mantenimiento con ese ID' }
+                errors: {
+                    message: 'No existe un mantenimiento con ese ID'
+                }
             });
         }
 
@@ -144,7 +152,7 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
         mantenimiento.detailsRev = body.detailsRev;
         mantenimiento.detailsRep = body.detailsRep;
 
-        mantenimiento.save(function(err, mantenimientoAct) {
+        mantenimiento.save(function (err, mantenimientoAct) {
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -153,13 +161,15 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            Maintenance.findById(mantenimientoAct._id, { state: false })
+            Maintenance.findById(mantenimientoAct._id, {
+                    state: false
+                })
                 .populate('_user', 'name lastName img')
                 .populate('_mech', '')
                 .populate('detailsV._part', '')
                 .populate('detailsG._part', '')
                 .exec(
-                    function(err, mantenimientoG) {
+                    function (err, mantenimientoG) {
                         res.status(200).json({
                             ok: true,
                             mantenimiento: mantenimientoG
@@ -175,12 +185,12 @@ app.put('/:id', mdAuth.verificaToken, function(req, res) {
  * FINALIZAR MANTENIMIENTO
  */
 
-app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
+app.put('/finish/:id', mdAuth.verificaToken, function (req, res) {
 
     var id = req.params.id;
     var body = req.body;
 
-    Maintenance.findById(id, function(err, mantenimiento) {
+    Maintenance.findById(id, function (err, mantenimiento) {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -193,7 +203,9 @@ app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
             return res.status(400).json({
                 ok: false,
                 mensaje: 'El mantenimiento con el id' + id + ' no existe',
-                errors: { message: 'No existe un mantenimiento con ese ID' }
+                errors: {
+                    message: 'No existe un mantenimiento con ese ID'
+                }
             });
         }
 
@@ -202,7 +214,7 @@ app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
         mantenimiento.dateEnd = body.dateEnd;
         mantenimiento.state = body.state;
 
-        mantenimiento.save(function(err, mantenimientoAct) {
+        mantenimiento.save(function (err, mantenimientoAct) {
             if (err) {
                 return res.status(400).json({
                     ok: false,
@@ -211,13 +223,15 @@ app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
                 });
             }
 
-            Maintenance.findById(mantenimientoAct._id, { state: false })
+            Maintenance.findById(mantenimientoAct._id, {
+                    state: false
+                })
                 .populate('_user', 'name lastName img')
                 .populate('_mech', '')
                 .populate('detailsV._part', '')
                 .populate('detailsG._part', '')
                 .exec(
-                    function(err, mantenimientoG) {
+                    function (err, mantenimientoG) {
                         res.status(200).json({
                             ok: true,
                             mantenimiento: mantenimientoG
@@ -233,7 +247,7 @@ app.put('/finish/:id', mdAuth.verificaToken, function(req, res) {
  * CREAR AJUSTE
  */
 
-app.post('/repair', mdAuth.verificaToken, function(req, res) {
+app.post('/repair', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
 
@@ -254,7 +268,7 @@ app.post('/repair', mdAuth.verificaToken, function(req, res) {
         state: body.state
     });
 
-    mantenimiento.save(function(err, mantenimientoG) {
+    mantenimiento.save(function (err, mantenimientoG) {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -263,13 +277,15 @@ app.post('/repair', mdAuth.verificaToken, function(req, res) {
             });
         }
 
-        Maintenance.findById({ _id: mantenimientoG._id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
+        Maintenance.findById({
+                _id: mantenimientoG._id
+            }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
             .populate('_user', 'name lastName img')
             .populate('_mech', '')
             .populate('detailsV._part', '')
             .populate('detailsG._part', '')
             .exec(
-                function(err, mant) {
+                function (err, mant) {
 
                     if (err) {
                         return res.status(500).json({
@@ -293,14 +309,14 @@ app.post('/repair', mdAuth.verificaToken, function(req, res) {
  * CREAR MANTENIMIENTO
  */
 
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
 
     var mantenimiento = new Maintenance({
         _user: body._user._id,
-        _vehicle: body._vehicle._id,
-        _gondola: body._gondola._id,
+        _vehicle: body._vehicle,
+        _gondola: body._gondola,
         _mech: body._mech,
         dateStart: body.dateStart,
         _typeMaintenance: null,
@@ -310,7 +326,7 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
         totalG: body.totalG
     });
 
-    mantenimiento.save(function(err, mantenimientoG) {
+    mantenimiento.save(function (err, mantenimientoG) {
         if (err) {
             return res.status(400).json({
                 ok: false,
@@ -319,13 +335,15 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
             });
         }
 
-        Maintenance.findById({ _id: mantenimientoG._id }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
+        Maintenance.findById({
+                _id: mantenimientoG._id
+            }, 'dateStart totalV totalG detailsRev detailsRep detailsV detailsG')
             .populate('_user', 'name lastName img')
             .populate('_mech', '')
             .populate('detailsV._part', '')
             .populate('detailsG._part', '')
             .exec(
-                function(err, mant) {
+                function (err, mant) {
 
                     if (err) {
                         return res.status(500).json({

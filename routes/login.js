@@ -467,20 +467,20 @@ function obtenerMenu(ROLE, AREA) {
                             }
                         ]
                     },
-                    {
-                        titulo: 'Reporte Lineas',
-                        icono: 'menu-icon fas fa-file-alt',
-                        submenu: [{
-                                titulo: 'Listar Reportes',
-                                url: '/wtrips'
-                            }
-                            // ,
-                            // {
-                            //     titulo: 'Crear Reporte',
-                            //     url: '/wtrip/new'
-                            // }
-                        ]
-                    },
+                    // {
+                    //     titulo: 'Reporte Lineas',
+                    //     icono: 'menu-icon fas fa-file-alt',
+                    //     submenu: [{
+                    //             titulo: 'Listar Reportes',
+                    //             url: '/wtrips'
+                    //         }
+                    //         // ,
+                    //         // {
+                    //         //     titulo: 'Crear Reporte',
+                    //         //     url: '/wtrip/new'
+                    //         // }
+                    //     ]
+                    // },
                     {
                         titulo: 'Destinos',
                         icono: 'menu-icon fas fa-map-marked-alt',

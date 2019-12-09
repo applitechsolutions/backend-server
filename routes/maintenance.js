@@ -315,7 +315,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var mantenimiento = new Maintenance({
         _user: body._user._id,
-        _vehicle: body._vehicle,
+        _vehicle: body._vehicle._id,
         _gondola: body._gondola,
         _mech: body._mech,
         dateStart: body.dateStart,

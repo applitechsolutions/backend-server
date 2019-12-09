@@ -82,7 +82,8 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
     Destination.findByIdAndUpdate(id, {
             "name": body.name,
             "type": body.type,
-            "km": body.km
+            "km": body.km,
+            "tariff": body.tariff
         }, {
             new: true
         })

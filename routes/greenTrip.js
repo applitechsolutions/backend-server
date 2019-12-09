@@ -163,29 +163,75 @@ app.get('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
 
-    GreenTrip.findById(id, function(err, gtDB) {
+    GreenTrip.findById({ _id: id })
+        .populate('_vehicle', 'km')
+        .populate('_type', 'km')
+        .exec(function(err, gtDB) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar reporte cuadros',
+                    errors: err
+                });
+            }
 
-        if (err) {
-            return res.status(500).json({
+            if (!gtDB) {
+                return res.status(400).json({
+                    ok: false,
+                    mensaje: 'El reporte cuadros con el id' + id + ' no existe',
+                    errors: { message: 'No existe un reporte de cuadros con ese ID' }
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                reporte: gtDB
+            });
+        });
+});
+
+/**
+ * ACTUALIZAR REPORTE CUADROS
+ */
+
+app.put('/', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.query.id;
+    var body = req.body;
+    var km = req.query.diferencia;
+
+    GreenTrip.findByIdAndUpdate(id, { $set: { "_employee": body._employee, "_type": body._type, "_vehicle": body._vehicle, "_material": body._material, "date": body.date, "checkIN": body.checkIN, "checkOUT": body.checkOUT, "trips": body.trips, "details": body.details } }, { new: true })
+        .then(function(tripUpdate) {
+            Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { "km": km, "pits.$[elem].km": km } }, {
+                    multi: true,
+                    arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                })
+                .then(function(vehicle) {})
+                .catch(function(err) {});
+
+            if (body._vehicle.type === 'camionG') {
+                Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { "pits.$[elem].km": km } }, {
+                        multi: true,
+                        arrayFilters: [{ "elem.km": { $gte: 0 } }]
+                    })
+                    .then(function(gkm) {})
+                    .catch(function(err) {});
+            }
+
+            res.status(200).json({
+                ok: true,
+                viajeV: tripUpdate
+            });
+
+        })
+        .catch(function(err) {
+            res.status(400).json({
                 ok: false,
-                mensaje: 'Error al buscar reporte cuadros',
+                mensaje: 'Error al actualizar reporte cuadros',
                 errors: err
             });
-        }
-
-        if (!gtDB) {
-            return res.status(400).json({
-                ok: false,
-                mensaje: 'El reporte cuadros con el id' + id + ' no existe',
-                errors: { message: 'No existe un reporte de cuadros con ese ID' }
-            });
-        }
-
-        res.status(200).json({
-            ok: true,
-            reporte: gtDB
         });
-    });
+
 });
 
 /**

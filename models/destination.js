@@ -4,7 +4,7 @@ var Float = require('mongoose-float').loadType(mongoose, 2);
 var Schema = mongoose.Schema;
 
 var tiposValidos = {
-    values: ['MIXTO', 'CD', 'PUESTOS'],
+    values: ['KG', 'MTS'],
     message: '{VALUE} no es un tipo permitido'
 }
 
@@ -17,7 +17,7 @@ var destinationSchema = new Schema({
     type: {
         type: String,
         required: true,
-        default: 'PUESTO',
+        default: 'MTS',
         enum: tiposValidos
     },
     km: {

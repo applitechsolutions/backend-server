@@ -9,14 +9,14 @@ var Destination = require('../models/destination');
  * LISTAR destinos
  */
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 
     Destination.find({})
         .sort({
             _id: 'desc'
         })
         .exec(
-            function (err, destinations) {
+            function(err, destinations) {
 
                 if (err) {
                     return res.status(500).json({
@@ -37,12 +37,12 @@ app.get('/', function (req, res) {
  * CARGAR destino
  */
 
-app.get('/:id', function (req, res) {
+app.get('/:id', function(req, res) {
 
     var id = req.params.id;
 
     Destination.findById(id)
-        .then(function (destination) {
+        .then(function(destination) {
             if (!destination) {
                 return res.status(400).json({
                     ok: false,
@@ -58,7 +58,7 @@ app.get('/:id', function (req, res) {
                 destino: destination
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(500).json({
                 ok: false,
                 mensaje: 'Error al buscar destino',
@@ -72,7 +72,7 @@ app.get('/:id', function (req, res) {
  * EDITAR destino
  */
 
-app.put('/', mdAuth.verificaToken, function (req, res) {
+app.put('/', mdAuth.verificaToken, function(req, res) {
 
     var id = req.query.id;
     var body = req.body;
@@ -87,13 +87,13 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
         }, {
             new: true
         })
-        .then(function (destinationU) {
+        .then(function(destinationU) {
             res.status(200).json({
                 ok: true,
                 destino: destinationU
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(500).json({
                 ok: false,
                 mensaje: 'Error actualizando destino',
@@ -106,7 +106,7 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
  * CREAR destino
  */
 
-app.post('/', mdAuth.verificaToken, function (req, res) {
+app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
 
@@ -118,14 +118,14 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     });
 
     destination.save()
-        .then(function (destinationG) {
+        .then(function(destinationG) {
             res.status(201).json({
                 ok: true,
                 destino: destinationG,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear destino',

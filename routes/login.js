@@ -22,7 +22,7 @@ var mdAutentificacion = require('../middlewares/auth');
  * RENOVAR TOKEN
  */
 
-app.get('/renuevatoken', mdAutentificacion.verificaToken, function (req, res) {
+app.get('/renuevatoken', mdAutentificacion.verificaToken, function(req, res) {
     var token = jwt.sign({
         usuario: req.usuario
     }, SEED, {
@@ -39,7 +39,7 @@ app.get('/renuevatoken', mdAutentificacion.verificaToken, function (req, res) {
  * LOGIN CON GOOGLE
  */
 
-app.post('/google', function (req, res) {
+app.post('/google', function(req, res) {
 
     var token = req.body.token;
 
@@ -61,7 +61,7 @@ app.post('/google', function (req, res) {
         User.findOne({
             email: payload.email,
             state: false
-        }, function (err, usuario) {
+        }, function(err, usuario) {
 
             if (err) {
                 return res.status(500).json({
@@ -93,7 +93,7 @@ app.post('/google', function (req, res) {
                     var menuDistribucion = [];
                     var menuContabilidad = [];
                     var menuAdmin = [];
-                    areas.forEach(function (area) {
+                    areas.forEach(function(area) {
                         switch (area._area.name) {
                             case 'TALLER':
                                 menuTaller = obtenerMenu(usuario.role, 'TALLER');
@@ -175,14 +175,14 @@ app.post('/google', function (req, res) {
  * LOGIN NORMAL
  */
 
-app.post('/', function (req, res) {
+app.post('/', function(req, res) {
 
     var body = req.body;
 
     User.findOne({
         email: body.email,
         state: false
-    }, function (err, usuarioBD) {
+    }, function(err, usuarioBD) {
 
         if (err) {
             return res.status(500).json({
@@ -221,7 +221,7 @@ app.post('/', function (req, res) {
             }, '')
             .populate('_area', 'name')
             .exec(
-                function (err, areas) {
+                function(err, areas) {
 
                     if (err) {
                         return res.status(500).json({
@@ -235,7 +235,7 @@ app.post('/', function (req, res) {
                     var menuDistribucion = [];
                     var menuContabilidad = [];
                     var menuAdmin = [];
-                    areas.forEach(function (area) {
+                    areas.forEach(function(area) {
                         switch (area._area.name) {
                             case 'TALLER':
                                 menuTaller = obtenerMenu(usuarioBD.role, 'TALLER');

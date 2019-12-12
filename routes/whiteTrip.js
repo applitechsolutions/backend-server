@@ -19,7 +19,7 @@ app.get('/:id', function (req, res) {
     whiteTrip.find({
             state: false,
             _pull: id
-        }, 'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT invoiced')
+        }, 'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced')
         .populate('_employee', 'name')
         .populate('_vehicle', 'plate type km')
         .populate({
@@ -73,7 +73,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
         kgT: body.kgT,
         kgN: body.kgN,
         checkIN: body.checkIN,
-        checkOUT: body.checkOUT
+        checkOUT: body.checkOUT,
+        tariff: body.tariff
     });
 
     whitetrip.save()
@@ -84,7 +85,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                 }, {
                     $inc: {
                         "mts": body.mts,
-                        "kg": body.kgT
+                        "kg": body.kgN
                     }
                 })
                 .then(function () {})
@@ -140,7 +141,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
         .catch(function (err) {
             res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear reporte cuadros',
+                mensaje: 'Error al crear reporte lineas',
                 errors: err
             });
             console.log(err);

@@ -510,7 +510,7 @@ function obtenerMenu(ROLE, AREA) {
         case 'DISTRIBUCIÓN':
             if (ROLE === 'ADMIN_ROLE') {
                 menu = [{
-                    titulo: 'Clientes',
+                    titulo: 'Clientes CD',
                     icono: 'menu-icon fas fa-user-tag',
                     submenu: [{
                         titulo: 'Listar clientes',

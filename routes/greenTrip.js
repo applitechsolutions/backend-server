@@ -131,11 +131,21 @@ app.get('/group', function(req, res) {
             },
         }, {
             $unwind: '$_vehicle'
+        }, {
+            $lookup: {
+                from: "typetrips",
+                localField: "_type",
+                foreignField: "_id",
+                as: "_type"
+            },
+        }, {
+            $unwind: '$_type'
         },
         {
             $group: {
                 _id: "$date",
-                vehicles: { $push: { _id: "$_vehicle._id", plate: "$_vehicle.plate" } },
+                vehicles: { $push: { _id: "$_vehicle._id", plate: "$_vehicle.plate", mts: "$_vehicle.mts" } },
+                types: { $push: { _id: "$_type._id", name: "$_type.name", tariff: "$_type.tariff" } },
                 cantidad: { $sum: 1 }
             }
         }

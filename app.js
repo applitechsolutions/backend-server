@@ -10,7 +10,7 @@ var app = express();
 
 app.use(cors());
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
@@ -47,6 +47,8 @@ var whiteTripRoutes = require('./routes/whiteTrip');
 var destinationRoutes = require('./routes/destination');
 var orderRoutes = require('./routes/order');
 var pullRoutes = require('./routes/pull');
+var destTankRoutes = require('./routes/destTank');
+var tankTripRoutes = require('./routes/tankTrip');
 // Taller
 var buySpareRoutes = require('./routes/buySpare');
 var autoProviderRoutes = require('./routes/autoProvider');
@@ -68,7 +70,7 @@ mongoose.Promise = global.Promise;
 
 mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', {
     useNewUrlParser: true
-}, function (error, res) {
+}, function(error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
@@ -99,6 +101,8 @@ app.use('/destino', destinationRoutes);
 app.use('/order', orderRoutes);
 app.use('/pull', pullRoutes);
 app.use('/viajeB', whiteTripRoutes);
+app.use('/viajeA', tankTripRoutes);
+app.use('/destinoA', destTankRoutes);
 // Taller
 app.use('/compraRepuesto', buySpareRoutes);
 app.use('/autoProveedor', autoProviderRoutes);
@@ -121,6 +125,6 @@ app.use('/', appRoutes);
 
 // Escuchar Peticiones
 var port = process.env.PORT || 3000;
-app.listen(port, function () {
+app.listen(port, function() {
     console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });

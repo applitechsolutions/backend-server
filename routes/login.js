@@ -495,6 +495,32 @@ function obtenerMenu(ROLE, AREA) {
                         ]
                     },
                     {
+                        titulo: 'Cisterna',
+                        icono: 'menu-icon fas fas fa-tint',
+                        submenu: [{
+                                titulo: 'Listar Reporte Cisterna',
+                                url: '/ktrips'
+                            },
+                            {
+                                titulo: 'Crear Reporte Cisterna',
+                                url: '/ktrip/new'
+                            }
+                        ]
+                    },
+                    {
+                        titulo: 'Destino Cisterna',
+                        icono: 'menu-icon fas fa-map-marked',
+                        submenu: [{
+                                titulo: 'Listar Destinos',
+                                url: '/destTanks'
+                            },
+                            {
+                                titulo: 'Crear Destino',
+                                url: '/destTank/new'
+                            }
+                        ]
+                    },
+                    {
                         titulo: 'Clientes',
                         icono: 'menu-icon fas fa-landmark',
                         submenu: [{

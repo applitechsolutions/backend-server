@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var uniqueValidator = require('mongoose-unique-validator');
-var Float = require('mongoose-float').loadType(mongoose, 2);
+var Float = require('mongoose-float').loadType(mongoose, 6);
 
 var Schema = mongoose.Schema;
 

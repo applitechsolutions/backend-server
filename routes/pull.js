@@ -226,7 +226,7 @@ app.put('/finish/:id', mdAuth.verificaToken, function (req, res) {
 });
 
 /**
- * CREAR PROVEEDOR
+ * CREAR PULL
  */
 
 app.post('/', mdAuth.verificaToken, function (req, res) {

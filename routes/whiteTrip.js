@@ -58,11 +58,6 @@ app.get('/', function(req, res) {
                 },
                 "state": false
             }
-        },
-        {
-            $project: {
-                viaje: "$_wtrip._id"
-            }
         }
     ], function(err, reports) {
         if (err) {

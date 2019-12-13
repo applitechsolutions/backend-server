@@ -131,6 +131,15 @@ app.get('/detalles', function(req, res) {
                 trips: { $sum: 1 },
                 tariff: { $first: "$_type.tariff" }
             }
+            // $group: {
+            //     _id: "$_type._id", // El valor por el cual se agrupa
+            //     code: { $first: "$_type.code" },
+            //     prod: { $first: "$_type.name" },
+            //     totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
+            //     trips: { $sum: 1 },
+            //     viajes: { $push: { id: "$_id", vehicle: "$_vehicle.plate" } },
+            //     tariff: { $first: "$_type.tariff" }
+            // }
         },
         {
             $limit: 1

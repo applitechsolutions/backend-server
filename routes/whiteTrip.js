@@ -1,5 +1,7 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
+var ObjectId = mongoose.Types.ObjectId;
 
 var app = express();
 
@@ -9,10 +11,81 @@ var Gondola = require('../models/gondola');
 var Pull = require('../models/pull');
 
 /**
+ * PRE FACTURA DE REPORTE DE LINEAS
+ */
+
+app.get('/', function(req, res) {
+
+    var idD = req.query.idD;
+    var idM = req.query.idM;
+    var startDate = new Date(req.query.fecha1);
+    var endDate = new Date(req.query.fecha2);
+
+    Pull.aggregate([{
+            $lookup: {
+                from: "orders",
+                localField: "_order",
+                foreignField: "_id",
+                as: "_order"
+            },
+        }, { $unwind: '$_order' },
+        {
+            $lookup: {
+                from: "whitetrips",
+                localField: "_id",
+                foreignField: "_pull",
+                as: "_wtrips"
+            },
+        }, { $unwind: '$_wtrips' },
+        {
+            $match: {
+                "_order._destination": ObjectId(idD),
+                "_material": ObjectId(idM),
+                "_wtrips.date": {
+                    $gte: startDate,
+                    $lte: endDate
+                },
+                "state": false
+            }
+        },
+        {
+            $match: {
+                "_order._destination": ObjectId(idD),
+                "_material": ObjectId(idM),
+                "_wtrips.date": {
+                    $gte: startDate,
+                    $lte: endDate
+                },
+                "state": false
+            }
+        },
+        {
+            $project: {
+                viaje: "$_wtrip._id"
+            }
+        }
+    ], function(err, reports) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error listando reportes verdes',
+                errors: err
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            preDetail: reports,
+        });
+    });
+
+});
+
+/**
  * LISTAR REPORTE LINEAS POR PULL
  */
 
-app.get('/:id', function (req, res) {
+app.get('/:id', function(req, res) {
 
     var id = req.params.id;
 
@@ -35,7 +108,7 @@ app.get('/:id', function (req, res) {
             '_id': 'asc'
         })
         .exec(
-            function (err, Wviajes) {
+            function(err, Wviajes) {
 
                 if (err) {
                     return res.status(500).json({
@@ -52,11 +125,12 @@ app.get('/:id', function (req, res) {
             });
 });
 
+
 /**
  * CREAR REPORTE LINEAS
  */
 
-app.post('/', mdAuth.verificaToken, function (req, res) {
+app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
     var km = req.query.km;
@@ -78,7 +152,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     });
 
     whitetrip.save()
-        .then(function (wtripsave) {
+        .then(function(wtripsave) {
 
             Pull.updateOne({
                     _id: body._pull._id
@@ -88,8 +162,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                         "kg": body.kgN
                     }
                 })
-                .then(function () {})
-                .catch(function (err) {
+                .then(function() {})
+                .catch(function(err) {
                     console.log(err);
                 });
 
@@ -108,8 +182,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                         }
                     }]
                 })
-                .then(function (tripKm) {})
-                .catch(function (err) {
+                .then(function(tripKm) {})
+                .catch(function(err) {
                     console.log(err);
                 });
 
@@ -127,8 +201,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                             }
                         }]
                     })
-                    .then(function (gkm) {})
-                    .catch(function (err) {
+                    .then(function(gkm) {})
+                    .catch(function(err) {
                         console.log(err);
                     });
             }
@@ -138,7 +212,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                 usuarioToken: req.usuario
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear reporte lineas',

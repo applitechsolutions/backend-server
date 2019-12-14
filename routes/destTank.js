@@ -95,6 +95,31 @@ app.put('/', mdAuth.verificaToken, function(req, res) {
 });
 
 /**
+ * ELIMINAR DESTINOS CISTERNA
+ */
+
+app.put('/delete', mdAuth.verificaToken, function(req, res) {
+
+    var id = req.query.id;
+    var body = req.body;
+
+    DestTank.findByIdAndUpdate(id, { $set: { "state": body.state } }, { new: true })
+        .then(function(destDel) {
+            res.status(200).json({
+                ok: true,
+                destino: destDel
+            });
+        })
+        .catch(function(err) {
+            res.status(500).json({
+                ok: false,
+                mensaje: 'Error borrando destino cisterna',
+                errors: err
+            });
+        });
+});
+
+/**
  * CREAR DESTINOS CISTERNA
  */
 

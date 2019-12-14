@@ -34,14 +34,13 @@ app.get('/', function(req, res) {
                 from: "whitetrips",
                 localField: "_id",
                 foreignField: "_pull",
-                as: "_wtrips"
+                as: "_wtrip"
             },
-        }, { $unwind: '$_wtrips' },
+        }, { $unwind: '$_wtrip' },
         {
             $match: {
                 "_order._destination": ObjectId(idD),
-                "_material": ObjectId(idM),
-                "_wtrips.date": {
+                "_wtrip.date": {
                     $gte: startDate,
                     $lte: endDate
                 },
@@ -49,14 +48,51 @@ app.get('/', function(req, res) {
             }
         },
         {
-            $match: {
-                "_order._destination": ObjectId(idD),
-                "_material": ObjectId(idM),
-                "_wtrips.date": {
-                    $gte: startDate,
-                    $lte: endDate
+            $lookup: {
+                from: "materials",
+                localField: "_material",
+                foreignField: "_id",
+                as: "_material"
+            },
+        }, { $unwind: '$_material' },
+        {
+            $lookup: {
+                from: "employees",
+                localField: "_wtrip._employee",
+                foreignField: "_id",
+                as: "_employee"
+            },
+        }, { $unwind: '$_employee' },
+        {
+            $lookup: {
+                from: "destinations",
+                localField: "_order._destination",
+                foreignField: "_id",
+                as: "_destination"
+            },
+        }, { $unwind: '$_destination' },
+        {
+            $group: {
+                _id: "$_material._id",
+                nameMat: { $first: "$_material.name" },
+                details: {
+                    $push: {
+                        date: "$_wtrip.date",
+                        noTicket: "$_wtrip.noTicket",
+                        noDelivery: "$_wtrip.noDelivery",
+                        plate: "$_vehilce.plate",
+                        employee: "$_employee.name",
+                        destination: "$_destination.name",
+                        km: "$_destination.km",
+                        tariff: "$_wtrip.tariff",
+                        material: "$_material.name",
+                        mts: "$_wtrip.mts",
+                        kgB: "$_wtrip.kgB",
+                        kgT: "$_wtrip.kgT",
+                        kgN: "$_wtrip.kgN"
+                    }
                 },
-                "state": false
+                noTrips: { $sum: 1 }
             }
         }
     ], function(err, reports) {

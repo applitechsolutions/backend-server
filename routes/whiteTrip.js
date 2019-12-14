@@ -1,5 +1,4 @@
 var express = require('express');
-
 var mdAuth = require('../middlewares/auth');
 var app = express();
 

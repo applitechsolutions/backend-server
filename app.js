@@ -101,7 +101,7 @@ app.use('/facturaV', greenBillRoutes);
 app.use('/destino', destinationRoutes);
 app.use('/order', orderRoutes);
 app.use('/pull', pullRoutes);
-app.use('/facturaB', whiteTripRoutes);
+app.use('/facturaB', whiteBillRoutes);
 app.use('/viajeB', whiteTripRoutes);
 app.use('/viajeA', tankTripRoutes);
 app.use('/destinoA', destTankRoutes);

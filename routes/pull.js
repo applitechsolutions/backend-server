@@ -1,7 +1,5 @@
 var express = require('express');
-var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
-var ObjectId = mongoose.Types.ObjectId;
 
 var app = express();
 
@@ -88,108 +86,6 @@ app.get('/finisheds', function(req, res) {
                     pulls: pulls
                 });
             });
-});
-
-/**
- * PRE FACTURA DE REPORTE DE LINEAS
- */
-
-app.get('/detalles', function(req, res) {
-
-    var idD = req.query.idD;
-    var idM = req.query.idM;
-    var startDate = new Date(req.query.fecha1);
-    var endDate = new Date(req.query.fecha2);
-
-    Pull.aggregate([{
-            $lookup: {
-                from: "orders",
-                localField: "_order",
-                foreignField: "_id",
-                as: "_order"
-            },
-        }, { $unwind: '$_order' },
-        {
-            $lookup: {
-                from: "whitetrips",
-                localField: "_id",
-                foreignField: "_pull",
-                as: "_wtrip"
-            },
-        }, { $unwind: '$_wtrip' },
-        {
-            $match: {
-                "_order._destination": ObjectId(idD),
-                "_wtrip.date": {
-                    $gte: startDate,
-                    $lte: endDate
-                },
-                "state": false
-            }
-        },
-        {
-            $lookup: {
-                from: "materials",
-                localField: "_material",
-                foreignField: "_id",
-                as: "_material"
-            },
-        }, { $unwind: '$_material' },
-        {
-            $lookup: {
-                from: "employees",
-                localField: "_wtrip._employee",
-                foreignField: "_id",
-                as: "_employee"
-            },
-        }, { $unwind: '$_employee' },
-        {
-            $lookup: {
-                from: "destinations",
-                localField: "_order._destination",
-                foreignField: "_id",
-                as: "_destination"
-            },
-        }, { $unwind: '$_destination' },
-        {
-            $group: {
-                _id: "$_material._id",
-                nameMat: { $first: "$_material.name" },
-                details: {
-                    $push: {
-                        date: "$_wtrip.date",
-                        noTicket: "$_wtrip.noTicket",
-                        noDelivery: "$_wtrip.noDelivery",
-                        plate: "$_vehilce.plate",
-                        employee: "$_employee.name",
-                        destination: "$_destination.name",
-                        km: "$_destination.km",
-                        tariff: "$_wtrip.tariff",
-                        material: "$_material.name",
-                        mts: "$_wtrip.mts",
-                        kgB: "$_wtrip.kgB",
-                        kgT: "$_wtrip.kgT",
-                        kgN: "$_wtrip.kgN"
-                    }
-                },
-                noTrips: { $sum: 1 }
-            }
-        }
-    ], function(err, reports) {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                mensaje: 'Error listando reportes verdes',
-                errors: err
-            });
-        }
-
-        res.status(200).json({
-            ok: true,
-            preDetail: reports,
-        });
-    });
-
 });
 
 /**

@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var tankTripsSchema = new Schema({
     _employee: { type: Schema.Types.ObjectId, ref: 'Employee' },
     _vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' },
-    _destino: { type: Schema.Types.ObjectId, ref: 'DestTank' },
+    _destination: { type: Schema.Types.ObjectId, ref: 'DestTank' },
     date: { type: Date, required: true },
     checkIN: { type: Date, required: true },
     checkOUT: { type: Date, required: true },

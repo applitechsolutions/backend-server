@@ -12,7 +12,7 @@ var Pull = require('../models/pull');
  * LISTAR FACTURAS BLANCAS
  */
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
 
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
@@ -27,7 +27,7 @@ app.get('/', function(req, res) {
         }, 'bill serie date oc ac details total paid')
         .populate('_customer', 'name nit address mobile')
         .exec(
-            function(err, bills) {
+            function (err, bills) {
 
                 if (err) {
                     return res.status(500).json({
@@ -49,7 +49,7 @@ app.get('/', function(req, res) {
  * LISTAR FACTURAS BLANCAS NO PAGADAS
  */
 
-app.get('/nopaid', function(req, res) {
+app.get('/nopaid', function (req, res) {
 
     GreenBill.find({
             state: false,
@@ -57,7 +57,7 @@ app.get('/nopaid', function(req, res) {
         }, 'date details total paid')
         .populate('_customer', 'name nit address mobile')
         .exec(
-            function(err, bills) {
+            function (err, bills) {
 
                 if (err) {
                     return res.status(500).json({
@@ -79,7 +79,7 @@ app.get('/nopaid', function(req, res) {
  * PRE FACTURA DE REPORTE DE LINEAS
  */
 
-app.get('/detalles', function(req, res) {
+app.get('/detalles', function (req, res) {
 
     var idD = req.query.idD;
     var startDate = new Date(req.query.fecha1);
@@ -92,7 +92,9 @@ app.get('/detalles', function(req, res) {
                 foreignField: "_id",
                 as: "_order"
             },
-        }, { $unwind: '$_order' },
+        }, {
+            $unwind: '$_order'
+        },
         {
             $lookup: {
                 from: "whitetrips",
@@ -100,15 +102,16 @@ app.get('/detalles', function(req, res) {
                 foreignField: "_pull",
                 as: "_wtrip"
             },
-        }, { $unwind: '$_wtrip' },
+        }, {
+            $unwind: '$_wtrip'
+        },
         {
             $match: {
                 "_order._destination": ObjectId(idD),
                 "_wtrip.date": {
                     $gte: startDate,
                     $lte: endDate
-                },
-                "state": false
+                }
             }
         },
         {
@@ -118,7 +121,9 @@ app.get('/detalles', function(req, res) {
                 foreignField: "_id",
                 as: "_material"
             },
-        }, { $unwind: '$_material' },
+        }, {
+            $unwind: '$_material'
+        },
         {
             $lookup: {
                 from: "employees",
@@ -126,7 +131,19 @@ app.get('/detalles', function(req, res) {
                 foreignField: "_id",
                 as: "_employee"
             },
-        }, { $unwind: '$_employee' },
+        }, {
+            $unwind: '$_employee'
+        },
+        {
+            $lookup: {
+                from: "vehicles",
+                localField: "_wtrip._vehicle",
+                foreignField: "_id",
+                as: "_vehicle"
+            },
+        }, {
+            $unwind: '$_vehicle'
+        },
         {
             $lookup: {
                 from: "destinations",
@@ -134,17 +151,21 @@ app.get('/detalles', function(req, res) {
                 foreignField: "_id",
                 as: "_destination"
             },
-        }, { $unwind: '$_destination' },
+        }, {
+            $unwind: '$_destination'
+        },
         {
             $group: {
                 _id: "$_material._id",
-                nameMat: { $first: "$_material.name" },
+                nameMat: {
+                    $first: "$_material.name"
+                },
                 details: {
                     $push: {
                         date: "$_wtrip.date",
                         noTicket: "$_wtrip.noTicket",
                         noDelivery: "$_wtrip.noDelivery",
-                        plate: "$_vehilce.plate",
+                        plate: "$_vehicle.plate",
                         employee: "$_employee.name",
                         destination: "$_destination.name",
                         km: "$_destination.km",
@@ -156,10 +177,12 @@ app.get('/detalles', function(req, res) {
                         kgN: "$_wtrip.kgN"
                     }
                 },
-                noTrips: { $sum: 1 }
+                noTrips: {
+                    $sum: 1
+                }
             }
         }
-    ], function(err, reports) {
+    ], function (err, reports) {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -180,7 +203,7 @@ app.get('/detalles', function(req, res) {
  * CREAR FACTURA BLANCA
  */
 
-app.post('/', mdAuth.verificaToken, function(req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
 
     var body = req.body;
 
@@ -196,14 +219,14 @@ app.post('/', mdAuth.verificaToken, function(req, res) {
     });
 
     whitebill.save()
-        .then(function(billSave) {
+        .then(function (billSave) {
             res.status(201).json({
                 ok: true,
                 facturaB: billSave,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function(err) {
+        .catch(function (err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear factura reporte lineas',

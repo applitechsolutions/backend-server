@@ -124,25 +124,23 @@ app.get('/detalles', function(req, res) {
         },
         {
             $group: {
-                _id: "$_type._id", // El valor por el cual se agrupa
+                _id: "$date", // El valor por el cual se agrupa
                 code: { $first: "$_type.code" },
                 prod: { $first: "$_type.name" },
-                totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
+                date: { $first: "$date" },
                 trips: { $sum: 1 },
+                totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
+                detalles: {
+                    $push: {
+                        _id: "$_vehicle._id",
+                        vehicle: "$_vehicle.plate",
+                        mts: "$_vehicle.mts",
+                        totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
+                        trips: "$trips"
+                    }
+                },
                 tariff: { $first: "$_type.tariff" }
             }
-            // $group: {
-            //     _id: "$_type._id", // El valor por el cual se agrupa
-            //     code: { $first: "$_type.code" },
-            //     prod: { $first: "$_type.name" },
-            //     totalmts: { $sum: { $multiply: ["$_vehicle.mts", "$trips"] } },
-            //     trips: { $sum: 1 },
-            //     viajes: { $push: { id: "$_id", vehicle: "$_vehicle.plate" } },
-            //     tariff: { $first: "$_type.tariff" }
-            // }
-        },
-        {
-            $limit: 1
         }
     ], function(err, reports) {
         if (err) {

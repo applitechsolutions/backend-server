@@ -497,10 +497,11 @@ function obtenerMenu(ROLE, AREA) {
                     {
                         titulo: 'Factura Reporte Lineas',
                         icono: 'menu-icon fas fa-file-invoice-dollar',
-                        submenu: [{
-                                titulo: 'Listar Facturas',
-                                url: '/wbills'
-                            },
+                        submenu: [
+                            // {
+                            //     titulo: 'Listar Facturas',
+                            //     url: '/wbills'
+                            // },
                             {
                                 titulo: 'Crear Factura',
                                 url: '/wbill/new'

@@ -12,7 +12,7 @@ var GreenTrip = require('../models/greenTrip');
  * LISTAR FACTURAS VERDES PAGADAS POR FECHAS
  */
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
@@ -27,7 +27,7 @@ app.get('/', function (req, res) {
         }, 'noBill serie date oc ac details total paid')
         .populate('_customer', 'name nit address mobile')
         .exec(
-            function (err, bills) {
+            function(err, bills) {
 
                 if (err) {
                     return res.status(500).json({
@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
  * LISTAR FACTURAS VERDES NO PAGADAS
  */
 
-app.get('/nopaid', function (req, res) {
+app.get('/nopaid', function(req, res) {
 
     GreenBill.find({
             state: false,
@@ -57,7 +57,7 @@ app.get('/nopaid', function (req, res) {
         }, 'date details total paid')
         .populate('_customer', 'name nit address mobile')
         .exec(
-            function (err, bills) {
+            function(err, bills) {
 
                 if (err) {
                     return res.status(500).json({
@@ -79,21 +79,21 @@ app.get('/nopaid', function (req, res) {
  * LISTAR DETALLE FACTURA VERDE POR FECHAS
  */
 
-app.get('/detalles', function (req, res) {
+app.get('/detalles', function(req, res) {
 
     var id = req.query.id;
     var startDate = new Date(req.query.fecha1);
     var endDate = new Date(req.query.fecha2);
 
     GreenTrip.aggregate([{
-            $match: {
-                "_type": ObjectId(id),
-                "date": {
-                    $gte: startDate,
-                    $lte: endDate
-                },
-                "state": false
+            $lookup: {
+                from: "vehicles",
+                localField: "_vehicle",
+                foreignField: "_id",
+                as: "_vehicle"
             }
+        }, {
+            $unwind: '$_vehicle'
         }, {
             $match: {
                 "_type": ObjectId(id),
@@ -103,7 +103,11 @@ app.get('/detalles', function (req, res) {
                 },
                 "state": false
             }
-        }, {
+        },
+        {
+            $sort: { "date": -1, "_vehicle.plate": 1 }
+        },
+        {
             $lookup: {
                 from: "typetrips",
                 localField: "_type",
@@ -112,15 +116,6 @@ app.get('/detalles', function (req, res) {
             },
         }, {
             $unwind: '$_type'
-        }, {
-            $lookup: {
-                from: "vehicles",
-                localField: "_vehicle",
-                foreignField: "_id",
-                as: "_vehicle"
-            },
-        }, {
-            $unwind: '$_vehicle'
         },
         {
             $group: {
@@ -157,7 +152,7 @@ app.get('/detalles', function (req, res) {
                 }
             }
         }
-    ], function (err, reports) {
+    ], function(err, reports) {
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -244,7 +239,7 @@ app.get('/detalles', function (req, res) {
  * ELIMINAR FACTURA REPORTE CUADROS
  */
 
-app.put('/delete', mdAuth.verificaToken, function (req, res) {
+app.put('/delete', mdAuth.verificaToken, function(req, res) {
     var id = req.query.id;
     var body = req.body;
 
@@ -253,13 +248,13 @@ app.put('/delete', mdAuth.verificaToken, function (req, res) {
         }, {
             new: true
         })
-        .then(function (billBorrada) {
+        .then(function(billBorrada) {
             res.status(200).json({
                 ok: true,
                 bill: billBorrada
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(500).json({
                 ok: false,
                 mensaje: 'Error borrando facturas',
@@ -274,7 +269,7 @@ app.put('/delete', mdAuth.verificaToken, function (req, res) {
  * ACTUALIZAR FACTURA REPORTE CUADROS
  */
 
-app.put('/:id', mdAuth.verificaToken, function (req, res) {
+app.put('/:id', mdAuth.verificaToken, function(req, res) {
 
     var id = req.params.id;
     var body = req.body;
@@ -289,13 +284,13 @@ app.put('/:id', mdAuth.verificaToken, function (req, res) {
         }, {
             new: true
         })
-        .then(function (billActualizada) {
+        .then(function(billActualizada) {
             res.status(200).json({
                 ok: true,
                 bill: billActualizada
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(500).json({
                 ok: false,
                 mensaje: 'Error actualizando facturas',
@@ -309,7 +304,7 @@ app.put('/:id', mdAuth.verificaToken, function (req, res) {
  * CREAR FACTURA REPORTE CUADROS
  */
 
-app.post('/', mdAuth.verificaToken, function (req, res) {
+app.post('/', mdAuth.verificaToken, function(req, res) {
 
     var body = req.body;
     var greenbill = new GreenBill({
@@ -327,14 +322,14 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     });
 
     greenbill.save()
-        .then(function (gbGuardado) {
+        .then(function(gbGuardado) {
             res.status(201).json({
                 ok: true,
                 facturaV: gbGuardado,
                 usuarioToken: req.usuario
             });
         })
-        .catch(function (err) {
+        .catch(function(err) {
             res.status(400).json({
                 ok: false,
                 mensaje: 'Error al crear factura reporte cuadros',

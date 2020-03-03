@@ -201,7 +201,7 @@ app.put('/delete', mdAuth.verificaToken, function(req, res) {
  * ACTUALIZAR FACTURA REPORTE CUADROS
  */
 
-app.put('/:id', mdAuth.verificaToken, function(req, res) {
+app.put('/:id', mdAuth.verificaToken, (req, res) => {
 
     var id = req.params.id;
     var body = req.body;

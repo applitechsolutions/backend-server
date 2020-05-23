@@ -1,4 +1,4 @@
-// REQUIRES 
+// REQUIRES
 var express = require('express');
 var mongoose = require('mongoose');
 var env = require('dotenv').config();
@@ -10,18 +10,23 @@ var app = express();
 
 app.use(cors());
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-    next();
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  res.header('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+  next();
 });
 
 // BODY PARSER
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 app.use(bodyParser.json());
 
 /* #region  Importaciones */
@@ -37,6 +42,7 @@ var userAreaRoutes = require('./routes/userArea');
 var customerRoutes = require('./routes/customer');
 var materialCellarRoutes = require('./routes/materialCellar');
 var materialRoutes = require('./routes/material');
+const saleRoutes = require('./routes/sale');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
@@ -70,13 +76,17 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 
-mongoose.connection.openUri('mongodb://localhost:27017/trucksDB', {
-    useNewUrlParser: true
-}, function(error, res) {
+mongoose.connection.openUri(
+  'mongodb://localhost:27017/trucksDB',
+  {
+    useNewUrlParser: true,
+  },
+  function (error, res) {
     if (error) throw error;
 
     console.log('Base de datos: \x1b[32m%s\x1b[0m', 'ONLINE XD');
-});
+  }
+);
 
 // const client = mongoose.connection.openUri(process.env.CUSTOMCONNSTR_COSMOS_CONNSTR, {
 //         useNewUrlParser: true
@@ -95,6 +105,7 @@ app.use('/login', loginRoutes);
 app.use('/cliente', customerRoutes);
 app.use('/material', materialRoutes);
 app.use('/materialCellar', materialCellarRoutes);
+app.use('/ventas', saleRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);
@@ -128,9 +139,8 @@ app.use('/img', imagesRoutes);
 app.use('/', appRoutes);
 /* #endregion */
 
-
 // Escuchar Peticiones
 var port = process.env.PORT || 3000;
-app.listen(port, function() {
-    console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'ONLINE XD');
+app.listen(port, function () {
+  console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'ONLINE XD');
 });

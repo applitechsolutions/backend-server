@@ -614,7 +614,7 @@ function obtenerMenu(ROLE, AREA) {
               },
               {
                 titulo: 'Crear venta',
-                url: 'sale/new',
+                url: '/sale/new',
               },
             ],
           },

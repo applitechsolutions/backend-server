@@ -31,6 +31,10 @@ var pullSchema = new Schema({
         type: Float,
         require: [true, 'Los KG son necesarios']
     },
+    details: {
+        type: String,
+        required: false
+    },
     state: {
         type: Boolean,
         default: false

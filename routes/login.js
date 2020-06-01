@@ -438,142 +438,138 @@ function obtenerMenu(ROLE, AREA) {
             icono: 'menu-icon fas fa-file-invoice',
             submenu: [
               {
-                titulo: 'Listar Reportes',
+                titulo: 'Crear reportes',
+                url: '/gtrip/new',
+              },
+              {
+                titulo: 'Listar reportes',
                 url: '/gtrips',
               },
               {
-                titulo: 'Crear Reportes',
-                url: '/gtrip/new',
+                titulo: 'Facturación',
+                icono: 'menu-icon fas fa-file-invoice-dollar',
+                submenu: [
+                  {
+                    titulo: 'Listar facturas',
+                    url: '/gbills',
+                  },
+                  {
+                    titulo: 'Crear factura',
+                    url: '/gbill/new',
+                  },
+                ],
+              },
+              {
+                titulo: 'Tipos de Producción',
+                icono: 'menu-icon fas fa-suitcase-rolling',
+                submenu: [
+                  {
+                    titulo: 'Listar tipos',
+                    url: '/typeTrips',
+                  },
+                  {
+                    titulo: 'Crear tipo',
+                    url: '/typeTrip/new',
+                  },
+                ]
               },
             ],
           },
           {
-            titulo: 'Tipo de Producción',
-            icono: 'menu-icon fas fa-suitcase-rolling',
-            submenu: [
-              {
-                titulo: 'Listar tipos',
-                url: '/typeTrips',
-              },
-              {
-                titulo: 'Crear Tipo de Viaje',
-                url: '/typeTrip/new',
-              },
-            ],
-          },
-          {
-            titulo: 'Factura Reporte Cuadros',
-            icono: 'menu-icon fas fa-file-invoice-dollar',
-            submenu: [
-              {
-                titulo: 'Listar Facturas',
-                url: '/gbills',
-              },
-              {
-                titulo: 'Crear Factura',
-                url: '/gbill/new',
-              },
-            ],
-          },
-          {
-            titulo: 'Ordenes',
-            icono: 'menu-icon fas fa-receipt',
-            submenu: [
-              {
-                titulo: 'Listar Activas',
-                url: '/orders',
-              },
-              {
-                titulo: 'Listar Finalizadas',
-                url: '/ordersFinished',
-              },
-              {
-                titulo: 'Crear Orden',
-                url: '/order/new',
-              },
-            ],
-          },
-          // {
-          //     titulo: 'Reporte Lineas',
-          //     icono: 'menu-icon fas fa-file-alt',
-          //     submenu: [{
-          //             titulo: 'Listar Reportes',
-          //             url: '/wtrips'
-          //         }
-          //         // ,
-          //         // {
-          //         //     titulo: 'Crear Reporte',
-          //         //     url: '/wtrip/new'
-          //         // }
-          //     ]
-          // },
-          {
-            titulo: 'Destinos',
-            icono: 'menu-icon fas fa-map-marked-alt',
-            submenu: [
-              {
-                titulo: 'Listar Destinos',
-                url: '/destinations',
-              },
-              {
-                titulo: 'Crear Destino',
-                url: '/destination/new',
-              },
-            ],
-          },
-          {
-            titulo: 'Factura Reporte Lineas',
-            icono: 'menu-icon fas fa-file-invoice-dollar',
+            titulo: 'Reporte Lineas',
+            icono: 'menu-icon fas fa-file-alt',
             submenu: [
               // {
-              //     titulo: 'Listar Facturas',
-              //     url: '/wbills'
+              //   titulo: 'Listar reportes',
+              //   url: '/wtrips'
               // },
               {
-                titulo: 'Crear Factura',
-                url: '/wbill/new',
+                titulo: 'Pedidos',
+                icono: 'menu-icon fas fa-receipt',
+                submenu: [
+                  {
+                    titulo: 'Activos',
+                    url: '/orders',
+                  },
+                  {
+                    titulo: 'Crear pedido',
+                    url: '/order/new',
+                  },
+                  {
+                    titulo: 'Finalizados',
+                    url: '/ordersFinished',
+                  },
+                ],
               },
-            ],
+              {
+                titulo: 'Facturación',
+                icono: 'menu-icon fas fa-file-invoice-dollar',
+                submenu: [
+                  // {
+                  //     titulo: 'Listar facturas',
+                  //     url: '/wbills'
+                  // },
+                  {
+                    titulo: 'Crear factura',
+                    url: '/wbill/new',
+                  },
+                ],
+              },
+              {
+                titulo: 'Destinos',
+                icono: 'menu-icon fas fa-map-marked-alt',
+                submenu: [
+                  {
+                    titulo: 'Listar destinos',
+                    url: '/destinations',
+                  },
+                  {
+                    titulo: 'Crear destino',
+                    url: '/destination/new',
+                  },
+                ],
+              },
+            ]
           },
           {
             titulo: 'Cisterna',
             icono: 'menu-icon fas fas fa-tint',
             submenu: [
               {
-                titulo: 'Listar Reporte Cisterna',
+                titulo: 'Listar reportes',
                 url: '/ktrips',
               },
               {
-                titulo: 'Crear Reporte Cisterna',
+                titulo: 'Crear reportes',
                 url: '/ktrip/new',
               },
-            ],
-          },
-          {
-            titulo: 'Destino Cisterna',
-            icono: 'menu-icon fas fa-map-marked',
-            submenu: [
+              // {
+              //   titulo: 'Facturación',
+              //   icono: 'menu-icon fas fa-file-invoice-dollar',
+              //   submenu: [
+              //     {
+              //       titulo: 'Listar facturas',
+              //       url: '/tBills',
+              //     },
+              //     {
+              //       titulo: 'Crear factura',
+              //       url: '/tBill/new',
+              //     },
+              //   ],
+              // },
               {
-                titulo: 'Listar Destinos',
-                url: '/destTanks',
-              },
-              {
-                titulo: 'Crear Destino',
-                url: '/destTank/new',
-              },
-            ],
-          },
-          {
-            titulo: 'Facturas Cisterna',
-            icono: 'menu-icon fas fa-file-invoice-dollar',
-            submenu: [
-              {
-                titulo: 'Listar Facturas',
-                url: '/tBills',
-              },
-              {
-                titulo: 'Crear Factura',
-                url: '/tBill/new',
+                titulo: 'Destinos',
+                icono: 'menu-icon fas fa-map-marked',
+                submenu: [
+                  {
+                    titulo: 'Listar destinos',
+                    url: '/destTanks',
+                  },
+                  {
+                    titulo: 'Crear destino',
+                    url: '/destTank/new',
+                  },
+                ],
               },
             ],
           },
@@ -595,16 +591,6 @@ function obtenerMenu(ROLE, AREA) {
       if (ROLE === 'ADMIN_ROLE') {
         menu = [
           {
-            titulo: 'Clientes CD',
-            icono: 'menu-icon fas fa-user-tag',
-            submenu: [
-              {
-                titulo: 'Listar clientes',
-                url: '/customers',
-              },
-            ],
-          },
-          {
             titulo: 'Ventas',
             icono: 'menu-icon fas fa-piggy-bank',
             submenu: [
@@ -618,6 +604,26 @@ function obtenerMenu(ROLE, AREA) {
               },
             ],
           },
+          {
+            titulo: 'Clientes CD',
+            icono: 'menu-icon fas fa-user-tag',
+            submenu: [
+              {
+                titulo: 'Listar clientes',
+                url: '/customers',
+              },
+            ],
+          },
+          // {
+          //   titulo: 'Pedidos',
+          //   icono: 'menu-icon fas fa-cart-plus',
+          //   submenu: [
+          //     {
+          //       titulo: 'Vigentes',
+          //       url: '/customers',
+          //     },
+          //   ],
+          // }
         ];
       } else if (ROLE === 'USER_ROLE') {
       }

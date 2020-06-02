@@ -53,6 +53,57 @@ app.get('/:id', function (req, res) {
 });
 
 /**
+ * LISTAR REPORTES DE LINEAS POR FECHAS
+ */
+
+app.get('/reports/:id', function (req, res) {
+  const id = req.params.id;
+  const startDate = new Date(req.query.fecha1);
+  const endDate = new Date(req.query.fecha2);
+
+  whiteTrip
+    .find(
+      {
+        state: false,
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+        _pull: id,
+      },
+      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
+    )
+    .populate('_employee', 'name')
+    .populate('_vehicle', 'plate type km')
+    .populate({
+      path: '_pull',
+      populate: {
+        path: '_order',
+        populate: {
+          path: '_destination',
+        },
+      },
+    })
+    .sort({
+      _id: 'asc',
+    })
+    .exec(function (err, Wviajes) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reporte cuadros',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        wviajes: Wviajes,
+      });
+    });
+});
+
+/**
  * ELIMINAR REPORTE LINEAS
  */
 

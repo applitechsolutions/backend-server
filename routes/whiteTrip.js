@@ -53,7 +53,52 @@ app.get('/:id', function (req, res) {
 });
 
 /**
- * LISTAR REPORTES DE LINEAS POR FECHAS
+ * LISTAR REPORTES DE LINEAS ANULADOS POR PULL
+ */
+
+app.get('/anulados/:id', function (req, res) {
+  const id = req.params.id;
+
+  whiteTrip
+    .find(
+      {
+        state: true,
+        _pull: id,
+      },
+      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
+    )
+    .populate('_employee', 'name')
+    .populate('_vehicle', 'plate type km')
+    .populate({
+      path: '_pull',
+      populate: {
+        path: '_order',
+        populate: {
+          path: '_destination',
+        },
+      },
+    })
+    .sort({
+      _id: 'asc',
+    })
+    .exec(function (err, Wviajes) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reporte cuadros',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        wviajes: Wviajes,
+      });
+    });
+});
+
+/**
+ * LISTAR REPORTES DE LINEAS ENTRE FECHAS POR PULL
  */
 
 app.get('/reports/:id', function (req, res) {

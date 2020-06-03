@@ -605,7 +605,7 @@ function obtenerMenu(ROLE, AREA) {
             ],
           },
           {
-            titulo: 'Clientes CD',
+            titulo: 'Clientes',
             icono: 'menu-icon fas fa-user-tag',
             submenu: [
               {
@@ -614,16 +614,35 @@ function obtenerMenu(ROLE, AREA) {
               },
             ],
           },
-          // {
-          //   titulo: 'Pedidos',
-          //   icono: 'menu-icon fas fa-cart-plus',
-          //   submenu: [
-          //     {
-          //       titulo: 'Vigentes',
-          //       url: '/customers',
-          //     },
-          //   ],
-          // }
+          {
+            titulo: 'Inventario',
+            icono: 'menu-icon fas fa-mountain',
+            url: '/cd/storage'
+          },
+          {
+            titulo: 'Pedidos',
+            icono: 'menu-icon fas fa-cart-plus',
+            url: '/cd/orders'
+          },
+          {
+            titulo: 'Facturación',
+            icono: 'menu-icon fas fa-file-invoice-dollar',
+            submenu: [
+              {
+                titulo: 'Listar facturas',
+                url: '/cd/bills',
+              },
+              {
+                titulo: 'Crear factura',
+                url: '/cd/bill',
+              },
+            ],
+          },
+          {
+            titulo: 'Reportes',
+            icono: 'menu-icon fas fa-chart-area',
+            url: '/cd/reports'
+          },
         ];
       } else if (ROLE === 'USER_ROLE') {
       }

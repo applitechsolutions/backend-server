@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 
   Sale.find(
     { bill: null, state: false, date: { $gte: startDate, $lte: endDate } },
-    '_customer date serie bill details total state'
+    '_customer date serie bill details flete total state'
   )
     .populate('_customer', 'name nit')
     .populate('details.material')
@@ -45,6 +45,7 @@ app.post('/', mdAuth.verificaToken, async (req, res) => {
     serie: body.serie,
     bill: body.bill,
     details: body.details,
+    flete: body.flete,
     total: body.total,
   });
 

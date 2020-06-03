@@ -12,7 +12,7 @@ var MaterialCellar = require('../models/materialCellar');
 
 app.get('/', function (req, res) {
   MaterialCellar.find({ state: false })
-    .populate('storage._material', 'code name minStock')
+    .populate('storage._material', 'code name minStock price')
     .sort({ _id: 'desc' })
     .exec(function (err, materials) {
       if (err) {
@@ -270,6 +270,7 @@ app.put('/:id', mdAuth.verificaToken, function (req, res) {
     material.code = body.code;
     material.name = body.name;
     material.minStock = body.minStock;
+    material.price = body.price;
 
     material.save(function (err, materialACT) {
       if (err) {
@@ -300,6 +301,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     code: body.code,
     name: body.name,
     minStock: body.minStock,
+    price: body.price,
   });
 
   material

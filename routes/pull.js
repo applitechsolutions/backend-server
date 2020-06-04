@@ -199,9 +199,14 @@ app.get('/finisheds', function (req, res) {
  * FINALIZAR pull
  */
 
+
+// TODO:CORREGIR RUTA CUANDO LOS DETALLES VIENEN VACIOS
 app.put('/finish/:id/:details', mdAuth.verificaToken, function (req, res) {
     var id = req.params.id;
-    var details = req.params.details;
+    var details = '';
+    if (req.params.details) {
+        var details = req.params.details;
+    }
 
     Pull.findById(id, function (err, pull) {
 

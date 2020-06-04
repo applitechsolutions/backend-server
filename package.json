@@ -16,7 +16,7 @@
         "cors": "^2.8.5",
         "dotenv": "^8.0.0",
         "express": "^4.17.0",
-        "express-fileupload": "^1.1.4",
+        "express-fileupload": "^1.1.6",
         "google-auth-library": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.5.9",

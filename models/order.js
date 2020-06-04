@@ -16,10 +16,6 @@ var orderSchema = new Schema({
         ref: 'Destination',
         required: [true, 'El destino es necesario']
     },
-    invoicedCD: {
-        type: Boolean,
-        default: false
-    },
     state: {
         type: Boolean,
         default: false

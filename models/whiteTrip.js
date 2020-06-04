@@ -65,6 +65,10 @@ var whiteTripSchema = new Schema({
         type: Boolean,
         default: false
     },
+    invoicedCD: {
+        type: Boolean,
+        default: false
+    },
     state: {
         type: Boolean,
         default: false

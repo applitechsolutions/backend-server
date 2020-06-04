@@ -621,19 +621,19 @@ function obtenerMenu(ROLE, AREA) {
           },
           {
             titulo: 'Pedidos',
-            icono: 'menu-icon fas fa-cart-plus',
+            icono: 'menu-icon fas fa-calendar-plus',
             url: '/cd/orders'
           },
           {
-            titulo: 'Facturación',
-            icono: 'menu-icon fas fa-file-invoice-dollar',
+            titulo: 'Compras',
+            icono: 'menu-icon fas fa-cart-arrow-down',
             submenu: [
               {
-                titulo: 'Listar facturas',
+                titulo: 'Listar compras',
                 url: '/cd/bills',
               },
               {
-                titulo: 'Crear factura',
+                titulo: 'Crear compra',
                 url: '/cd/bill',
               },
             ],

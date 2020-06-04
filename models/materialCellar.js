@@ -9,7 +9,7 @@ var materialCellarSchema = new Schema({
     storage: [{
         _material: { type: Schema.Types.ObjectId, ref: 'Material' },
         stock: { type: Number, required: true },
-        cost: { type: Float, require: true }
+        cost: { type: Float, require: false }
     }],
     state: { type: Boolean, required: true, default: false }
 

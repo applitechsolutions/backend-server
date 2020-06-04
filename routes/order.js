@@ -59,7 +59,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
         _destination: body._destination
     });
 
-    console.log(order);
+    // console.log(order);
 
     order.save(function (err, orderG) {
         if (err) {

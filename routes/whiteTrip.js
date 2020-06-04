@@ -1,17 +1,17 @@
-var express = require('express');
-var mdAuth = require('../middlewares/auth');
+var express = require("express");
+var mdAuth = require("../middlewares/auth");
 var app = express();
 
-var whiteTrip = require('../models/whiteTrip');
-var Vehicle = require('../models/vehicle');
-var Gondola = require('../models/gondola');
-var Pull = require('../models/pull');
+var whiteTrip = require("../models/whiteTrip");
+var Vehicle = require("../models/vehicle");
+var Gondola = require("../models/gondola");
+var Pull = require("../models/pull");
 
 /**
  * LISTAR REPORTE LINEAS POR PULL
  */
 
-app.get('/:id', function (req, res) {
+app.get("/:id", function (req, res) {
   var id = req.params.id;
 
   whiteTrip
@@ -20,27 +20,27 @@ app.get('/:id', function (req, res) {
         state: false,
         _pull: id,
       },
-      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
+      "date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced"
     )
-    .populate('_employee', 'name')
-    .populate('_vehicle', 'plate type km')
+    .populate("_employee", "name")
+    .populate("_vehicle", "plate type km")
     .populate({
-      path: '_pull',
+      path: "_pull",
       populate: {
-        path: '_order',
+        path: "_order",
         populate: {
-          path: '_destination',
+          path: "_destination",
         },
       },
     })
     .sort({
-      _id: 'asc',
+      _id: "asc",
     })
     .exec(function (err, Wviajes) {
       if (err) {
         return res.status(500).json({
           ok: false,
-          mensaje: 'Error listando reporte cuadros',
+          mensaje: "Error listando reporte cuadros",
           errors: err,
         });
       }
@@ -56,7 +56,7 @@ app.get('/:id', function (req, res) {
  * LISTAR REPORTES DE LINEAS ANULADOS POR PULL
  */
 
-app.get('/anulados/:id', function (req, res) {
+app.get("/anulados/:id", function (req, res) {
   const id = req.params.id;
 
   whiteTrip
@@ -65,78 +65,27 @@ app.get('/anulados/:id', function (req, res) {
         state: true,
         _pull: id,
       },
-      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
+      "date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced"
     )
-    .populate('_employee', 'name')
-    .populate('_vehicle', 'plate type km')
+    .populate("_employee", "name")
+    .populate("_vehicle", "plate type km")
     .populate({
-      path: '_pull',
+      path: "_pull",
       populate: {
-        path: '_order',
+        path: "_order",
         populate: {
-          path: '_destination',
+          path: "_destination",
         },
       },
     })
     .sort({
-      _id: 'asc',
+      _id: "asc",
     })
     .exec(function (err, Wviajes) {
       if (err) {
         return res.status(500).json({
           ok: false,
-          mensaje: 'Error listando reporte cuadros',
-          errors: err,
-        });
-      }
-
-      res.status(200).json({
-        ok: true,
-        wviajes: Wviajes,
-      });
-    });
-});
-
-/**
- * LISTAR REPORTES DE LINEAS ENTRE FECHAS POR PULL
- */
-
-app.get('/reports/:id', function (req, res) {
-  const id = req.params.id;
-  const startDate = new Date(req.query.fecha1);
-  const endDate = new Date(req.query.fecha2);
-
-  whiteTrip
-    .find(
-      {
-        state: false,
-        date: {
-          $gte: startDate,
-          $lte: endDate,
-        },
-        _pull: id,
-      },
-      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
-    )
-    .populate('_employee', 'name')
-    .populate('_vehicle', 'plate type km')
-    .populate({
-      path: '_pull',
-      populate: {
-        path: '_order',
-        populate: {
-          path: '_destination',
-        },
-      },
-    })
-    .sort({
-      _id: 'asc',
-    })
-    .exec(function (err, Wviajes) {
-      if (err) {
-        return res.status(500).json({
-          ok: false,
-          mensaje: 'Error listando reporte cuadros',
+          mensaje: "Error listando reporte cuadros",
           errors: err,
         });
       }
@@ -152,7 +101,7 @@ app.get('/reports/:id', function (req, res) {
  * ELIMINAR REPORTE LINEAS
  */
 
-app.put('/anular', mdAuth.verificaToken, function (req, res) {
+app.put("/anular", mdAuth.verificaToken, function (req, res) {
   const id = req.query.id;
   const body = req.body;
   const km = req.query.km;
@@ -177,22 +126,22 @@ app.put('/anular', mdAuth.verificaToken, function (req, res) {
         });
       Vehicle.findByIdAndUpdate(
         body._vehicle._id,
-        { $inc: { km: -km, 'pits.$[elem].km': -km } },
+        { $inc: { km: -km, "pits.$[elem].km": -km } },
         {
           multi: true,
-          arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+          arrayFilters: [{ "elem.km": { $gte: 0 } }],
         }
       )
         .then(function (vehicle) {})
         .catch(function (err) {});
 
-      if (body._vehicle.type === 'camionG') {
+      if (body._vehicle.type === "camionG") {
         Gondola.findByIdAndUpdate(
           body._vehicle._gondola,
-          { $inc: { 'pits.$[elem].km': -km } },
+          { $inc: { "pits.$[elem].km": -km } },
           {
             multi: true,
-            arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+            arrayFilters: [{ "elem.km": { $gte: 0 } }],
           }
         )
           .then(function (gkm) {})
@@ -207,7 +156,7 @@ app.put('/anular', mdAuth.verificaToken, function (req, res) {
     .catch(function (err) {
       res.status(400).json({
         ok: false,
-        mensaje: 'Error al anular reporte de lineas',
+        mensaje: "Error al anular reporte de lineas",
         errors: err,
       });
     });
@@ -217,7 +166,7 @@ app.put('/anular', mdAuth.verificaToken, function (req, res) {
  * CREAR REPORTE LINEAS
  */
 
-app.post('/', mdAuth.verificaToken, function (req, res) {
+app.post("/", mdAuth.verificaToken, function (req, res) {
   var body = req.body;
   var km = req.query.km;
 
@@ -263,14 +212,14 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
         {
           $inc: {
             km: km,
-            'pits.$[elem].km': km,
+            "pits.$[elem].km": km,
           },
         },
         {
           multi: true,
           arrayFilters: [
             {
-              'elem.km': {
+              "elem.km": {
                 $gte: 0,
               },
             },
@@ -282,19 +231,19 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
           console.log(err);
         });
 
-      if (body._vehicle.type === 'camionG') {
+      if (body._vehicle.type === "camionG") {
         Gondola.findByIdAndUpdate(
           body._vehicle._gondola,
           {
             $inc: {
-              'pits.$[elem].km': km,
+              "pits.$[elem].km": km,
             },
           },
           {
             multi: true,
             arrayFilters: [
               {
-                'elem.km': {
+                "elem.km": {
                   $gte: 0,
                 },
               },
@@ -315,7 +264,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     .catch(function (err) {
       res.status(400).json({
         ok: false,
-        mensaje: 'Error al crear reporte lineas',
+        mensaje: "Error al crear reporte lineas",
         errors: err,
       });
       console.log(err);

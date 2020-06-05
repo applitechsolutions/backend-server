@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
   const endDate = req.query.fecha2;
 
   Sale.find(
-    { bill: null, state: false, date: { $gte: startDate, $lte: endDate } },
+    { state: false, date: { $gte: startDate, $lte: endDate } },
     '_customer date serie bill details flete total state'
   )
     .populate('_customer', 'name nit')
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
       if (err) {
         return res.status(500).json({
           ok: false,
-          mensaje: 'Error listando mensaje',
+          mensaje: 'Error listando ventas',
           errors: err,
         });
       }

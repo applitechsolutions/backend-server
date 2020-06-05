@@ -629,12 +629,16 @@ function obtenerMenu(ROLE, AREA) {
             icono: 'menu-icon fas fa-cart-arrow-down',
             submenu: [
               {
+                titulo: 'Listar créditos',
+                url: '/cd/tobepaids',
+              },
+              {
                 titulo: 'Listar compras',
-                url: '/cd/bills',
+                url: '/cd/purchases',
               },
               {
                 titulo: 'Crear compra',
-                url: '/cd/bill',
+                url: '/cd/purchase',
               },
             ],
           },

@@ -43,6 +43,7 @@ var customerRoutes = require('./routes/customer');
 var materialCellarRoutes = require('./routes/materialCellar');
 var materialRoutes = require('./routes/material');
 const saleRoutes = require('./routes/sale');
+const purchaseCDRoutes = require('./routes/purchaseCD');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
@@ -106,6 +107,7 @@ app.use('/cliente', customerRoutes);
 app.use('/material', materialRoutes);
 app.use('/materialCellar', materialCellarRoutes);
 app.use('/ventas', saleRoutes);
+app.use('/comprasCD', purchaseCDRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);

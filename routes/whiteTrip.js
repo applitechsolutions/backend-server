@@ -1,4 +1,5 @@
 var express = require("express");
+var mongoose = require('mongoose');
 var mdAuth = require("../middlewares/auth");
 var app = express();
 
@@ -6,6 +7,82 @@ var whiteTrip = require("../models/whiteTrip");
 var Vehicle = require("../models/vehicle");
 var Gondola = require("../models/gondola");
 var Pull = require("../models/pull");
+
+/**
+ * LISTAR REPORTE LINEAS DISPONIBLES PARA FACTURAR EN EL CD
+ */
+
+app.get("/purchaseCD", function (req, res) {
+
+  var id = mongoose.Types.ObjectId('5e31e0a9c71f490a70eb2884'); // ID DEL CENTRO DE DISTRIBUCION DE LA VIÑA
+
+  whiteTrip.aggregate([{
+    $match: {
+      state: false,
+      invoicedCD: false
+    }
+  }, {
+    $lookup: {
+      from: "pulls",
+      localField: "_pull",
+      foreignField: "_id",
+      as: "_pull"
+    },
+  }, {
+    $unwind: '$_pull'
+  }, {
+    $lookup: {
+      from: "orders",
+      localField: "_pull._order",
+      foreignField: "_id",
+      as: "_pull._order"
+    },
+  }, {
+    $unwind: '$_pull._order'
+  }, {
+    $match: {
+      "_pull._order._destination": id,
+    }
+  },
+  {
+    $lookup: {
+      from: "materials",
+      localField: "_pull._material",
+      foreignField: "_id",
+      as: "_pull._material"
+    },
+  }, {
+    $unwind: '$_pull._material'
+  },
+  {
+    $sort: {
+      '_pull._order.order': 1
+    }
+  },
+  {
+    $project: {
+      _id: '$_id',
+      _pull: 1,
+      date: 1,
+      noTicket: 1,
+      mts: 1
+    }
+  }], function (err, whiteTrips) {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        mensaje: 'Error listando reportes',
+        errors: err
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      viajesBlancos: whiteTrips
+    });
+  });
+
+});
 
 /**
  * LISTAR REPORTE LINEAS POR PULL
@@ -120,7 +197,7 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
           },
         }
       )
-        .then(function () {})
+        .then(function () { })
         .catch(function (err) {
           console.log(err);
         });
@@ -132,8 +209,8 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ "elem.km": { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) {})
-        .catch(function (err) {});
+        .then(function (vehicle) { })
+        .catch(function (err) { });
 
       if (body._vehicle.type === "camionG") {
         Gondola.findByIdAndUpdate(
@@ -144,8 +221,8 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ "elem.km": { $gte: 0 } }],
           }
         )
-          .then(function (gkm) {})
-          .catch(function (err) {});
+          .then(function (gkm) { })
+          .catch(function (err) { });
       }
 
       res.status(200).json({
@@ -200,7 +277,7 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
           },
         }
       )
-        .then(function () {})
+        .then(function () { })
         .catch(function (err) {
           console.log(err);
         });
@@ -226,7 +303,7 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
           ],
         }
       )
-        .then(function (tripKm) {})
+        .then(function (tripKm) { })
         .catch(function (err) {
           console.log(err);
         });
@@ -250,7 +327,7 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
             ],
           }
         )
-          .then(function (gkm) {})
+          .then(function (gkm) { })
           .catch(function (err) {
             console.log(err);
           });

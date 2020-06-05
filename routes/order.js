@@ -1,9 +1,38 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
 
 var app = express();
 
 var Order = require('../models/order');
+
+/**
+ * Catalogo de ordenes para las compras en el CD
+ */
+
+app.get('/purchaseCD', function (req, res) {
+
+    var id = mongoose.Types.ObjectId('5e31e0a9c71f490a70eb2884'); // ID DEL CENTRO DE DISTRIBUCION DE LA VIÑA
+
+    Order.find({
+        _destination: id,
+        state: false
+    }, 'date order')
+        .exec(function (err, orders) {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: "Error listando historial de ordenes",
+                    errors: err,
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                ordenes: orders,
+            });
+        });
+});
 
 /**
  * BUSCAR SI EXISTE ESA ORDEN

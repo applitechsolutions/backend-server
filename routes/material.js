@@ -12,7 +12,7 @@ var MaterialCellar = require('../models/materialCellar');
 
 app.get('/', function (req, res) {
   MaterialCellar.find({ state: false })
-    .populate('storage._material', 'code name minStock')
+    .populate('storage._material', 'code name minStock price')
     .sort({ _id: 'desc' })
     .exec(function (err, materials) {
       if (err) {

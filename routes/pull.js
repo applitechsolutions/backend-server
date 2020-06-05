@@ -1,4 +1,5 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
 
 var app = express();
@@ -40,6 +41,80 @@ app.get('/', function (req, res) {
                     pulls: pulls
                 });
             });
+});
+
+/**
+ * LISTAR PULLS ACTIVOS DEL CD
+ */
+
+app.get('/cd/actives', function (req, res) {
+
+    var id = mongoose.Types.ObjectId('5e31e0a9c71f490a70eb2884'); // ID DEL CENTRO DE DISTRIBUCION DE LA VIÑA
+
+    Pull.aggregate([{
+        $match: {
+            "state": false
+        }
+    }, {
+        $lookup: {
+            from: "materials",
+            localField: "_material",
+            foreignField: "_id",
+            as: "_material"
+        },
+    }, {
+        $unwind: '$_material'
+    }, {
+        $lookup: {
+            from: "orders",
+            localField: "_order",
+            foreignField: "_id",
+            as: "_order"
+        },
+    }, {
+        $unwind: '$_order'
+    }, {
+        $match: {
+            "_order._destination": id,
+        }
+    },
+    {
+        $lookup: {
+            from: "destinations",
+            localField: "_order._destination",
+            foreignField: "_id",
+            as: "_order._destination"
+        },
+    }, {
+        $unwind: '$_order._destination'
+    }, {
+        $sort: { "_order.date": 1 }
+    },
+    {
+        $project: {
+            _id: '$_id',
+            _order: 1,
+            _material: 1,
+            mts: '$mts',
+            totalMts: '$totalMts',
+            kg: '$kg',
+            totalKg: '$totalKg',
+            details: '$details'
+        }
+    }], function (err, pulls) {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error listando ordenes',
+                errors: err
+            });
+        }
+
+        res.status(200).json({
+            ok: true,
+            pulls: pulls
+        });
+    });
 });
 
 /**
@@ -123,12 +198,11 @@ app.get('/finisheds', function (req, res) {
 /**
  * FINALIZAR pull
  */
+app.put('/finish/', mdAuth.verificaToken, function (req, res) {
 
-app.put('/finish/:id/:details', mdAuth.verificaToken, function (req, res) {
-    var id = req.params.id;
-    var details = req.params.details;
+    var body = req.body;
 
-    Pull.findById(id, function (err, pull) {
+    Pull.findById(body._id, function (err, pull) {
 
         if (err) {
             return res.status(500).json({
@@ -141,7 +215,7 @@ app.put('/finish/:id/:details', mdAuth.verificaToken, function (req, res) {
         if (!pull) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El orden con el id' + id + ' no existe',
+                mensaje: 'El orden con el id' + body._id + ' no existe',
                 errors: {
                     message: 'No existe un orden con ese ID'
                 }
@@ -149,7 +223,7 @@ app.put('/finish/:id/:details', mdAuth.verificaToken, function (req, res) {
         }
 
         pull.state = true;
-        pull.details = details;
+        pull.details = body.details;
 
         pull.save(function (err, pullB) {
 

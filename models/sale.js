@@ -20,10 +20,11 @@ var saleSchema = new Schema({
         ref: 'Material',
         required: [true, 'El material es necesario'],
       },
-      total: { type: Float, requerido: [true, 'La cantidad es necesaria'] },
-      price: { type: Float, requerido: [true, 'El precio es necesario'] },
+      total: { type: Float, required: [true, 'La cantidad es necesaria'] },
+      price: { type: Float, required: [true, 'El precio es necesario'] },
     },
   ],
+  flete: { type: Float },
   total: { type: Float, required: true },
   state: { type: Boolean, required: true, default: false },
 });

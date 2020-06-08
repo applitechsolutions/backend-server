@@ -5,6 +5,7 @@ var app = express();
 
 var PurchaseCD = require('../models/purchaseCD');
 var WhiteTrip = require('../models/whiteTrip');
+var MaterialCellar = require('../models/materialCellar')
 
 /**
  * LISTAR COMPRAS
@@ -208,7 +209,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     var purchaseCD = new PurchaseCD({
         date: body.date,
         noBill: body.noBill,
-        serie: body.document,
+        serie: body.serie,
         _order: body._order,
         sap: body.sap,
         details: body.details,
@@ -238,6 +239,40 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                         }
                     }
                 );
+
+                WhiteTrip.findOne({ '_id': e._whiteTrip._id }, '_pull')
+                    .populate('_pull', '_material')
+                    .exec(function (err, whiteTrip) {
+                        if (err) {
+                            res.status(500).json({
+                                ok: false,
+                                mensaje: 'Error al buscar pull',
+                                errors: err
+                            });
+                        }
+
+                        if (!whiteTrip) {
+                            res.status(400).json({
+                                ok: false,
+                                mensaje: 'El reporte no existe',
+                                errors: { message: 'No existe un reporte con ese ID' }
+                            });
+                        }
+
+                        MaterialCellar.updateOne(
+                            { 'storage._material': whiteTrip._pull._material },
+                            { 'storage.$.cost': e.cost },
+                            function (err, storageAct) {
+                                if (err) {
+                                    res.status(400).json({
+                                        ok: false,
+                                        mensaje: 'Error al actualizar costo',
+                                        errors: err,
+                                    });
+                                }
+                            }
+                        );
+                    });
             });
 
             Promise.all(promises)

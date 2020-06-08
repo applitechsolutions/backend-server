@@ -268,8 +268,8 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) {})
-        .catch(function (err) {});
+        .then(function (vehicle) { })
+        .catch(function (err) { });
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -280,8 +280,8 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) {})
-          .catch(function (err) {});
+          .then(function (gkm) { })
+          .catch(function (err) { });
       }
 
       res.status(200).json({
@@ -317,8 +317,8 @@ app.put('/borrar', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) {})
-        .catch(function (err) {});
+        .then(function (vehicle) { })
+        .catch(function (err) { });
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -329,8 +329,8 @@ app.put('/borrar', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) {})
-          .catch(function (err) {});
+          .then(function (gkm) { })
+          .catch(function (err) { });
       }
 
       res.status(200).json({
@@ -355,7 +355,6 @@ app.delete('/:id', mdAuth.verificaToken, function (req, res) {
   var id = req.params.id;
   var body = req.body;
   var km = body._type.km * body.trips * -1;
-  console.log(body);
 
   GreenTrip.findByIdAndDelete(id)
     .then(function (tripBorrado) {
@@ -367,8 +366,8 @@ app.delete('/:id', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (tripKm) {})
-        .catch(function (err) {});
+        .then(function (tripKm) { })
+        .catch(function (err) { });
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -379,14 +378,13 @@ app.delete('/:id', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) {})
-          .catch(function (err) {});
+          .then(function (gkm) { })
+          .catch(function (err) { });
       }
 
       res.status(200).json({
         ok: true,
-        viajeV: tripBorrado,
-        usuarioToken: req.usuario,
+        viajeV: tripBorrado
       });
     })
     .catch(function (err) {
@@ -436,8 +434,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
               arrayFilters: [{ 'elem.km': { $gte: 0 } }],
             }
           )
-            .then(function (tripKm) {})
-            .catch(function (err) {});
+            .then(function (tripKm) { })
+            .catch(function (err) { });
 
           if (body._vehicle.type === 'camionG') {
             Gondola.findByIdAndUpdate(
@@ -448,8 +446,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                 arrayFilters: [{ 'elem.km': { $gte: 0 } }],
               }
             )
-              .then(function (gkm) {})
-              .catch(function (err) {});
+              .then(function (gkm) { })
+              .catch(function (err) { });
           }
 
           res.status(201).json({

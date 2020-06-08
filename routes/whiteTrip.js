@@ -178,6 +178,67 @@ app.get("/anulados/:id", function (req, res) {
  * ELIMINAR REPORTE LINEAS
  */
 
+app.delete('/:id', mdAuth.verificaToken, async (req, res) => {
+  const id = req.params.id;
+  const body = req.body;
+  const km = req.query.km;
+
+  try {
+    if (body._vehicle.type === 'camionG') {
+      const trip = await whiteTrip.findByIdAndDelete(id);
+
+      const vehicle = await Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { 'km': -km, 'pits.$[elem].km': -km } }, {
+        multi: true,
+        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+      });
+
+      const pull = await Pull.updateOne({ _id: body._pull._id }, { $inc: { mts: -body.mts, kg: -body.kgN, }, });
+      const gondola = await Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { 'pits.$[elem].km': km } }, {
+        multi: true,
+        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+      });
+
+      const success = Promise.all(trip, vehicle, pull, gondola);
+
+      if (success) {
+        res.status(200).json({
+          ok: true,
+          mensaje: 'Reporte eliminado con exito',
+          viaje: success
+        });
+      }
+    } else {
+      const trip = await whiteTrip.findByIdAndDelete(id);
+
+      const vehicle = await Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { 'km': -km, 'pits.$[elem].km': -km } }, {
+        multi: true,
+        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+      });
+
+      const pull = await Pull.updateOne({ _id: body._pull._id }, { $inc: { mts: -body.mts, kg: -body.kgN, }, });
+
+      const success = Promise.all(trip, vehicle, pull);
+
+      if (success) {
+        res.status(200).json({
+          ok: true,
+          mensaje: 'Reporte eliminado con exito',
+          viaje: success[0]
+        });
+      }
+    }
+
+
+
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      mensaje: 'Error al eliminar reporte lineas',
+      errors: error.message
+    });
+  }
+});
+
 app.put("/anular", mdAuth.verificaToken, function (req, res) {
   const id = req.query.id;
   const body = req.body;

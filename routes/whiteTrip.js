@@ -1,94 +1,103 @@
-var express = require("express");
+var express = require('express');
 var mongoose = require('mongoose');
-var mdAuth = require("../middlewares/auth");
+var mdAuth = require('../middlewares/auth');
 var app = express();
 
-var whiteTrip = require("../models/whiteTrip");
-var Vehicle = require("../models/vehicle");
-var Gondola = require("../models/gondola");
-var Pull = require("../models/pull");
+var whiteTrip = require('../models/whiteTrip');
+var Vehicle = require('../models/vehicle');
+var Gondola = require('../models/gondola');
+var Pull = require('../models/pull');
 
 /**
  * LISTAR REPORTE LINEAS DISPONIBLES PARA FACTURAR EN EL CD
  */
 
-app.get("/purchaseCD", function (req, res) {
-
+app.get('/purchaseCD', function (req, res) {
   var id = mongoose.Types.ObjectId('5e31e0a9c71f490a70eb2884'); // ID DEL CENTRO DE DISTRIBUCION DE LA VIÑA
 
-  whiteTrip.aggregate([{
-    $match: {
-      state: false,
-      invoicedCD: false
-    }
-  }, {
-    $lookup: {
-      from: "pulls",
-      localField: "_pull",
-      foreignField: "_id",
-      as: "_pull"
-    },
-  }, {
-    $unwind: '$_pull'
-  }, {
-    $lookup: {
-      from: "orders",
-      localField: "_pull._order",
-      foreignField: "_id",
-      as: "_pull._order"
-    },
-  }, {
-    $unwind: '$_pull._order'
-  }, {
-    $match: {
-      "_pull._order._destination": id,
-    }
-  },
-  {
-    $lookup: {
-      from: "materials",
-      localField: "_pull._material",
-      foreignField: "_id",
-      as: "_pull._material"
-    },
-  }, {
-    $unwind: '$_pull._material'
-  },
-  {
-    $sort: {
-      '_pull._order.order': 1
-    }
-  },
-  {
-    $project: {
-      _id: '$_id',
-      _pull: 1,
-      date: 1,
-      noTicket: 1,
-      mts: 1
-    }
-  }], function (err, whiteTrips) {
-    if (err) {
-      return res.status(500).json({
-        ok: false,
-        mensaje: 'Error listando reportes',
-        errors: err
+  whiteTrip.aggregate(
+    [
+      {
+        $match: {
+          state: false,
+          invoicedCD: false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'pulls',
+          localField: '_pull',
+          foreignField: '_id',
+          as: '_pull',
+        },
+      },
+      {
+        $unwind: '$_pull',
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: '_pull._order',
+          foreignField: '_id',
+          as: '_pull._order',
+        },
+      },
+      {
+        $unwind: '$_pull._order',
+      },
+      {
+        $match: {
+          '_pull._order._destination': id,
+        },
+      },
+      {
+        $lookup: {
+          from: 'materials',
+          localField: '_pull._material',
+          foreignField: '_id',
+          as: '_pull._material',
+        },
+      },
+      {
+        $unwind: '$_pull._material',
+      },
+      {
+        $sort: {
+          '_pull._order.order': 1,
+        },
+      },
+      {
+        $project: {
+          _id: '$_id',
+          _pull: 1,
+          date: 1,
+          noTicket: 1,
+          mts: 1,
+        },
+      },
+    ],
+    function (err, whiteTrips) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reportes',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        viajesBlancos: whiteTrips,
       });
     }
-
-    res.status(200).json({
-      ok: true,
-      viajesBlancos: whiteTrips
-    });
-  });
-
+  );
 });
 
 /**
  * LISTAR REPORTE LINEAS POR PULL
  */
 
-app.get("/:id", function (req, res) {
+app.get('/:id', function (req, res) {
   var id = req.params.id;
 
   whiteTrip
@@ -97,27 +106,27 @@ app.get("/:id", function (req, res) {
         state: false,
         _pull: id,
       },
-      "date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced"
+      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
     )
-    .populate("_employee", "name")
-    .populate("_vehicle", "plate type km")
+    .populate('_employee', 'name')
+    .populate('_vehicle', 'plate type km')
     .populate({
-      path: "_pull",
+      path: '_pull',
       populate: {
-        path: "_order",
+        path: '_order',
         populate: {
-          path: "_destination",
+          path: '_destination',
         },
       },
     })
     .sort({
-      _id: "asc",
+      _id: 'asc',
     })
     .exec(function (err, Wviajes) {
       if (err) {
         return res.status(500).json({
           ok: false,
-          mensaje: "Error listando reporte cuadros",
+          mensaje: 'Error listando reporte cuadros',
           errors: err,
         });
       }
@@ -133,7 +142,7 @@ app.get("/:id", function (req, res) {
  * LISTAR REPORTES DE LINEAS ANULADOS POR PULL
  */
 
-app.get("/anulados/:id", function (req, res) {
+app.get('/anulados/:id', function (req, res) {
   const id = req.params.id;
 
   whiteTrip
@@ -142,27 +151,27 @@ app.get("/anulados/:id", function (req, res) {
         state: true,
         _pull: id,
       },
-      "date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced"
+      'date noTicket noDelivery mts kgB kgT kgN checkIN checkOUT tariff invoiced'
     )
-    .populate("_employee", "name")
-    .populate("_vehicle", "plate type km")
+    .populate('_employee', 'name')
+    .populate('_vehicle', 'plate type km')
     .populate({
-      path: "_pull",
+      path: '_pull',
       populate: {
-        path: "_order",
+        path: '_order',
         populate: {
-          path: "_destination",
+          path: '_destination',
         },
       },
     })
     .sort({
-      _id: "asc",
+      _id: 'asc',
     })
     .exec(function (err, Wviajes) {
       if (err) {
         return res.status(500).json({
           ok: false,
-          mensaje: "Error listando reporte cuadros",
+          mensaje: 'Error listando reporte cuadros',
           errors: err,
         });
       }
@@ -183,63 +192,63 @@ app.delete('/:id', mdAuth.verificaToken, async (req, res) => {
   const body = req.body;
   const km = req.query.km;
 
-  try {
-    if (body._vehicle.type === 'camionG') {
-      const trip = await whiteTrip.findByIdAndDelete(id);
-
-      const vehicle = await Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { 'km': -km, 'pits.$[elem].km': -km } }, {
-        multi: true,
-        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
-      });
-
-      const pull = await Pull.updateOne({ _id: body._pull._id }, { $inc: { mts: -body.mts, kg: -body.kgN, }, });
-      const gondola = await Gondola.findByIdAndUpdate(body._vehicle._gondola, { $inc: { 'pits.$[elem].km': km } }, {
-        multi: true,
-        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
-      });
-
-      const success = Promise.all(trip, vehicle, pull, gondola);
-
-      if (success) {
-        res.status(200).json({
-          ok: true,
-          mensaje: 'Reporte eliminado con exito',
-          viaje: success
+  whiteTrip
+    .findByIdAndDelete(id)
+    .then(function (tripBorrado) {
+      Pull.updateOne(
+        {
+          _id: body._pull._id,
+        },
+        {
+          $inc: {
+            mts: -body.mts,
+            kg: -body.kgN,
+          },
+        }
+      )
+        .then(function () {})
+        .catch(function (err) {
+          console.log(err);
         });
-      }
-    } else {
-      const trip = await whiteTrip.findByIdAndDelete(id);
+      Vehicle.findByIdAndUpdate(
+        body._vehicle._id,
+        { $inc: { km: -km, 'pits.$[elem].km': -km } },
+        {
+          multi: true,
+          arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+        }
+      )
+        .then(function (tripKm) {})
+        .catch(function (err) {});
 
-      const vehicle = await Vehicle.findByIdAndUpdate(body._vehicle._id, { $inc: { 'km': -km, 'pits.$[elem].km': -km } }, {
-        multi: true,
-        arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+      if (body._vehicle.type === 'camionG') {
+        Gondola.findByIdAndUpdate(
+          body._vehicle._gondola,
+          { $inc: { 'pits.$[elem].km': -km } },
+          {
+            multi: true,
+            arrayFilters: [{ 'elem.km': { $gte: 0 } }],
+          }
+        )
+          .then(function (gkm) {})
+          .catch(function (err) {});
+      }
+
+      res.status(200).json({
+        ok: true,
+        viajeB: tripBorrado,
       });
-
-      const pull = await Pull.updateOne({ _id: body._pull._id }, { $inc: { mts: -body.mts, kg: -body.kgN, }, });
-
-      const success = Promise.all(trip, vehicle, pull);
-
-      if (success) {
-        res.status(200).json({
-          ok: true,
-          mensaje: 'Reporte eliminado con exito',
-          viaje: success[0]
-        });
-      }
-    }
-
-
-
-  } catch (error) {
-    res.status(500).json({
-      ok: false,
-      mensaje: 'Error al eliminar reporte lineas',
-      errors: error.message
+    })
+    .catch(function (err) {
+      res.status(400).json({
+        ok: false,
+        mensaje: 'Error al borrar reporte lineas',
+        errors: err,
+      });
     });
-  }
 });
 
-app.put("/anular", mdAuth.verificaToken, function (req, res) {
+app.put('/anular', mdAuth.verificaToken, function (req, res) {
   const id = req.query.id;
   const body = req.body;
   const km = req.query.km;
@@ -258,32 +267,32 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
           },
         }
       )
-        .then(function () { })
+        .then(function () {})
         .catch(function (err) {
           console.log(err);
         });
       Vehicle.findByIdAndUpdate(
         body._vehicle._id,
-        { $inc: { km: -km, "pits.$[elem].km": -km } },
+        { $inc: { km: -km, 'pits.$[elem].km': -km } },
         {
           multi: true,
-          arrayFilters: [{ "elem.km": { $gte: 0 } }],
+          arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) { })
-        .catch(function (err) { });
+        .then(function (vehicle) {})
+        .catch(function (err) {});
 
-      if (body._vehicle.type === "camionG") {
+      if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
           body._vehicle._gondola,
-          { $inc: { "pits.$[elem].km": -km } },
+          { $inc: { 'pits.$[elem].km': -km } },
           {
             multi: true,
-            arrayFilters: [{ "elem.km": { $gte: 0 } }],
+            arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) { })
-          .catch(function (err) { });
+          .then(function (gkm) {})
+          .catch(function (err) {});
       }
 
       res.status(200).json({
@@ -294,7 +303,7 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
     .catch(function (err) {
       res.status(400).json({
         ok: false,
-        mensaje: "Error al anular reporte de lineas",
+        mensaje: 'Error al anular reporte de lineas',
         errors: err,
       });
     });
@@ -304,7 +313,7 @@ app.put("/anular", mdAuth.verificaToken, function (req, res) {
  * CREAR REPORTE LINEAS
  */
 
-app.post("/", mdAuth.verificaToken, function (req, res) {
+app.post('/', mdAuth.verificaToken, function (req, res) {
   var body = req.body;
   var km = req.query.km;
 
@@ -338,7 +347,7 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
           },
         }
       )
-        .then(function () { })
+        .then(function () {})
         .catch(function (err) {
           console.log(err);
         });
@@ -350,45 +359,45 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
         {
           $inc: {
             km: km,
-            "pits.$[elem].km": km,
+            'pits.$[elem].km': km,
           },
         },
         {
           multi: true,
           arrayFilters: [
             {
-              "elem.km": {
+              'elem.km': {
                 $gte: 0,
               },
             },
           ],
         }
       )
-        .then(function (tripKm) { })
+        .then(function (tripKm) {})
         .catch(function (err) {
           console.log(err);
         });
 
-      if (body._vehicle.type === "camionG") {
+      if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
           body._vehicle._gondola,
           {
             $inc: {
-              "pits.$[elem].km": km,
+              'pits.$[elem].km': km,
             },
           },
           {
             multi: true,
             arrayFilters: [
               {
-                "elem.km": {
+                'elem.km': {
                   $gte: 0,
                 },
               },
             ],
           }
         )
-          .then(function (gkm) { })
+          .then(function (gkm) {})
           .catch(function (err) {
             console.log(err);
           });
@@ -402,7 +411,7 @@ app.post("/", mdAuth.verificaToken, function (req, res) {
     .catch(function (err) {
       res.status(400).json({
         ok: false,
-        mensaje: "Error al crear reporte lineas",
+        mensaje: 'Error al crear reporte lineas',
         errors: err,
       });
       console.log(err);

@@ -35,6 +35,35 @@ app.get('/', (req, res) => {
     });
 });
 
+/* #region  GET lastCorrelative */
+
+app.get('/lastCorrelative', function (req, res) {
+  Sale.findOne(
+    { state: false },
+    {},
+    {
+      sort: {
+        _id: -1
+      }
+    },
+    function (err, sale) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando correlativos',
+          errors: err
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        venta: sale
+      });
+    }
+  );
+});
+/* #endregion */
+
 // CREAR VENTA
 app.post('/', mdAuth.verificaToken, async (req, res) => {
   const body = req.body;

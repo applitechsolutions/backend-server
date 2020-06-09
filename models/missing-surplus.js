@@ -14,6 +14,7 @@ const missingSurplus = new Schema(
     state: {
       type: String,
       required: [true, 'Es necesario el estado del sobrante o faltante'],
+      default: 'pendiente',
       enum: ['pendiente', 'confirmado', 'rechazado'],
     },
   },

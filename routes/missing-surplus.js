@@ -3,6 +3,7 @@ const mdAuth = require('../middlewares/auth');
 const app = express();
 
 const MissingSurplus = require('../models/missing-surplus');
+const MaterialCellar = require('../models/materialCellar');
 
 /**
  * LISTAR FALTANTES O SOBRANTES
@@ -16,9 +17,9 @@ app.get('/', (req, res) => {
     'type _user _material description _materialCellar state createdAt'
   )
     .populate('_user', 'name role')
-    .populate('_material', 'code name price')
+    .populate('_material', 'code name minStock price')
     .populate('_materialCellar', 'name storage')
-    .exec((err, missings) => {
+    .exec((err, stocks) => {
       if (err) {
         res.status(500).json({
           ok: false,
@@ -29,7 +30,7 @@ app.get('/', (req, res) => {
 
       res.status(200).json({
         ok: true,
-        faltantes: missings,
+        excesos: stocks,
       });
     });
 });
@@ -41,15 +42,19 @@ app.get('/', (req, res) => {
 app.post('/', mdAuth.verificaToken, async (req, res) => {
   const body = req.body;
   let name;
+  let cantidad;
 
   if (body.type) {
     name = 'Faltante';
+    cantidad = body.load * -1;
   } else {
     name = 'Sobrante';
+    cantidad = body.load;
   }
 
   missingSurplus = new MissingSurplus({
     type: body.type,
+    load: body.load,
     _user: body._user,
     _material: body._material,
     description: body.description,
@@ -61,11 +66,21 @@ app.post('/', mdAuth.verificaToken, async (req, res) => {
     const respuesta = await missingSurplus.save();
 
     if (respuesta) {
-      res.status(201).json({
-        ok: true,
-        mensjae: `${name} creado correctamente`,
-        surpmiss: respuesta,
-      });
+      MaterialCellar.findOneAndUpdate(
+        { 'storage._material': respuesta._material },
+        { $inc: { 'storage.stock': cantidad } }
+      )
+        .then((doc) => {
+          console.log('respuesta', doc);
+          res.status(201).json({
+            ok: true,
+            mensaje: `${name} creado correctamente`,
+            surpmiss: respuesta,
+          });
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     }
   } catch (error) {
     res.status(500).json({

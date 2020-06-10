@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var Float = require('mongoose-float').loadType(mongoose, 2);
 
 const missingSurplus = new Schema(
   {
     type: { type: Boolean, required: [true, 'El tipo es necesario'] },
+    load: {
+      type: Float,
+      required: [true, 'Es necesaria la cantidad que esta de mas'],
+    },
     _user: { type: Schema.Types.ObjectId, ref: 'User' },
     _material: { type: Schema.Types.ObjectId, ref: 'Material' },
     description: {

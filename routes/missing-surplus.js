@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
   MissingSurplus.find(
     {
       type,
-      state: { $eq: 'pendiente' },
     },
     'type load _user _material description _materialCellar state createdAt'
   )
@@ -23,6 +22,7 @@ app.get('/', (req, res) => {
     .populate('_material', 'code name minStock price')
     .populate('_materialCellar', 'name storage')
     .limit(50)
+    .sort({ createdAt: -1 })
     .exec((err, stocks) => {
       if (err) {
         res.status(500).json({

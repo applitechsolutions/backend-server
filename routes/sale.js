@@ -35,6 +35,35 @@ app.get('/', (req, res) => {
     });
 });
 
+/* #region  GET lastCorrelative */
+
+app.get('/lastCorrelative', function (req, res) {
+  Sale.findOne(
+    { state: false },
+    {},
+    {
+      sort: {
+        _id: -1,
+      },
+    },
+    function (err, sale) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando correlativos',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        venta: sale,
+      });
+    }
+  );
+});
+/* #endregion */
+
 /**
  * ANULAR VENTA
  */
@@ -44,20 +73,26 @@ app.patch('/:id', mdAuth.verificaToken, async (req, res) => {
   const body = req.body;
 
   try {
-    const ventaAnulada = await Sale.findByIdAndUpdate(id, { $set: { state: body.state } }, { new: true }, (err, res) => {
-      if (err) {
-        res.status(400).json({
-          ok: false,
-          mensaje: 'No existe una venta con ese id',
-          errors: err
-        });
+    const ventaAnulada = await Sale.findByIdAndUpdate(
+      id,
+      { $set: { state: body.state } },
+      { new: true },
+      (err, res) => {
+        if (err) {
+          res.status(400).json({
+            ok: false,
+            mensaje: 'No existe una venta con ese id',
+            errors: err,
+          });
+        }
       }
-    });
+    );
 
     const promises = await body.details.map(async (item) => {
       await MaterialCellar.findOneAndUpdate(
         { 'storage._material': item.material },
-        { $inc: { 'storage.$.stock': item.total } });
+        { $inc: { 'storage.$.stock': item.total } }
+      );
     });
 
     const storage = Promise.all(promises);
@@ -66,17 +101,16 @@ app.patch('/:id', mdAuth.verificaToken, async (req, res) => {
       res.status(200).json({
         ok: true,
         mensaje: 'Venta anulada correctamente',
-        venta: ventaAnulada
+        venta: ventaAnulada,
       });
     }
   } catch (error) {
     res.status(500).json({
       ok: false,
       mensaje: 'Error al anular la venta',
-      errors: error.message
+      errors: error.message,
     });
   }
-
 });
 
 // CREAR VENTA

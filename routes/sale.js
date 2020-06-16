@@ -88,22 +88,25 @@ app.patch('/:id', mdAuth.verificaToken, async (req, res) => {
       }
     );
 
-    const promises = await body.details.map(async (item) => {
-      await MaterialCellar.findOneAndUpdate(
-        { 'storage._material': item.material },
-        { $inc: { 'storage.$.stock': item.total } }
-      );
-    });
-
-    const storage = Promise.all(promises);
-
-    if (ventaAnulada && storage) {
-      res.status(200).json({
-        ok: true,
-        mensaje: 'Venta anulada correctamente',
-        venta: ventaAnulada,
+    if (ventaAnulada) {
+      body.details.map((item) => {
+        MaterialCellar.findOneAndUpdate(
+          { 'storage._material': item.material },
+          { $inc: { 'storage.$.stock': item.total } }
+        )
+          .then((doc) => {
+            console.log('Todo bien devolviendo material');
+          })
+          .catch((error) => {
+            throw new Error(error);
+          });
       });
     }
+    res.status(200).json({
+      ok: true,
+      mensaje: 'Venta anulada correctamente',
+      venta: ventaAnulada,
+    });
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -129,30 +132,25 @@ app.post('/', mdAuth.verificaToken, async (req, res) => {
 
   try {
     const saleSaved = await sale.save();
-
-    const promises = saleSaved.details.map(async (item) => {
-      await MaterialCellar.findOneAndUpdate(
-        { 'storage._material': item.material },
-        { $inc: { 'storage.$.stock': -item.total } }
-      )
-        .then((res) => {
-          console.log('respuesta', res);
-        })
-        .catch((error) => {
-          throw new Error(error);
-        });
-    });
-
-    await Promise.all(saleSaved, promises).catch(function (err) {
-      // log that I have an error, return the entire array;
-      console.log('A promise failed to resolve', err);
-    });
-
-    res.status(201).json({
-      ok: true,
-      mensaje: 'Venta creada correctamente',
-      venta: saleSaved,
-    });
+    if (saleSaved) {
+      saleSaved.details.map((item) => {
+        MaterialCellar.findOneAndUpdate(
+          { 'storage._material': item.material },
+          { $inc: { 'storage.$.stock': -item.total } }
+        )
+          .then((doc) => {
+            console.log('Todo bien restando material');
+          })
+          .catch((error) => {
+            throw new Error(error);
+          });
+      });
+      res.status(201).json({
+        ok: true,
+        mensaje: 'Venta creada correctamente',
+        venta: saleSaved,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       ok: false,

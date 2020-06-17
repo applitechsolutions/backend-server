@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var uniqueValidator = require('mongoose-unique-validator');
 var Float = require('mongoose-float').loadType(mongoose, 2);
 
 var Schema = mongoose.Schema;
@@ -11,8 +10,8 @@ var saleSchema = new Schema({
     required: [true, 'El cliente es necesario'],
   },
   date: { type: Date, required: [true, 'La fecha es necesaria'] },
-  serie: { type: String },
-  bill: { type: String },
+  serie: { type: String, unique: false },
+  bill: { type: String, unique: false },
   details: [
     {
       material: {
@@ -28,7 +27,5 @@ var saleSchema = new Schema({
   total: { type: Float, required: true },
   state: { type: Boolean, required: true, default: false },
 });
-
-saleSchema.plugin(uniqueValidator, { message: '{PATH} debe ser unico' });
 
 module.exports = mongoose.model('Sale', saleSchema);

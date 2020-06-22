@@ -65,6 +65,8 @@ app.get('/lastCorrelative', function (req, res) {
 /* #endregion */
 
 /* #region REPORTES */
+
+// TOTAL VENDIDO
 app.get('/amount', (req, res) => {
   const { startDate, endDate, startAmount, endAmount } = req.query;
 
@@ -97,6 +99,40 @@ app.get('/amount', (req, res) => {
       });
     });
 });
+
+// FACTURADAS
+app.get('/bill', (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  Sale.find({
+    state: false,
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    bill: { $ne: '' },
+  })
+    .populate('_customer', 'name nit')
+    .populate('details.materia')
+    .sort({ date: 'asc' })
+    .exec((err, sales) => {
+      if (err) {
+        res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando ventas',
+          errors: err.message,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        ventas: sales,
+      });
+    });
+});
+
+// NO FACTURADAS
+// ANULADAS
 /* #endregion */
 
 /**

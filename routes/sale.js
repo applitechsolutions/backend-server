@@ -64,6 +64,41 @@ app.get('/lastCorrelative', function (req, res) {
 });
 /* #endregion */
 
+/* #region REPORTES */
+app.get('/amount', (req, res) => {
+  const { startDate, endDate, startAmount, endAmount } = req.query;
+
+  Sale.find({
+    state: false,
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    total: {
+      $gte: startAmount,
+      $lte: endAmount,
+    },
+  })
+    .populate('_customer', 'name nit')
+    .populate('details.material')
+    .sort({ date: 'asc' })
+    .exec((err, sales) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando ventas',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        ventas: sales,
+      });
+    });
+});
+/* #endregion */
+
 /**
  * ANULAR VENTA
  */

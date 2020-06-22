@@ -172,6 +172,37 @@ app.get('/nobill', (req, res) => {
 });
 
 // ANULADAS
+app.get('/cancel', (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  Sale.find(
+    {
+      state: true,
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    },
+    '_customer date serie bill details flete total state'
+  )
+    .populate('_customer', 'name nit')
+    .populate('details.material')
+    .sort({ date: 'asc' })
+    .exec((err, sales) => {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando ventas',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        ventas: sales,
+      });
+    });
+});
 /* #endregion */
 
 /**

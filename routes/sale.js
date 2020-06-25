@@ -103,18 +103,52 @@ app.get('/amount', (req, res) => {
     });
 });
 
-// FACTURADAS O NO FACTURADAS
-app.get('/billed', (req, res) => {
-  const { startDate, endDate, isBilled } = req.query;
+// FACTURADAS
+app.get('/bill', (req, res) => {
+  const { startDate, endDate } = req.query;
 
   Sale.find(
     {
-      state: isBilled,
+      state: false,
       date: {
         $gte: startDate,
         $lte: endDate,
       },
       bill: { $ne: '' },
+    },
+    '_customer date serie bill details flete total state'
+  )
+    .populate('_customer', 'name nit')
+    .populate('details.material')
+    .sort({ date: 'asc' })
+    .exec((err, sales) => {
+      if (err) {
+        res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando ventas',
+          errors: err.message,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        ventas: sales,
+      });
+    });
+});
+
+// NO FACTURADAS
+app.get('/nobill', (req, res) => {
+  const { startDate, endDate } = req.query;
+
+  Sale.find(
+    {
+      state: false,
+      date: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+      bill: { $eq: '' },
     },
     '_customer date serie bill details flete total state'
   )

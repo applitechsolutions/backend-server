@@ -289,12 +289,12 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Reportes',
             icono: 'menu-icon fas fa-chart-line',
-            submenu: [
-              {
-                titulo: 'Ver todos',
-                url: '/reports',
-              },
-            ],
+            url: '/reports'
+          },
+          {
+            titulo: 'Materiales',
+            icono: 'menu-icon fas fa-mountain',
+            url: '/materials'
           },
           {
             titulo: 'Usuarios',
@@ -311,8 +311,6 @@ function obtenerMenu(ROLE, AREA) {
             ],
           },
         ];
-      } else if (ROLE === 'USER_ROLE') {
-        // TODO:agregar menu
       }
       break;
     case 'TALLER':
@@ -576,12 +574,7 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Clientes',
             icono: 'menu-icon fas fa-landmark',
-            submenu: [
-              {
-                titulo: 'Listar clientes',
-                url: '/CPcustomers',
-              },
-            ],
+            url: '/CPcustomers'
           },
         ];
       } else if (ROLE === 'USER_ROLE') {
@@ -607,12 +600,7 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Clientes',
             icono: 'menu-icon fas fa-user-tag',
-            submenu: [
-              {
-                titulo: 'Listar clientes',
-                url: '/customers',
-              },
-            ],
+            url: '/customers'
           },
           {
             titulo: 'Inventario',

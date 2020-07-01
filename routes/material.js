@@ -7,7 +7,7 @@ var Material = require('../models/material');
 var MaterialCellar = require('../models/materialCellar');
 
 /**
- * LISTAR MATERIALES POR STOCK
+ * LISTAR MATERIALES
  */
 
 app.get('/', function (req, res) {
@@ -51,6 +51,57 @@ app.get('/catalog', function (req, res) {
         materiales: materials,
       });
     });
+});
+
+/**
+ * LISTAR MATERIALES PARA EL CD
+ */
+
+app.get('/storage', function (req, res) {
+
+  MaterialCellar.aggregate([{
+    $match: {
+      "state": false
+    }
+  }, {
+    $unwind: '$storage'
+  }, {
+    $lookup: {
+      from: "materials",
+      localField: "storage._material",
+      foreignField: "_id",
+      as: "_material"
+    },
+  }, {
+    $unwind: '$_material'
+  }, {
+    $match: {
+      "_material.isCD": true
+    }
+  },
+  {
+    $sort: { "_material.name": 1 }
+  },
+  {
+    $project: {
+      _id: '$_id',
+      _material: 1,
+      stock: '$storage.stock',
+    }
+  }], function (err, materials) {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        mensaje: 'Error listando inventario',
+        errors: err
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      materiales: materials
+    });
+  });
 });
 
 /**

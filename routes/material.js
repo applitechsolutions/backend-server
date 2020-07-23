@@ -12,7 +12,7 @@ var MaterialCellar = require('../models/materialCellar');
 
 app.get('/', function (req, res) {
   MaterialCellar.find({ state: false })
-    .populate('storage._material', 'code name minStock price')
+    .populate('storage._material', 'code name minStock price cost isCD')
     .sort({ _id: 'desc' })
     .exec(function (err, materials) {
       if (err) {
@@ -28,6 +28,80 @@ app.get('/', function (req, res) {
         materiales: materials,
       });
     });
+});
+
+/**
+ * LISTAR MATERIALES CATALOGO
+ */
+
+app.get('/catalog', function (req, res) {
+  Material.find()
+    .sort({ name: 1 })
+    .exec(function (err, materials) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando materiales',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        materiales: materials,
+      });
+    });
+});
+
+/**
+ * LISTAR MATERIALES PARA EL CD
+ */
+
+app.get('/storage', function (req, res) {
+
+  MaterialCellar.aggregate([{
+    $match: {
+      "state": false
+    }
+  }, {
+    $unwind: '$storage'
+  }, {
+    $lookup: {
+      from: "materials",
+      localField: "storage._material",
+      foreignField: "_id",
+      as: "_material"
+    },
+  }, {
+    $unwind: '$_material'
+  }, {
+    $match: {
+      "_material.isCD": true
+    }
+  },
+  {
+    $sort: { "_material.name": 1 }
+  },
+  {
+    $project: {
+      _id: '$_id',
+      _material: 1,
+      stock: '$storage.stock',
+    }
+  }], function (err, materials) {
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        mensaje: 'Error listando inventario',
+        errors: err
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      materiales: materials
+    });
+  });
 });
 
 /**
@@ -270,7 +344,10 @@ app.put('/:id', mdAuth.verificaToken, function (req, res) {
     material.code = body.code;
     material.name = body.name;
     material.minStock = body.minStock;
+    material.cost = body.cost;
     material.price = body.price;
+    material.isCD = body.isCD;
+    material.state = false;
 
     material.save(function (err, materialACT) {
       if (err) {
@@ -301,7 +378,9 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
     code: body.code,
     name: body.name,
     minStock: body.minStock,
+    cost: body.cost,
     price: body.price,
+    isCD: body.isCD
   });
 
   material

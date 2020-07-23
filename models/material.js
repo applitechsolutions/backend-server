@@ -10,7 +10,10 @@ var materialSchema = new Schema({
     type: Float,
     required: [true, 'La existencia minima es necesaria'],
   },
-  price: { type: Float, required: [true, 'El precio de venta es necesario'] },
+  cost: { type: Float, required: false },
+  price: { type: Float, required: false },
+  isCD: { type: Boolean, default: false },
+  state: { type: Boolean, default: false }
 });
 
 module.exports = mongoose.model('Material', materialSchema);

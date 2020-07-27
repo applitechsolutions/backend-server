@@ -207,95 +207,79 @@ app.get('/ranges', async (req, res) => {
   const startDate = new Date(req.query.fecha1);
   const endDate = new Date(req.query.fecha2);
 
-  GreenTrip.aggregate(
-    [
-      {
-        $match: {
-          date: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-          state: false,
+  GreenTrip.aggregate([
+    {
+      $match: {
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+        state: false,
+      },
+    },
+    {
+      $match: {
+        date: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+        state: false,
+      },
+    },
+    {
+      $lookup: {
+        from: 'vehicles',
+        localField: '_vehicle',
+        foreignField: '_id',
+        as: '_vehicle',
+      },
+    },
+    {
+      $unwind: '$_vehicle',
+    },
+    {
+      $lookup: {
+        from: 'typetrips',
+        localField: '_type',
+        foreignField: '_id',
+        as: '_type',
+      },
+    },
+    {
+      $unwind: '$_type',
+    },
+    {
+      $project: {
+        _id: 1,
+        _vehicle: 1,
+        _type: 1,
+        trips: 1,
+        realkm: { $multiply: ['$_type.km', 2] },
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        _vehicle: 1,
+        _type: 1,
+        trips: 1,
+        range: {
+          $concat: [
+            { $cond: [{$and:[ {$gt:["$realkm", 0]}, {$lte: ["$realkm", 20]}]}, "0 - 2", ""] }, //prettier-ignore
+            { $cond: [{$and:[ {$gt:["$realkm", 20]}, {$lte:["$realkm", 40]}]}, "2 - 4", ""]}, //prettier-ignore
+            { $cond: [{$and:[ {$gt:["$realkm", 40]}, {$lte:["$realkm", 60]}]}, "4 - 6", ""]}, //prettier-ignore
+          ],
         },
       },
-      {
-        $match: {
-          date: {
-            $gte: startDate,
-            $lte: endDate,
-          },
-          state: false,
-        },
+    },
+    {
+      $group: {
+        _id: '$range',
+        viajes: { $sum: '$trips' },
+        cantidad: { $sum: 1 },
       },
-      {
-        $lookup: {
-          from: 'vehicles',
-          localField: '_vehicle',
-          foreignField: '_id',
-          as: '_vehicle',
-        },
-      },
-      {
-        $unwind: '$_vehicle',
-      },
-      {
-        $lookup: {
-          from: 'typetrips',
-          localField: '_type',
-          foreignField: '_id',
-          as: '_type',
-        },
-      },
-      {
-        $unwind: '$_type',
-      },
-      {
-        $project: {
-          _id: 1,
-          _vehicle: 1,
-          _type: 1,
-          trips: 1,
-          realkm: { $multiply: ['$_type.km', 2] },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          _vehicle: 1,
-          _type: 1,
-          trips: 1,
-          range: {
-            $concat: [
-              { $cond: [{$and:[ {$gt:["$realkm", 0]}, {$lte: ["$realkm", 20]}]}, "0 - 2", ""] }, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$realkm", 20]}, {$lte:["$realkm", 40]}]}, "2 - 4", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$realkm", 40]}, {$lte:["$realkm", 60]}]}, "4 - 6", ""]}, //prettier-ignore
-            ],
-          },
-        },
-      },
-      {
-        $group: {
-          _id: '$range',
-          viajes: { $sum: '$trips' },
-          cantidad: { $sum: 1 },
-        },
-      },
-    ],
-    function (err, reports) {
-      if (err) {
-        return res.status(500).json({
-          ok: false,
-          mensaje: 'Error listando reportes verdes',
-          errors: err,
-        });
-      }
-
-      res.status(200).json({
-        ok: true,
-        preDetail: reports,
-      });
-    }
-  );
+    },
+  ]);
 });
 
 /**

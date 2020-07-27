@@ -45,6 +45,8 @@ var materialRoutes = require('./routes/material');
 const saleRoutes = require('./routes/sale');
 const purchaseCDRoutes = require('./routes/purchaseCD');
 const missingSurplusRoutes = require('./routes/missing-surplus');
+const cashTypeCDRoutes = require('./routes/cashTypeCD');
+const cashCDRoutes = require('./routes/cashCD');
 // VIAJES
 var employeeRoutes = require('./routes/employee');
 var typeTripRoutes = require('./routes/typeTrip');
@@ -110,6 +112,8 @@ app.use('/materialCellar', materialCellarRoutes);
 app.use('/ventas', saleRoutes);
 app.use('/comprasCD', purchaseCDRoutes);
 app.use('/excesos', missingSurplusRoutes);
+app.use('/cajaTiposCD', cashTypeCDRoutes);
+app.use('/cajaCD', cashCDRoutes);
 // VIAJES
 app.use('/empleado', employeeRoutes);
 app.use('/tviajes', typeTripRoutes);

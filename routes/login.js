@@ -289,12 +289,12 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Reportes',
             icono: 'menu-icon fas fa-chart-line',
-            url: '/reports'
+            url: '/reports/purchasesByProviders',
           },
           {
             titulo: 'Materiales',
             icono: 'menu-icon fas fa-mountain',
-            url: '/materials'
+            url: '/materials',
           },
           {
             titulo: 'Usuarios',
@@ -469,7 +469,7 @@ function obtenerMenu(ROLE, AREA) {
                     titulo: 'Crear tipo',
                     url: '/typeTrip/new',
                   },
-                ]
+                ],
               },
             ],
           },
@@ -527,7 +527,7 @@ function obtenerMenu(ROLE, AREA) {
                   },
                 ],
               },
-            ]
+            ],
           },
           {
             titulo: 'Cisterna',
@@ -574,7 +574,7 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Clientes',
             icono: 'menu-icon fas fa-landmark',
-            url: '/CPcustomers'
+            url: '/CPcustomers',
           },
         ];
       } else if (ROLE === 'USER_ROLE') {
@@ -598,19 +598,24 @@ function obtenerMenu(ROLE, AREA) {
             ],
           },
           {
+            titulo: 'Caja',
+            icono: 'menu-icon fas fa-cash-register',
+            url: '/cd/cash',
+          },
+          {
             titulo: 'Clientes',
             icono: 'menu-icon fas fa-user-tag',
-            url: '/customers'
+            url: '/customers',
           },
           {
             titulo: 'Inventario',
             icono: 'menu-icon fas fa-mountain',
-            url: '/cd/storage'
+            url: '/cd/storage',
           },
           {
             titulo: 'Pedidos',
             icono: 'menu-icon fas fa-calendar-plus',
-            url: '/cd/orders'
+            url: '/cd/orders',
           },
           {
             titulo: 'Compras',
@@ -633,7 +638,7 @@ function obtenerMenu(ROLE, AREA) {
           {
             titulo: 'Reportes',
             icono: 'menu-icon fas fa-chart-area',
-            url: '/cd/reports'
+            url: '/cd/reports',
           },
         ];
       } else if (ROLE === 'USER_ROLE') {

@@ -200,6 +200,105 @@ app.get('/group', function (req, res) {
 });
 
 /**
+ * GROUP POR RANGOS
+ */
+
+app.get('/ranges', async (req, res) => {
+  const startDate = new Date(req.query.fecha1);
+  const endDate = new Date(req.query.fecha2);
+
+  GreenTrip.aggregate(
+    [
+      {
+        $match: {
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          state: false,
+        },
+      },
+      {
+        $match: {
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          state: false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'vehicles',
+          localField: '_vehicle',
+          foreignField: '_id',
+          as: '_vehicle',
+        },
+      },
+      {
+        $unwind: '$_vehicle',
+      },
+      {
+        $lookup: {
+          from: 'typetrips',
+          localField: '_type',
+          foreignField: '_id',
+          as: '_type',
+        },
+      },
+      {
+        $unwind: '$_type',
+      },
+      {
+        $project: {
+          _id: 1,
+          _vehicle: 1,
+          _type: 1,
+          trips: 1,
+          realkm: { $multiply: ['$_type.km', 2] },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          _vehicle: 1,
+          _type: 1,
+          trips: 1,
+          range: {
+            $concat: [
+              { $cond: [{$and:[ {$gt:["$realkm", 0]}, {$lte: ["$realkm", 20]}]}, "0 - 2", ""] }, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$realkm", 20]}, {$lte:["$realkm", 40]}]}, "2 - 4", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$realkm", 40]}, {$lte:["$realkm", 60]}]}, "4 - 6", ""]}, //prettier-ignore
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: '$range',
+          viajes: { $sum: '$trips' },
+          cantidad: { $sum: 1 },
+        },
+      },
+    ],
+    function (err, reports) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reportes verdes',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        preDetail: reports,
+      });
+    }
+  );
+});
+
+/**
  * CARGAR REPORTE CUADROS
  */
 
@@ -268,8 +367,8 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) { })
-        .catch(function (err) { });
+        .then(function (vehicle) {})
+        .catch(function (err) {});
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -280,8 +379,8 @@ app.put('/', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) { })
-          .catch(function (err) { });
+          .then(function (gkm) {})
+          .catch(function (err) {});
       }
 
       res.status(200).json({
@@ -317,8 +416,8 @@ app.put('/borrar', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (vehicle) { })
-        .catch(function (err) { });
+        .then(function (vehicle) {})
+        .catch(function (err) {});
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -329,8 +428,8 @@ app.put('/borrar', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) { })
-          .catch(function (err) { });
+          .then(function (gkm) {})
+          .catch(function (err) {});
       }
 
       res.status(200).json({
@@ -366,8 +465,8 @@ app.delete('/:id', mdAuth.verificaToken, function (req, res) {
           arrayFilters: [{ 'elem.km': { $gte: 0 } }],
         }
       )
-        .then(function (tripKm) { })
-        .catch(function (err) { });
+        .then(function (tripKm) {})
+        .catch(function (err) {});
 
       if (body._vehicle.type === 'camionG') {
         Gondola.findByIdAndUpdate(
@@ -378,13 +477,13 @@ app.delete('/:id', mdAuth.verificaToken, function (req, res) {
             arrayFilters: [{ 'elem.km': { $gte: 0 } }],
           }
         )
-          .then(function (gkm) { })
-          .catch(function (err) { });
+          .then(function (gkm) {})
+          .catch(function (err) {});
       }
 
       res.status(200).json({
         ok: true,
-        viajeV: tripBorrado
+        viajeV: tripBorrado,
       });
     })
     .catch(function (err) {
@@ -434,8 +533,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
               arrayFilters: [{ 'elem.km': { $gte: 0 } }],
             }
           )
-            .then(function (tripKm) { })
-            .catch(function (err) { });
+            .then(function (tripKm) {})
+            .catch(function (err) {});
 
           if (body._vehicle.type === 'camionG') {
             Gondola.findByIdAndUpdate(
@@ -446,8 +545,8 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
                 arrayFilters: [{ 'elem.km': { $gte: 0 } }],
               }
             )
-              .then(function (gkm) { })
-              .catch(function (err) { });
+              .then(function (gkm) {})
+              .catch(function (err) {});
           }
 
           res.status(201).json({

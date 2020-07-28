@@ -326,29 +326,29 @@ app.get('/kmByDestination', async function (req, res) {
           trips: 1,
           range: {
             $concat: [
-              { $cond: [{$and:[ {$gt:["$_type.km", 0]}, {$lte: ["$_type.km", 2]}]}, "0 - 2", ""] }, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 2]}, {$lte:["$_type.km", 4]}]}, "2 - 4", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 4]}, {$lte:["$_type.km", 6]}]}, "4 - 6", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 6]}, {$lte:["$_type.km", 8]}]}, "6 - 8", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 8]}, {$lte:["$_type.km", 10]}]}, "8 - 10", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 10]}, {$lte:["$_type.km", 15]}]}, "10 - 15", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 15]}, {$lte:["$_type.km", 20]}]}, "15 - 20", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 20]}, {$lte:["$_type.km", 25]}]}, "20 - 25", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 25]}, {$lte:["$_type.km", 30]}]}, "25 - 30", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 30]}, {$lte:["$_type.km", 35]}]}, "30 - 35", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 35]}, {$lte:["$_type.km", 40]}]}, "35 - 40", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 40]}, {$lte:["$_type.km", 45]}]}, "40 - 45", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 45]}, {$lte:["$_type.km", 50]}]}, "45 - 50", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 50]}, {$lte:["$_type.km", 60]}]}, "50 - 60", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 60]}, {$lte:["$_type.km", 70]}]}, "60 - 70", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 70]}, {$lte:["$_type.km", 80]}]}, "70 - 80", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 80]}, {$lte:["$_type.km", 90]}]}, "80 - 90", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 90]}, {$lte:["$_type.km", 100]}]}, "90 - 100", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 100]}, {$lte:["$_type.km", 125]}]}, "100 - 125", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 125]}, {$lte:["$_type.km", 150]}]}, "125 - 150", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 150]}, {$lte:["$_type.km", 175]}]}, "150 - 175", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 175]}, {$lte:["$_type.km", 200]}]}, "175 - 200", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_type.km", 200]}]}, "+200", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 0]}, {$lte: ["$_type.km", 2]}]}, "0 - 2 km", ""] }, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 2]}, {$lte:["$_type.km", 4]}]}, "2 - 4 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 4]}, {$lte:["$_type.km", 6]}]}, "4 - 6 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 6]}, {$lte:["$_type.km", 8]}]}, "6 - 8 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 8]}, {$lte:["$_type.km", 10]}]}, "8 - 10 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 10]}, {$lte:["$_type.km", 15]}]}, "10 - 15 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 15]}, {$lte:["$_type.km", 20]}]}, "15 - 20 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 20]}, {$lte:["$_type.km", 25]}]}, "20 - 25 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 25]}, {$lte:["$_type.km", 30]}]}, "25 - 30 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 30]}, {$lte:["$_type.km", 35]}]}, "30 - 35 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 35]}, {$lte:["$_type.km", 40]}]}, "35 - 40 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 40]}, {$lte:["$_type.km", 45]}]}, "40 - 45 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 45]}, {$lte:["$_type.km", 50]}]}, "45 - 50 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 50]}, {$lte:["$_type.km", 60]}]}, "50 - 60 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 60]}, {$lte:["$_type.km", 70]}]}, "60 - 70 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 70]}, {$lte:["$_type.km", 80]}]}, "70 - 80 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 80]}, {$lte:["$_type.km", 90]}]}, "80 - 90 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 90]}, {$lte:["$_type.km", 100]}]}, "90 - 100 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 100]}, {$lte:["$_type.km", 125]}]}, "100 - 125 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 125]}, {$lte:["$_type.km", 150]}]}, "125 - 150 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 150]}, {$lte:["$_type.km", 175]}]}, "150 - 175 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 175]}, {$lte:["$_type.km", 200]}]}, "175 - 200 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_type.km", 200]}]}, "+200 km", ""]}, //prettier-ignore
             ],
           },
         },
@@ -357,6 +357,9 @@ app.get('/kmByDestination', async function (req, res) {
         $group: {
           _id: '$range',
           viajes: { $sum: '$trips' },
+          total: {
+            $sum: { $multiply: ['$trips', '$_type.km'] },
+          },
           // cantidad: { $sum: 1 },
         },
       },
@@ -408,31 +411,32 @@ app.get('/kmByDestination', async function (req, res) {
       {
         $project: {
           _id: 1,
+          _pull: 1,
           range: {
             $concat: [
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 0]}, {$lte: ["$_pull._order._destination.km", 2]}]}, "0 - 2", ""] }, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 2]}, {$lte:["$_pull._order._destination.km", 4]}]}, "2 - 4", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 4]}, {$lte:["$_pull._order._destination.km", 6]}]}, "4 - 6", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 6]}, {$lte:["$_pull._order._destination.km", 8]}]}, "6 - 8", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 8]}, {$lte:["$_pull._order._destination.km", 10]}]}, "8 - 10", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 10]}, {$lte:["$_pull._order._destination.km", 15]}]}, "10 - 15", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 15]}, {$lte:["$_pull._order._destination.km", 20]}]}, "15 - 20", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 20]}, {$lte:["$_pull._order._destination.km", 25]}]}, "20 - 25", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 25]}, {$lte:["$_pull._order._destination.km", 30]}]}, "25 - 30", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 30]}, {$lte:["$_pull._order._destination.km", 35]}]}, "30 - 35", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 35]}, {$lte:["$_pull._order._destination.km", 40]}]}, "35 - 40", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 40]}, {$lte:["$_pull._order._destination.km", 45]}]}, "40 - 45", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 45]}, {$lte:["$_pull._order._destination.km", 50]}]}, "45 - 50", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 50]}, {$lte:["$_pull._order._destination.km", 60]}]}, "50 - 60", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 60]}, {$lte:["$_pull._order._destination.km", 70]}]}, "60 - 70", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 70]}, {$lte:["$_pull._order._destination.km", 80]}]}, "70 - 80", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 80]}, {$lte:["$_pull._order._destination.km", 90]}]}, "80 - 90", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 90]}, {$lte:["$_pull._order._destination.km", 100]}]}, "90 - 100", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 100]}, {$lte:["$_pull._order._destination.km", 125]}]}, "100 - 125", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 125]}, {$lte:["$_pull._order._destination.km", 150]}]}, "125 - 150", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 150]}, {$lte:["$_pull._order._destination.km", 175]}]}, "150 - 175", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 175]}, {$lte:["$_pull._order._destination.km", 200]}]}, "175 - 200", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 200]}]}, "+200", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 0]}, {$lte: ["$_pull._order._destination.km", 2]}]}, "0 - 2 km", ""] }, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 2]}, {$lte:["$_pull._order._destination.km", 4]}]}, "2 - 4 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 4]}, {$lte:["$_pull._order._destination.km", 6]}]}, "4 - 6 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 6]}, {$lte:["$_pull._order._destination.km", 8]}]}, "6 - 8 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 8]}, {$lte:["$_pull._order._destination.km", 10]}]}, "8 - 10 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 10]}, {$lte:["$_pull._order._destination.km", 15]}]}, "10 - 15 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 15]}, {$lte:["$_pull._order._destination.km", 20]}]}, "15 - 20 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 20]}, {$lte:["$_pull._order._destination.km", 25]}]}, "20 - 25 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 25]}, {$lte:["$_pull._order._destination.km", 30]}]}, "25 - 30 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 30]}, {$lte:["$_pull._order._destination.km", 35]}]}, "30 - 35 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 35]}, {$lte:["$_pull._order._destination.km", 40]}]}, "35 - 40 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 40]}, {$lte:["$_pull._order._destination.km", 45]}]}, "40 - 45 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 45]}, {$lte:["$_pull._order._destination.km", 50]}]}, "45 - 50 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 50]}, {$lte:["$_pull._order._destination.km", 60]}]}, "50 - 60 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 60]}, {$lte:["$_pull._order._destination.km", 70]}]}, "60 - 70 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 70]}, {$lte:["$_pull._order._destination.km", 80]}]}, "70 - 80 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 80]}, {$lte:["$_pull._order._destination.km", 90]}]}, "80 - 90 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 90]}, {$lte:["$_pull._order._destination.km", 100]}]}, "90 - 100 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 100]}, {$lte:["$_pull._order._destination.km", 125]}]}, "100 - 125 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 125]}, {$lte:["$_pull._order._destination.km", 150]}]}, "125 - 150 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 150]}, {$lte:["$_pull._order._destination.km", 175]}]}, "150 - 175 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 175]}, {$lte:["$_pull._order._destination.km", 200]}]}, "175 - 200 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_pull._order._destination.km", 200]}]}, "+200 km", ""]}, //prettier-ignore
             ],
           },
         },
@@ -441,6 +445,7 @@ app.get('/kmByDestination', async function (req, res) {
         $group: {
           _id: '$range',
           viajes: { $sum: 1 },
+          total: { $sum: '$_pull._order._destination.km' },
         },
       },
     ]);
@@ -473,29 +478,29 @@ app.get('/kmByDestination', async function (req, res) {
           trips: 1,
           range: {
             $concat: [
-              { $cond: [{$and:[ {$gt:["$_destination.km", 0]}, {$lte: ["$_destination.km", 2]}]}, "0 - 2", ""] }, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 2]}, {$lte:["$_destination.km", 4]}]}, "2 - 4", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 4]}, {$lte:["$_destination.km", 6]}]}, "4 - 6", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 6]}, {$lte:["$_destination.km", 8]}]}, "6 - 8", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 8]}, {$lte:["$_destination.km", 10]}]}, "8 - 10", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 10]}, {$lte:["$_destination.km", 15]}]}, "10 - 15", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 15]}, {$lte:["$_destination.km", 20]}]}, "15 - 20", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 20]}, {$lte:["$_destination.km", 25]}]}, "20 - 25", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 25]}, {$lte:["$_destination.km", 30]}]}, "25 - 30", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 30]}, {$lte:["$_destination.km", 35]}]}, "30 - 35", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 35]}, {$lte:["$_destination.km", 40]}]}, "35 - 40", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 40]}, {$lte:["$_destination.km", 45]}]}, "40 - 45", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 45]}, {$lte:["$_destination.km", 50]}]}, "45 - 50", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 50]}, {$lte:["$_destination.km", 60]}]}, "50 - 60", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 60]}, {$lte:["$_destination.km", 70]}]}, "60 - 70", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 70]}, {$lte:["$_destination.km", 80]}]}, "70 - 80", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 80]}, {$lte:["$_destination.km", 90]}]}, "80 - 90", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 90]}, {$lte:["$_destination.km", 100]}]}, "90 - 100", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 100]}, {$lte:["$_destination.km", 125]}]}, "100 - 125", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 125]}, {$lte:["$_destination.km", 150]}]}, "125 - 150", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 150]}, {$lte:["$_destination.km", 175]}]}, "150 - 175", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 175]}, {$lte:["$_destination.km", 200]}]}, "175 - 200", ""]}, //prettier-ignore
-              { $cond: [{$and:[ {$gt:["$_destination.km", 200]}]}, "+200", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 0]}, {$lte: ["$_destination.km", 2]}]}, "0 - 2 km", ""] }, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 2]}, {$lte:["$_destination.km", 4]}]}, "2 - 4 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 4]}, {$lte:["$_destination.km", 6]}]}, "4 - 6 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 6]}, {$lte:["$_destination.km", 8]}]}, "6 - 8 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 8]}, {$lte:["$_destination.km", 10]}]}, "8 - 10 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 10]}, {$lte:["$_destination.km", 15]}]}, "10 - 15 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 15]}, {$lte:["$_destination.km", 20]}]}, "15 - 20 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 20]}, {$lte:["$_destination.km", 25]}]}, "20 - 25 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 25]}, {$lte:["$_destination.km", 30]}]}, "25 - 30 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 30]}, {$lte:["$_destination.km", 35]}]}, "30 - 35 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 35]}, {$lte:["$_destination.km", 40]}]}, "35 - 40 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 40]}, {$lte:["$_destination.km", 45]}]}, "40 - 45 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 45]}, {$lte:["$_destination.km", 50]}]}, "45 - 50 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 50]}, {$lte:["$_destination.km", 60]}]}, "50 - 60 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 60]}, {$lte:["$_destination.km", 70]}]}, "60 - 70 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 70]}, {$lte:["$_destination.km", 80]}]}, "70 - 80 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 80]}, {$lte:["$_destination.km", 90]}]}, "80 - 90 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 90]}, {$lte:["$_destination.km", 100]}]}, "90 - 100 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 100]}, {$lte:["$_destination.km", 125]}]}, "100 - 125 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 125]}, {$lte:["$_destination.km", 150]}]}, "125 - 150 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 150]}, {$lte:["$_destination.km", 175]}]}, "150 - 175 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 175]}, {$lte:["$_destination.km", 200]}]}, "175 - 200 km", ""]}, //prettier-ignore
+              { $cond: [{$and:[ {$gt:["$_destination.km", 200]}]}, "+200 km", ""]}, //prettier-ignore
             ],
           },
         },
@@ -504,6 +509,9 @@ app.get('/kmByDestination', async function (req, res) {
         $group: {
           _id: '$range',
           viajes: { $sum: '$trips' },
+          total: {
+            $sum: { $multiply: ['$trips', '$_destination.km'] },
+          },
         },
       },
     ]);

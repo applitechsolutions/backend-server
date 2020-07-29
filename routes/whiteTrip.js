@@ -9,6 +9,256 @@ var Gondola = require('../models/gondola');
 var Pull = require('../models/pull');
 
 /**
+ * LISTAR REPORTE LINEAS DE ORDENES ACTIVAS
+ */
+
+app.get('/actives', function name(req, res) {
+  whiteTrip.aggregate(
+    [
+      {
+        $match: {
+          state: false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'employees',
+          localField: '_employee',
+          foreignField: '_id',
+          as: '_employee',
+        },
+      },
+      {
+        $unwind: '$_employee',
+      },
+      {
+        $lookup: {
+          from: 'vehicles',
+          localField: '_vehicle',
+          foreignField: '_id',
+          as: '_vehicle',
+        },
+      },
+      {
+        $unwind: '$_vehicle',
+      },
+      {
+        $lookup: {
+          from: 'pulls',
+          localField: '_pull',
+          foreignField: '_id',
+          as: '_pull',
+        },
+      },
+      {
+        $unwind: '$_pull',
+      },
+      {
+        $match: {
+          '_pull.state': false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'materials',
+          localField: '_pull._material',
+          foreignField: '_id',
+          as: '_pull._material',
+        },
+      },
+      {
+        $unwind: '$_pull._material',
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: '_pull._order',
+          foreignField: '_id',
+          as: '_pull._order',
+        },
+      },
+      {
+        $unwind: '$_pull._order',
+      },
+      {
+        $lookup: {
+          from: 'destinations',
+          localField: '_pull._order._destination',
+          foreignField: '_id',
+          as: '_pull._order._destination',
+        },
+      },
+      {
+        $unwind: '$_pull._order._destination',
+      },
+      {
+        $sort: {
+          date: -1,
+        },
+      },
+      {
+        $project: {
+          _id: '$_id',
+          _employee: { name: 1 },
+          _vehicle: { plate: 1 },
+          _pull: 1,
+          date: '$date',
+          noTicket: '$noTicket',
+          noDelivery: '$noDelivery',
+          mts: '$mts',
+          kgB: '$kgB',
+          kgT: '$kgT',
+          kgN: '$kgN',
+          checkIN: '$checkIN',
+          checkOUT: '$checkOUT',
+          invoiced: '$invoiced',
+        },
+      },
+    ],
+    function (err, reports) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reportes',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        reportes: reports,
+      });
+    }
+  );
+});
+
+/**
+ * LISTAR REPORTE LINEAS DE ORDENES HISTORIAL
+ */
+
+app.get('/history', function name(req, res) {
+  var startDate = new Date(req.query.fecha1);
+  var endDate = new Date(req.query.fecha2);
+
+  whiteTrip.aggregate(
+    [
+      {
+        $match: {
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          state: false,
+        },
+      },
+      {
+        $lookup: {
+          from: 'employees',
+          localField: '_employee',
+          foreignField: '_id',
+          as: '_employee',
+        },
+      },
+      {
+        $unwind: '$_employee',
+      },
+      {
+        $lookup: {
+          from: 'vehicles',
+          localField: '_vehicle',
+          foreignField: '_id',
+          as: '_vehicle',
+        },
+      },
+      {
+        $unwind: '$_vehicle',
+      },
+      {
+        $lookup: {
+          from: 'pulls',
+          localField: '_pull',
+          foreignField: '_id',
+          as: '_pull',
+        },
+      },
+      {
+        $unwind: '$_pull',
+      },
+      {
+        $lookup: {
+          from: 'materials',
+          localField: '_pull._material',
+          foreignField: '_id',
+          as: '_pull._material',
+        },
+      },
+      {
+        $unwind: '$_pull._material',
+      },
+      {
+        $lookup: {
+          from: 'orders',
+          localField: '_pull._order',
+          foreignField: '_id',
+          as: '_pull._order',
+        },
+      },
+      {
+        $unwind: '$_pull._order',
+      },
+      {
+        $lookup: {
+          from: 'destinations',
+          localField: '_pull._order._destination',
+          foreignField: '_id',
+          as: '_pull._order._destination',
+        },
+      },
+      {
+        $unwind: '$_pull._order._destination',
+      },
+      {
+        $sort: {
+          date: 1,
+        },
+      },
+      {
+        $project: {
+          _id: '$_id',
+          _employee: { name: 1 },
+          _vehicle: { plate: 1 },
+          _pull: 1,
+          date: '$date',
+          noTicket: '$noTicket',
+          noDelivery: '$noDelivery',
+          mts: '$mts',
+          kgB: '$kgB',
+          kgT: '$kgT',
+          kgN: '$kgN',
+          checkIN: '$checkIN',
+          checkOUT: '$checkOUT',
+          invoiced: '$invoiced',
+        },
+      },
+    ],
+    function (err, reports) {
+      if (err) {
+        return res.status(500).json({
+          ok: false,
+          mensaje: 'Error listando reportes',
+          errors: err,
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        reportes: reports,
+      });
+    }
+  );
+});
+
+/**
  * LISTAR REPORTE LINEAS DISPONIBLES PARA FACTURAR EN EL CD
  */
 

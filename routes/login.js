@@ -477,10 +477,10 @@ function obtenerMenu(ROLE, AREA) {
             titulo: 'Reporte Lineas',
             icono: 'menu-icon fas fa-file-alt',
             submenu: [
-              // {
-              //   titulo: 'Listar reportes',
-              //   url: '/wtrips'
-              // },
+              {
+                titulo: 'Listar reportes',
+                url: '/wtrips',
+              },
               {
                 titulo: 'Pedidos',
                 icono: 'menu-icon fas fa-receipt',

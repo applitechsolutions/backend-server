@@ -1,13 +1,17 @@
 var express = require('express');
-
+var mongoose = require('mongoose');
 var mdAuth = require('../middlewares/auth');
 
 var app = express();
 
 var CashCD = require('../models/cashCD');
+var Sale = require('../models/sale');
 
 /* #region  GET Saldo Actual */
 app.get('/lastBalance', function (req, res) {
+  var startDate = new Date(req.query.fecha1);
+  var endDate = new Date(req.query.fecha2);
+
   CashCD.findOne(
     {},
     {},
@@ -25,9 +29,29 @@ app.get('/lastBalance', function (req, res) {
         });
       }
 
-      res.status(200).json({
-        ok: true,
-        saldo: cash,
+      Sale.find(
+        {
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          state: false,
+        },
+        'flete total'
+      ).exec(function (err, sales) {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            mensaje: 'Error obteniendo ventas',
+            errors: err,
+          });
+        }
+
+        res.status(200).json({
+          ok: true,
+          saldo: cash,
+          ventas: sales,
+        });
       });
     }
   );
@@ -64,9 +88,29 @@ app.get('/', function (req, res) {
         });
       }
 
-      res.status(200).json({
-        ok: true,
-        movimientos: cashs,
+      Sale.find(
+        {
+          date: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+          state: false,
+        },
+        'flete total'
+      ).exec(function (err, sales) {
+        if (err) {
+          return res.status(500).json({
+            ok: false,
+            mensaje: 'Error obteniendo ventas',
+            errors: err,
+          });
+        }
+
+        res.status(200).json({
+          ok: true,
+          movimientos: cashs,
+          ventas: sales,
+        });
       });
     });
 });
@@ -200,7 +244,7 @@ app.post('/', mdAuth.verificaToken, function (req, res) {
   var idCellarMaterial = mongoose.Types.ObjectId('5db1d858d2773e07f0965510'); // ID DEL CENTRO DE DISTRIBUCION DE LA VIÑA
 
   var cash = new CashCD({
-    _cashType: body._cashType,
+    _cashTypeCD: body._cashTypeCD,
     _user: body._user,
     _cellar: idCellarMaterial,
     date: body.date,

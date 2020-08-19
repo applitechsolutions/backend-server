@@ -11,7 +11,7 @@ var saleSchema = new Schema({
   },
   date: { type: Date, required: [true, 'La fecha es necesaria'] },
   serie: { type: String, unique: false },
-  bill: { type: String, unique: false },
+  bill: { type: String, required: false },
   details: [
     {
       material: {

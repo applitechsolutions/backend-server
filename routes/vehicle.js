@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var express = require('express');
 var mdAuth = require('../middlewares/auth');
-mongoose.set('useFindAndModify', false);
+// mongoose.set('useFindAndModify', false);
 
 var app = express();
 

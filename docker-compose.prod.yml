@@ -1,0 +1,40 @@
+services:
+  # Servicio de la aplicación Node.js
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: xelatrucks-backend
+    restart: unless-stopped
+    environment:
+      # Variables de entorno de la aplicación
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: ${PORT:-3000}
+      # Conexión a MongoDB externa (CosmosDB)
+      CUSTOMCONNSTR_COSMOS_CONNSTR: ${CUSTOMCONNSTR_COSMOS_CONNSTR}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      # Volumen para persistir los archivos subidos (imágenes)
+      - uploads_data:/app/uploads
+    networks:
+      - dokploy-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  uploads_data:
+    driver: local
+
+networks:
+  dokploy-network:
+    external: true
